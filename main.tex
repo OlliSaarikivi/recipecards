@@ -1,0 +1,303 @@
+\documentclass{article}
+\usepackage[paperheight=3in,paperwidth=5in,margin=0.25in,headsep=0pt,footskip=4pt]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[USenglish]{babel}
+\usepackage{multicol}
+\usepackage{paracol}
+\usepackage{parskip}
+\usepackage{pgfornament}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{ragged2e}
+\usepackage[clock]{ifsym}
+\usepackage{cookingsymbols}
+
+\hyphenation{slight-ly car-da-mom crush-ed}
+
+\makeatletter
+\newcommand*{\shifttext}[2]{%
+  \settowidth{\@tempdima}{#2}%
+  \makebox[\@tempdima]{\hspace*{#1}#2}%
+}
+\makeatother
+
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot{}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}}
+\fancypagestyle{cont}{
+    \fancyhf{}
+    \fancyfoot[R]{\vspace{-0.1in}\shifttext{0.4in}{\pgfornament[height = 0.15in]{155}}}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}}
+\pagestyle{plain}
+
+\renewcommand*\ttdefault{cmvtt}
+\renewcommand*\familydefault{\ttdefault}
+\usepackage{coelacanth}
+
+\def\blankpage{%
+    \clearpage%
+    \ifodd\value{page}\else%
+        \hbox{}\newpage
+    \fi}
+
+\let\svpar\par
+\edef\svparskip{\the\parskip}
+\def\revertpar{\svpar\setlength\parskip{\svparskip}\let\par\svpar}
+\def\noparskip{\leavevmode\setlength\parskip{0pt}%
+  \def\par{\svpar\let\par\revertpar}}
+
+\newenvironment{recipe}[2]
+    {\clearpage
+    \begin{FlushLeft}
+    \textrm{{\large#1}\hfill{\large\tabularnums{#2}}}
+    \vspace{0.5em}
+    \columnratio{0.333}
+    \setlength{\columnsep}{0.2in}
+    \begin{paracol}{2}}
+    {\end{paracol}\end{FlushLeft}}
+\newenvironment{denserecipe}[2]
+    {\small
+    \begin{recipe}{#1}{#2}}
+    {\end{recipe}}
+\newcommand{\nextcolumn}{\switchcolumn}
+\newenvironment{ingredients}
+    {
+    \begin{obeylines}
+    \vspace{\parskip}
+    \setlength{\parskip}{0.25em}
+    \vspace{-0.25em}
+    \leftskip=1em
+    \parindent=-1em}
+    {\end{obeylines}}
+\newenvironment{steps}
+    {\begin{enumerate}[leftmargin=*,topsep=0pt]}
+    {\end{enumerate}}
+
+\newcommand{\celsius}[1]{#1\textdegree{}C}
+\newcommand{\fahrenheit}[1]{#1\textdegree{}F}
+
+\newcommand{\tag}[1]{\hspace{1em}#1}
+\newcommand{\symboltag}[2]{\tag{#1\hspace{0.4em}#2}}
+\newcommand{\totaltime}[1]{\symboltag{\raisebox{-0.1em}{\small\StopWatchEnd}}{#1}}
+\newcommand{\preheat}[1]{\symboltag{\Topbottomheat}{#1}}
+
+\begin{document}
+
+\begin{recipe}{Banana Pancakes}{\tag{V}\totaltime{20 min}}
+\begin{ingredients}
+1 banana
+2 eggs
+1 dl almond flour
+2 dl rolled oats
+1 dl milk
+1 dl cottage cheese
+pinch of salt
+cardamom, optional
+\end{ingredients}
+\nextcolumn
+Makes 4 large pancakes
+\begin{steps}
+    \item Blend all ingredients
+    \item Fry in oil on medium-high heat
+\end{steps}
+Substitute half of almond flour with protein powder for fluffier pancakes.
+\end{recipe}
+
+\begin{recipe}{Olive Potatoes}{\tag{V}\preheat{\celsius{225}}\totaltime{1 h}}
+\begin{ingredients}
+1 kg new potatoes
+2 tbsp butter
+3 tbsp minced dill
+1/2 tsp salt
+1/2 tsp black pepper
+1/2 tbsp rosemary
+1/2 tbsp thyme
+2 cloves of garlic
+2 dl black olives
+1 dl heavy cream
+\end{ingredients}
+\nextcolumn
+Serves 6
+\begin{steps}
+    \item Preheat oven to \celsius{225}
+    \item Scrub potatoes and split large ones
+    \item Roast butter, herbs and spices for 5 min
+    \item Toss potatoes to coat and roast for 30 min
+    \item Add olives and cream and roast for 10 min
+\end{steps}
+\end{recipe}
+
+\begin{recipe}{Piquant Cabbage Stew}{\totaltime{45 min}}
+\begin{ingredients}
+500 g white cabbage, shredded
+400 g ground beef
+1 large onion, diced
+2-4	cloves of garlic, crushed
+1 tbsp oil 
+2 tbsp or more sweet chilli sauce
+3-4 tbsp soy sauce
+salt and pepper
+\end{ingredients}
+\nextcolumn
+Serves 4
+\begin{steps}
+    \item Brown ground beef from one side on high
+    \item Add onion and cook on medium until soft
+    \item Add garlic and cabbage and toss until slightly softened
+    \item Add spices and stew on medium-low heat for at least 10 min
+\end{steps}
+\end{recipe}
+
+\begin{denserecipe}{Lentil Soup, World's Best}{\tag{V}\totaltime{1 h}}
+\begin{ingredients}
+2 tbsp coconut oil
+1 large onion, diced
+3 cloves of garlic, crushed
+2 tsp turmeric
+1 tsp ginger
+1/4 tsp paprika
+1/4 tsp oregano
+1/8 tsp cayenne
+1-2 tbsp kosher salt
+800 g crushed tomatoes
+3 dl red lentils 
+2 dl coconut cream
+\end{ingredients}
+\nextcolumn
+Serves 6
+\begin{steps}
+    \item Rinse and drain lentils
+    \item Saute onion, garlic and spices until soft
+    \item Add 1.1 liters water and crushed tomatoes, and bring to a boil
+    \item Add lentils and simmer for 30 min
+    \item Add cream and let sit for 5-10 min
+\end{steps}
+Check for salt before serving.
+\end{denserecipe}
+
+\begin{denserecipe}{Pork Chile Verde}{\totaltime{1 h 15 min}}
+\begin{ingredients}
+2 kg pork shoulder
+4 tomatillos, quartered
+2 Poblano peppers
+2 Anaheim or Cubanelle peppers
+2 serranos or jalapeños
+1 white onion, chopped
+6 cloves garlic
+2 tsp ground cumin
+big pinch of kosher salt
+1/2 cup cilantro
+1 tbsp fish sauce
+\end{ingredients}
+\nextcolumn
+Serves 6 to 8
+\begin{steps}
+    \item Remove seeds and roughly chop all peppers
+    \item Cut pork into 2-inch chunks
+    \item Saute ingredients up to salt in pressure cooker
+    \item Once sizzling, cook for 30 minutes on high
+    \item Transfer pork pieces to a bowl and set aside
+    \item Add cilantro and fish sauce to pressure cooker and blend with an immersion blender
+    \item Season to taste with salt
+    \item Gently combine pork with sauce
+\end{steps}
+\end{denserecipe}
+
+\begin{denserecipe}{Freeze \& Bake Chicken Pot Pies}{\preheat{\fahrenheit{400}}\totaltime{1 h 30 min}}
+\begin{ingredients}
+1/3 cup butter
+1 onion, diced
+3 stalks celery, diced
+3 large carrots, diced
+1 cup milk
+2 cups chicken broth
+1/2 cup flour
+1 rotisserie chicken
+1 cup frozen peas
+1 tsp salt
+1/2 tsp pepper
+3 refrigerated pie crusts
+\end{ingredients}
+\nextcolumn
+Makes 6 small pies
+\begin{steps}
+    \item Saute butter and aromatics in a deep skillet
+    \item Add flour, mix well, and add cold milk and chicken broth, stirring continuously
+    \item Bring to boil, stirring, and cook until thick
+    \item Add shredded chicken, peas, salt, and pepper
+    \item Line pie dishes with pie crust, fill with the cooled filling and top with more crust
+    \item Seal edges, cut 4 slits and freeze in foil
+    \item Thaw frozen pies in foil for 30 min at \fahrenheit{400}, then bake for 35 min uncovered
+\end{steps}
+\end{denserecipe}
+
+\begin{recipe}{Pulla}{\preheat{\celsius{220}}\totaltime{1h 15 min}}
+\begin{ingredients}
+5 dl whole milk, warm
+50 g fresh yeast or 15 g dry
+2 dl sugar
+1 tsp salt
+1 tbsp cardamom
+14 dl flour
+200 g butter, room temperature
+1 egg + 1 tbsp water for egg wash
+\end{ingredients}
+\nextcolumn
+\begin{steps}
+    \item Mix milk, yeast, sugar, salt and cardamom
+    \item Add flour until a soft dough forms
+    \item Add soft butter and knead for 10 min
+    \item Let rise for 30 min until doubled
+    \item Form into buns and let rise covered until doubled (or overnight in refrigerator)
+    \item Brush with egg wash and decorate with granulated sugar or almond flakes
+    \item Bake for 7-10 min at \celsius{220}
+\end{steps}
+\end{recipe}
+
+\begin{denserecipe}{Italian Sausage Spaghetti}{\totaltime{2 h}}
+\begin{ingredients}
+1 tbsp olive oil
+4 raw Italian sausage links
+1/4 cup white wine
+32 oz marinara sauce
+1 1/2 cups water
+1 lb spaghetti
+grated parmesan and flat-leaf parsley
+\end{ingredients}
+\nextcolumn
+Serves 4
+\begin{steps}
+    \item Heat oil over medium heat and sear sausages under lid for 5 min on each side
+    \item Move links to a plate and deglaze with wine
+    \item Add sauce and water and bring to a simmer
+    \item Slice cooled links into 4 and return to sauce
+    \item Simmer on low for 1 h 30 min, skimming some of the fat away after 1 h
+    \item Serve on spaghetti with grated parmesan and flat-leaf parsley
+\end{steps}
+\end{denserecipe}
+
+\begin{recipe}{Genius Oatmeal}{\tag{V}\totaltime{25 min}}
+\begin{ingredients}
+2 cups water
+1/2 cup rolled oats
+1/2 cup steel cut oats
+1 cup milk
+1 tbsp maple syrup
+salt
+\end{ingredients}
+\nextcolumn
+Serves 2
+\begin{steps}
+    \item Bring water and oats to a boil
+    \item Add milk and reduce to a bare simmer
+    \item Simmer for 20 minutes
+    \item Add maple syrup and salt to taste
+\end{steps}
+\end{recipe}
+
+\end{document}
