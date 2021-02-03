@@ -29,10 +29,3 @@ jobs:
           title: "Latest PDF"
           files: |
             recipe_cards.pdf
-      - name: Fix release body text
-        uses: tubone24/update_release@v1.0
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          release_name: latest
-          body: PDF for printable 3x5 inch recipe cards
