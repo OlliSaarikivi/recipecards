@@ -13,7 +13,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: dante-ev/latex-action@master
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Build PDF
+        uses: dante-ev/latex-action@master
         with:
           root_file: main.tex
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: latest
+          release_name: Latest PDF
+      - name: Upload PDF to release
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./main.pdf
+          asset_name: recipe_cards.pdf
+          asset_content_type: application/pdf
