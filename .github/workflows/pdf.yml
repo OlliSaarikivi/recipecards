@@ -25,7 +25,13 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
-          prerelease: true
+          prerelease: false
           title: "Latest PDF"
           files: |
             recipe_cards.pdf
+      - name: Fix release body text
+        uses: tubone24/update_release@v1.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          body: PDF for printable 3x5 inch recipe cards
