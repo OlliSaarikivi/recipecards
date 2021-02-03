@@ -34,4 +34,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
+          release_name: latest
           body: PDF for printable 3x5 inch recipe cards
