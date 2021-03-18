@@ -55,13 +55,17 @@
     {\clearpage
     \begin{FlushLeft}
     \textrm{{\large#1}\hfill{\large\tabularnums{#2}}}
-    \vspace{0.5em}
+    \vspace{0.45em}
     \columnratio{0.333}
     \setlength{\columnsep}{0.2in}
     \begin{paracol}{2}}
     {\end{paracol}\end{FlushLeft}}
 \newenvironment{denserecipe}[2]
     {\small
+    \begin{recipe}{#1}{#2}}
+    {\end{recipe}}
+\newenvironment{denserrecipe}[2]
+    {\footnotesize
     \begin{recipe}{#1}{#2}}
     {\end{recipe}}
 \newcommand{\nextcolumn}{\switchcolumn}
@@ -395,5 +399,34 @@ Serves 8
     \item Bake at \celsius{200} for 25 to 35 min
 \end{steps}
 \end{denserecipe}
+
+\begin{denserrecipe}{Healthy Turkey Chili}{\preheat{\fahrenheit{325}\totaltime{2 h}}}
+\begin{ingredients}
+2 tsp olive oil
+1 yellow onion, chopped
+1 red bell pepper, chopped
+3 cloves garlic, crushed
+1 lb lean ground turkey
+2 tbsp chili powder
+2 tsp ground cumin
+1 tsp dried oregano
+1/4 tsp cayenne pepper
+1/2 tsp salt
+28 oz crushed tomatoes
+1 1/4 cups chicken broth
+30 oz canned kidney beans
+15 oz canned sweet corn
+\end{ingredients}
+\nextcolumn
+\begin{steps}
+    \item Heat oil over medium high heat in dutch oven
+    \item Saute onion and red pepper until soft
+    \item Add turkey and garlic, breaking up the meat
+    \item Continue cooking until meat is no longer pink
+    \item Add remaining ingredients
+    \item Bake uncovered at \fahrenheit{325} for 1 h 30 min, stirring occasionally
+    \item Add more salt and cayenne to taste
+\end{steps}
+\end{denserrecipe}
 
 \end{document}
