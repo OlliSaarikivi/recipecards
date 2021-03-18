@@ -55,17 +55,13 @@
     {\clearpage
     \begin{FlushLeft}
     \textrm{{\large#1}\hfill{\large\tabularnums{#2}}}
-    \vspace{0.45em}
+    \vspace{0.5em}
     \columnratio{0.333}
     \setlength{\columnsep}{0.2in}
     \begin{paracol}{2}}
     {\end{paracol}\end{FlushLeft}}
 \newenvironment{denserecipe}[2]
     {\small
-    \begin{recipe}{#1}{#2}}
-    {\end{recipe}}
-\newenvironment{denserrecipe}[2]
-    {\footnotesize
     \begin{recipe}{#1}{#2}}
     {\end{recipe}}
 \newcommand{\nextcolumn}{\switchcolumn}
@@ -389,6 +385,7 @@ Serves 8
 1 tsp vanilla extract
 \end{ingredients}
 \nextcolumn
+Serves 8
 \begin{steps}
     \item Cream butter and 1 dl sugar
     \item Whisk in 1 egg
@@ -400,9 +397,8 @@ Serves 8
 \end{steps}
 \end{denserecipe}
 
-\begin{denserrecipe}{Healthy Turkey Chili}{\preheat{\fahrenheit{325}\totaltime{2 h}}}
+\begin{denserecipe}{Healthy Turkey Chili}{\preheat{\fahrenheit{325}\totaltime{2 h}}}
 \begin{ingredients}
-2 tsp olive oil
 1 yellow onion, chopped
 1 red bell pepper, chopped
 3 cloves garlic, crushed
@@ -411,13 +407,13 @@ Serves 8
 2 tsp ground cumin
 1 tsp dried oregano
 1/4 tsp cayenne pepper
-1/2 tsp salt
 28 oz crushed tomatoes
 1 1/4 cups chicken broth
-30 oz canned kidney beans
-15 oz canned sweet corn
+30 oz kidney beans
+15 oz sweet corn
 \end{ingredients}
 \nextcolumn
+Serves 6
 \begin{steps}
     \item Heat oil over medium high heat in dutch oven
     \item Saute onion and red pepper until soft
@@ -427,7 +423,7 @@ Serves 8
     \item Bake uncovered at \fahrenheit{325} for 1 h 30 min, stirring occasionally
     \item Add more salt and cayenne to taste
 \end{steps}
-\end{denserrecipe}
+\end{denserecipe}
 
 \begin{denserecipe}{Classic Chicken Salad}{\totaltime{2 h}}
 \begin{ingredients}
@@ -445,6 +441,7 @@ Salt and black pepper
 1 clove garlic, minced
 \end{ingredients}
 \nextcolumn
+Serves 4
 \begin{steps}
     \item Season chicken with salt and pepper and seal into sous-vide bags with slices from 1 lemon
     \item Cook chicken in water bath at \celsius{65} for 1 h
@@ -457,5 +454,25 @@ Salt and black pepper
     \item Season to taste with salt and pepper
 \end{steps}
 \end{denserecipe}
+
+\begin{recipe}{Crepes}{\totaltime{15 min}}
+\begin{ingredients}
+1 large eggs
+5/8 cups whole milk
+1/2 cup flour
+1/2 tbsp oil or melted unsalted butter
+pinch of salt
+1/2 tbsp sugar, for sweet crepes
+1/2 tbsp minced herbs, for savory crepes
+\end{ingredients}
+\nextcolumn
+Makes 4 to 6 large crepes
+\begin{steps}
+    \item Blend all ingredients except herbs for 10 s
+    \item Add herbs (if using) and pulse to combine
+    \item Pour thin layer of batter into buttered pan on medium heat, swirl to spread, cook for 20~s, flip, and cook another 10~s
+\end{steps}
+Fill sweet crepes with sugar and lemon juice, or whipped cream and berries; savory crepes with mushrooms and ricotta, or ham, cheese and fried eggs.
+\end{recipe}
 
 \end{document}
