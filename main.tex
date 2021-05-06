@@ -9,6 +9,8 @@
 \usepackage{pgfornament}
 \usepackage{enumitem}
 \usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{booktabs}
 \usepackage{microtype}
 \usepackage{ragged2e}
 \usepackage[clock]{ifsym}
@@ -51,15 +53,25 @@
 \def\noparskip{\leavevmode\setlength\parskip{0pt}%
   \def\par{\svpar\let\par\revertpar}}
 
-\newenvironment{recipe}[2]
+\newenvironment{cardbase}[2]
     {\clearpage
     \begin{FlushLeft}
     \textrm{{\large#1}\hfill{\large\tabularnums{#2}}}
-    \vspace{0.5em}
+    \vspace{0.5em}}
+    {\end{FlushLeft}}
+\newenvironment{card}[2]
+    {\begin{cardbase}{#1}{#2}\\}
+    {\end{cardbase}}
+\newenvironment{densecard}[2]
+    {\small
+    \begin{card}{#1}{#2}}
+    {\end{card}}
+\newenvironment{recipe}[2]
+    {\begin{cardbase}{#1}{#2}
     \columnratio{0.333}
     \setlength{\columnsep}{0.2in}
     \begin{paracol}{2}}
-    {\end{paracol}\end{FlushLeft}}
+    {\end{paracol}\end{cardbase}}
 \newenvironment{denserecipe}[2]
     {\small
     \begin{recipe}{#1}{#2}}
@@ -642,5 +654,56 @@ Good herbs: tarragon, parsley, dill and chives.
 \end{steps}
 Use as filling for sandwiches, cream puffs or crepes. 
 \end{denserecipe}
+
+\begin{densecard}{Rich Salad Dressings}{}
+\begin{tabularx}{\textwidth}{@{}XXXXX@{}}
+\toprule
+Base & Aromatics & Sweetness & Acid & Oil \\
+\midrule
+% Base
+Soaked nuts\newline
+Miso\newline
+Sun-dried tomatoes\newline
+Yoghurt\newline
+Avocado\newline
+Nut butter\newline
+Silken tofu
+& % Aromatics
+Herbs\newline
+Spices\newline
+Garlic\newline
+Ginger\newline
+Sesame oil\newline
+Chili paste\newline
+Mustard\newline
+Fish sauce
+& % Sweetness
+Sugar\newline
+Honey\newline
+Balsamic $\rightarrow$\newline
+Mirin\newline
+Jam\newline
+Maple syrup\newline
+Molasses
+& % Acid
+Citrus juices\newline
+Pickle brine\newline
+Vinegar\newline
+Pineapple
+& % Oil
+Canola\newline
+Olive\newline
+Avocado\newline
+Walnut\newline
+Omit with fatty base
+\\
+\bottomrule
+\end{tabularx}
+\begin{steps}
+\item Process all ingredients except oil in food processor
+\item Pour in oil with food processor running and let run until creamy
+\item Adjust consistency and season to taste with salt
+\end{steps}
+\end{densecard}
 
 \end{document}
