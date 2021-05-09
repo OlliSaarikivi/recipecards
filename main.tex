@@ -73,6 +73,8 @@
 \SOUL@}
 \makeatother
 
+\setlength{\columnsep}{0.2in}
+
 \newenvironment{cardbase}[2]
     {\clearpage
     \begin{FlushLeft}
@@ -89,7 +91,6 @@
 \newenvironment{recipe}[2]
     {\begin{cardbase}{#1}{#2}
     \columnratio{0.333}
-    \setlength{\columnsep}{0.2in}
     \begin{paracol}{2}}
     {\end{paracol}\end{cardbase}}
 \newenvironment{denserecipe}[2]
@@ -119,6 +120,7 @@
 \newcommand{\preheat}[1]{\symboltag{\Topbottomheat}{#1}}
 
 \newcommand{\ihead}[1]{\ful{#1}}
+\newcommand{\ijoin}{$\cdot{}$}
 
 \begin{document}
 
@@ -753,5 +755,32 @@ Serves 4. Great with berries or stone fruit.
     \item Spoon topping onto cooled possets
 \end{steps}
 \end{recipe}
+
+\begin{densecard}{Quick Pastas}{\totaltime{20 min}}
+\begin{steps}
+    \item Cook sauce ingredients in proper order and boil pasta just short of al dente
+    \item Toss pasta in sauce, adding pasta water as necessary, plate and garnish
+\end{steps}
+\columnratio{0.333}
+\begin{paracol}{3}
+\ihead{Aglio e Olio} olive\ijoin{}oil garlic chili parsley
+
+\ihead{Con le Sarde} fennel onion garlic anchovy raisins saffron white\ijoin{}wine sardines pine\ijoin{}nuts chili breadcrumbs
+
+\ihead{B3S3} butternut\ijoin{}squash shallot sage butter lemon parmesan
+
+\nextcolumn
+\ihead{Al Limone} butter garlic lemon\ijoin{}zest lemon\ijoin{}juice pepper parmesan
+
+\ihead{Pomarola} cherry\ijoin{}tomatoes garlic basil parmesan
+
+\ihead{All'Amatriciana} guanciale chili white\ijoin{}wine crushed\ijoin{}tomatoes\\pecorino\ijoin{}romano
+
+\nextcolumn
+\ihead{Puttanesca} garlic anchovies chili capers olives crushed\ijoin{}tomatoes parsley parmesan
+
+\ihead{Al Tonno} anchovy capers garlic white\ijoin{}wine oregano chili tuna crushed\ijoin{}tomatoes parsley parmesan
+\end{paracol}
+\end{densecard}
 
 \end{document}
