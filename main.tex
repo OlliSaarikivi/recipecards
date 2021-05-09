@@ -11,6 +11,8 @@
 \usepackage{fancyhdr}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{soul}
+\usepackage{color}
 \usepackage{microtype}
 \usepackage{ragged2e}
 \usepackage[clock]{ifsym}
@@ -52,6 +54,24 @@
 \def\revertpar{\svpar\setlength\parskip{\svparskip}\let\par\svpar}
 \def\noparskip{\leavevmode\setlength\parskip{0pt}%
   \def\par{\svpar\let\par\revertpar}}
+
+% fancy underline
+\makeatletter
+\newcommand*{\whiten}[1]{\llap{\textcolor{white}{{\the\SOUL@token}}\hspace{#1pt}}}
+\DeclareRobustCommand*\ful{%
+    \def\SOUL@everyspace{\underline{\space}\kern\z@}%
+    \def\SOUL@everytoken{%
+     \setbox0=\hbox{\the\SOUL@token}%
+     \ifdim\dp0>\z@
+        \raisebox{\dp0}{\underline{\phantom{\the\SOUL@token}}}%
+        \whiten{1}\whiten{0}%
+        \whiten{-1}\whiten{-2}%
+        \llap{\the\SOUL@token}%
+     \else
+        \underline{\the\SOUL@token}%
+     \fi}%
+\SOUL@}
+\makeatother
 
 \newenvironment{cardbase}[2]
     {\clearpage
@@ -97,6 +117,8 @@
 \newcommand{\symboltag}[2]{\tag{#1\hspace{0.4em}#2}}
 \newcommand{\totaltime}[1]{\symboltag{\raisebox{-0.1em}{\small\StopWatchEnd}}{#1}}
 \newcommand{\preheat}[1]{\symboltag{\Topbottomheat}{#1}}
+
+\newcommand{\ihead}[1]{\ful{#1}}
 
 \begin{document}
 
@@ -705,5 +727,31 @@ Omit with fatty base
 \item Adjust consistency and season to taste with salt
 \end{steps}
 \end{densecard}
+
+\begin{recipe}{Fruit Posset}{\tag{V}\totaltime{4 h 45 min}}
+\begin{ingredients}
+\ihead{puree}
+2 cups diced fruit
+1 tsp sugar
+\ihead{cream}
+1/2 cup sugar
+2 cups heavy cream
+1/4 tsp vanilla extract
+1/4 cup lemon juice
+\ihead{topping}
+2/3 cup diced fruit
+1 tsp white sugar
+\end{ingredients}
+\nextcolumn
+Serves 4. Great with berries or stone fruit.
+\begin{steps}
+    \item Macerate fruit with sugar for 1 hour, then blend and refrigerate
+    \item Bring cream and sugar to boil, then maintain a steady simmer for 5 min
+    \item Whisk in vanilla, lemon and 1/3 cup puree, and let cream cool for 15 min
+    \item Pour puree and then cream into 4 glasses
+    \item Chill for 3 hours and macerate topping
+    \item Spoon topping onto cooled possets
+\end{steps}
+\end{recipe}
 
 \end{document}
