@@ -35,9 +35,8 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'recipe_cards.pdf'
-          destination_repo: 'OlliSaarikivi/OlliSaarikivi.github.io'
+          destination_repo: 'OlliSaarikivi/homepage'
           destination_branch: 'master'
-          destination_folder: 'files'
           user_email: 'olli.saarikivi@iki.fi'
           user_name: 'Olli Saarikivi'
           commit_message: 'Update recipe cards PDF to latest release'
