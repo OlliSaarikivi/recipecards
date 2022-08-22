@@ -1,3 +1,4 @@
+% !TeX program = lualatex
 \documentclass{article}
 \usepackage[paperheight=3in,paperwidth=5in,margin=0.25in,headsep=0pt,footskip=4pt]{geometry}
 \usepackage[utf8]{inputenc}
@@ -13,12 +14,16 @@
 \usepackage{booktabs}
 \usepackage{soul}
 \usepackage{color}
+\usepackage{hyperref}
 \usepackage{microtype}
 \usepackage{ragged2e}
 \usepackage[clock]{ifsym}
 \usepackage{cookingsymbols}
+\usepackage{xstring}
 
 \hyphenation{slight-ly car-da-mom crush-ed}
+
+\hypersetup{hidelinks}
 
 \makeatletter
 \newcommand*{\shifttext}[2]{%
@@ -77,8 +82,13 @@
 
 \newenvironment{cardbase}[2]
     {\clearpage
+    \StrSubstitute{#1}{ }{-}[\safeA]
+    \StrDel{\safeA}{,}[\safeB]
+    \StrDel{\safeB}{'}[\safeC]
+    \StrSubstitute{\safeC}{\&}{and}[\safe]
+    \hypertarget{\safe}{}
     \begin{FlushLeft}
-    \textrm{{\large#1}\hfill{\large\tabularnums{#2}}}
+    \textrm{{\large\hyperlink{\safe}{#1}}\hfill{\large\tabularnums{#2}}}
     \vspace{0.5em}}
     {\end{FlushLeft}}
 \newenvironment{card}[2]
