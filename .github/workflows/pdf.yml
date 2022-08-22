@@ -36,6 +36,7 @@ jobs:
         with:
           source_file: 'recipe_cards.pdf'
           destination_repo: 'OlliSaarikivi/OlliSaarikivi.github.io'
+          destination_branch: 'master'
           destination_folder: 'files'
           user_email: 'olli.saarikivi@iki.fi'
           user_name: 'Olli Saarikivi'
