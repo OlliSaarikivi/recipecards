@@ -119,6 +119,9 @@
 \newenvironment{steps}
     {\begin{enumerate}[leftmargin=*,topsep=0pt]}
     {\end{enumerate}}
+\newenvironment{densesteps}
+    {\begin{enumerate}[leftmargin=*,topsep=0pt,itemsep=0pt]}
+    {\end{enumerate}}
 
 \newcommand{\celsius}[1]{#1\textdegree{}C}
 \newcommand{\fahrenheit}[1]{#1\textdegree{}F}
@@ -1261,6 +1264,38 @@ Makes 1 large loaf
     \item Bake at \celsius{175} for 1 h 30 min, brush with espresso treacle mixture and bake for 30 minutes more
 \end{steps}
 \end{recipe}
+
+\begin{densecard}{Quiche}{\preheat{\fahrenheit{350}}\totaltime{1 h 15 min}}
+\begin{densesteps}
+    \item Blind bake frozen crust 45 minutes (15 minutes at \fahrenheit{425} if not frozen)
+    \item Cook raw meats, saute vegetables that release moisture
+    \item Mix 3 eggs, 1 1/2 cup whole milk, salt, pepper (optionally heat to \celsius{50})
+    \item Fill and bake at \fahrenheit{350} until temperature reaches \celsius{75}, about 35 minutes
+\end{densesteps}
+\columnratio{0.333}
+\begin{paracol}{3}
+\ihead{Lorraine} pancetta onion gruyère paprika nutmeg
+
+\ihead{LASS} leek asparagus garlic smoked\ijoin{}salmon gruyère dill
+
+\ihead{Kinkku} smoked\ijoin{}ham bell\ijoin{}pepper onion emmental parsley
+
+\nextcolumn
+
+\ihead{Florentine} butter shallots spinach gruyère
+
+\ihead{Greek} ground\ijoin{}lamb onion garlic rosemary mint olives feta
+
+\ihead{Gallic} goat\ijoin{}cheese thyme lemon\ijoin{}zest scallions parsley
+
+\nextcolumn
+\ihead{BLB} bacon bell\ijoin{}pepper leek gruyère thyme
+
+\ihead{Vahvero} chanterelles red\ijoin{}onion garlic gouda chives
+
+\ihead{Dandy} mushroom onion garlic blanched\ijoin{}dandelion gruyère
+\end{paracol}
+\end{densecard}
 
 % ===========================
 % === New recipe template ===
