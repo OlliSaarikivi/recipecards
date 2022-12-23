@@ -1,6 +1,6 @@
 # Recipes Cards
 
-This is a collection of my often-used recipes that I want to have easily referencable in the kitchen.
+This is a collection of recipes that I want to have easily referencable in the kitchen.
 These are printable onto 3x5 inch index cards.
 This format has a few distinct advantages:
 
