@@ -19,6 +19,10 @@
 \usepackage[clock]{ifsym}
 \usepackage{cookingsymbols}
 \usepackage{xstring}
+\usepackage{xparse}
+
+\usepackage[absolute]{textpos}
+\textblockorigin{0pt}{\paperheight-0.18in}
 
 \hyphenation{slight-ly car-da-mom crush-ed}
 
@@ -79,32 +83,36 @@
 
 \setlength{\columnsep}{0.2in}
 
-\newenvironment{cardbase}[2]
+\newcommand{\macros}[5]{#1: #2 kcal, #3 g protein, #4 g carbs, #5 g fats}
+\newcommand{\macrosper}[5]{\macros{Per #1}{#2}{#3}{#4}{#5}}
+
+\NewDocumentEnvironment{cardbase}{omm}%[3][]
     {\clearpage
-    \StrSubstitute{#1}{ }{-}[\safeA]
+    \StrSubstitute{#2}{ }{-}[\safeA]
     \StrDel{\safeA}{,}[\safeB]
     \StrDel{\safeB}{'}[\safeC]
     \StrSubstitute{\safeC}{\&}{and}[\safe]
     \hypertarget{\safe}{}
     \begin{FlushLeft}
-    \textrm{{\large\hyperlink{\safe}{#1}}\hfill{\large\tabularnums{#2}}}
+    \textrm{{\large\hyperlink{\safe}{#2}}\hfill{\large\tabularnums{#3}}}
     \vspace{0.5em}}
-    {\end{FlushLeft}}
-\newenvironment{card}[2]
-    {\begin{cardbase}{#1}{#2}\\}
+    {\end{FlushLeft}
+    \begin{textblock*}{\paperwidth-0.1in}(0mm,0mm)\raggedleft  \footnotesize #1\end{textblock*}}
+\newenvironment{card}[3][]
+    {\begin{cardbase}[#1]{#2}{#3}\\}
     {\end{cardbase}}
-\newenvironment{densecard}[2]
+\newenvironment{densecard}[3][]
     {\small
-    \begin{card}{#1}{#2}}
+    \begin{card}[#1]{#2}{#3}}
     {\end{card}}
-\newenvironment{recipe}[2]
-    {\begin{cardbase}{#1}{#2}
+\newenvironment{recipe}[3][]
+    {\begin{cardbase}[#1]{#2}{#3}
     \columnratio{0.333}
     \begin{paracol}{2}}
     {\end{paracol}\end{cardbase}}
-\newenvironment{denserecipe}[2]
+\newenvironment{denserecipe}[3][]
     {\small
-    \begin{recipe}{#1}{#2}}
+    \begin{recipe}[#1]{#2}{#3}}
     {\end{recipe}}
 \newcommand{\nextcolumn}{\switchcolumn}
 \newenvironment{ingredients}
@@ -1333,9 +1341,9 @@ Replace fish sauce with 2 anchovy fillets.
 \begin{ingredients}
 3 lb chicken dark meat
 2 cups hearty red wine
-1/2 lb frozen pearl onions
 1/4 lb lardons
 1/2 lb mushrooms
+1/2 lb frozen pearl onions
 2 carrots, diced
 3 cloves garlic, crushed
 2 sprigs thyme
@@ -1349,7 +1357,7 @@ Replace fish sauce with 2 anchovy fillets.
     \item Marinate chicken in wine, at least 30 minutes
     \item Render lardons in dutch oven, set aside
     \item Dry chicken, brown in rendered fat, season with salt and pepper, set aside
-    \item Brown mushrooms and then carrots
+    \item Brown mushrooms, onions and carrots
     \item Add garlic for 1 minute
     \item Deglaze with wine
     \item Add lardons, thyme, bay leaves and stock
@@ -3031,7 +3039,7 @@ Serves 4
 \begin{denserecipe}{Cured Beef Carpaccio}{\totaltime{1 day + 5 h}}
 \begin{ingredients}
 500 g beef tenderloin
-1 tbsp salt
+2 tbsp kosher salt
 1 tsp black pepper
 1 tsp thyme
 1 tsp rosemary
@@ -3045,7 +3053,6 @@ Serves 10
 \item Remove excess spices from surface, re-wrap, and freeze for 5 hours
 \item Slice semi-frozen beef into very thin slices
 \end{steps}
-
 Serve with olive oil, flaky salt, black pepper, arugula, parmesan shavings, capers, and fresh thyme leaves.
 \end{denserecipe}
 
@@ -3304,7 +3311,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Protein Souffle Pancakes}{\totaltime{30 min}}
+\begin{denserecipe}[\macrosper{serving}{175}{20}{22}{6}]{Protein Souffle Pancakes}{\totaltime{30 min}}
 \begin{ingredients}
 2 eggs
 40 g fat-free milk
@@ -3314,7 +3321,7 @@ pinch of kosher salt
 1 tbsp whey
 1 tbsp casein
 1/4 tsp baking powder
-1 tbsp sugar
+2 tbsp sugar
 1/8 tsp cream of tartar
 \end{ingredients}
 \nextcolumn
@@ -3329,7 +3336,7 @@ Serves 2
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Italian Egg Bites}{\preheat{\fahrenheit{350}}\totaltime{30 min}}
+\begin{denserecipe}[\macrosper{serving (whites/eggs)}{125/255}{19/21}{4/3}{3/17}]{Italian Egg Bites}{\preheat{\fahrenheit{350}}\totaltime{30 min}}
 \begin{ingredients}
 300 g egg whites or 6~eggs
 50 g tomatoes, chopped
@@ -3347,6 +3354,121 @@ Serves 2
 \item Divide mixture into six muffin cases (3 inch)
 \item If using whole eggs, crack one into each case and whisk with a fork until mostly combined
 \item Bake at \fahrenheit{350} for 15 to 18 minutes
+\end{steps}
+\end{denserecipe}
+
+\begin{denserecipe}[\macrosper{serving}{583}{59}{40}{18}]{Butter Chicken}{\totaltime{30 min}}
+\begin{ingredients}
+400 g chicken thighs
+100 g fat free yogurt
+1 + 1 tsp oil
+1 large onion, diced
+4 cloves garlic, crushed
+2 tsp garam masala
+1 tsp turmeric
+1/2 tsp cayenne pepper
+salt and pepper
+400 g crushed tomatoes
+200 g evaporated milk
+2 wedges Laughing Cow
+\end{ingredients}
+\nextcolumn
+Serves 2
+\begin{steps}
+\item Remove skin and bones from chicken, cut into bite-size pieces, and mix with yogurt, garam masala, and a pinch of salt
+\item Brown chicken in 1 tsp oil on both side over high heat and remove from pan
+\item Saute onions with remaining spices in 1 tsp oil until starting to brown
+\item Add garlic and cook until fragrant
+\item Add tomatoes and simmer for 5 minutes
+\item Add milk, cheese and chicken
+\item Simmer until chicken is cooked for 5-7 minutes
+\end{steps}
+\end{denserecipe}
+
+\begin{denserecipe}{Esquites Salad}{\tag{V}\totaltime{20 min}}
+\begin{ingredients}
+2 tbsp oil
+4 ears fresh corn kernels
+salt
+50 g crumbled cotija
+1/2 cup scallions, green parts, sliced
+1/2 cup cilantro, chopped
+1 jalapeno, finely chopped
+1 clove garlic, minced
+2 tbsp mayonnaise
+1 tbsp lime juice
+chile powder, to taste
+\end{ingredients}
+\nextcolumn
+Serves 4
+\begin{steps}
+    \item Heat oil in large nonstick skillet on high heat until shimmering, add corn kernels and season with salt
+    \item Cook kernels until charred on one side, about 2 minutes, toss and continue until charred all over, about 10 minutes
+    \item Transfer corn to a large bowl
+    \item Add cheese, scallions, cilantro, jalapeno, garlic, mayonnaise, lime juice, and chile powder, and toss to combine
+    \item Season to taste with more salt and chile
+\end{steps}
+\end{denserecipe}
+
+\begin{recipe}{Broccoli Aligot}{\tag{V}\totaltime{30 min}}
+\begin{ingredients}
+5 to 6 cups broccoli, shaved dark green tops only (about 4 large heads)
+4 tbsp butter
+3/4 tsp kosher salt
+1 cup cream
+170 g low-moisture mozzarella, grated
+salt and pepper
+\end{ingredients}
+\nextcolumn
+Serves 4
+\begin{steps}
+    \item Shave dark green tops of florets (5-6 cups)
+    \item Cook broccoli and salt in butter over medium until softened, 6 to 8 minutes
+    \item Add cream and simmer for 5 minutes
+    \item Blend broccoli mixture until completely smooth, adding cream as needed
+    \item Add cheese in handfuls, stirring vigorously until integrated and stretchy
+    \item Season with more salt and pepper
+\end{steps}
+\end{recipe}
+
+\begin{recipe}{Peruvian Green Chile Sauce (Ají Verde)}{\totaltime{10 min}}
+\begin{ingredients}
+1/2 cup mayonnaise
+1 jalapeno, seeded
+3 tbsp minced cilantro
+2 tbsp grated cotija
+2 tbsp lime juice
+1 tbsp huacatay paste
+1 clove garlic
+\end{ingredients}
+\nextcolumn
+Makes 3/4 cup
+\begin{steps}
+    \item Combine all ingredients in blender
+    \item Process until smooth, about 1 minute
+\end{steps}
+Huacatay can be found jarred. If unavailable, increase the cilantro to 5 tbsp.
+\end{recipe}
+
+\begin{denserecipe}{Oven-to-Pan Velvet Chicken}{\preheat{\fahrenheit{275}}\totaltime{1 h 15 min}}
+\begin{ingredients}
+4 boneless, skinless chicken breasts
+2 tsp kosher salt
+2 tbsp butter, melted
+1 tbsp flour
+1 tsp cornstarch
+1/2 tsp ground black pepper
+1 tbsp vegetable oil
+\end{ingredients}
+\nextcolumn
+Serves 4
+\begin{steps}
+    \item Poke breasts with fork and sprinkle with salt.
+    \item Bake, covered with foil, skinned side down at \fahrenheit{275} until \celsius{60}, about 30 minutes.
+    \item Mix butter, flour, cornstarch, and pepper.
+    \item Pat dry, brush flat side with half of batter and brown in oil over high heat, 3 to 4 minutes.
+    \item Brush with remaining batter, flip and cook over medium until \celsius{68}, 3 to 4 minutes more.
+    \item Rest 5 minutes before serving.
 \end{steps}
 \end{denserecipe}
 
