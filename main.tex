@@ -88,6 +88,7 @@
 
 \NewDocumentEnvironment{cardbase}{omm}%[3][]
     {\clearpage
+    \begin{textblock*}{\paperwidth-0.1in}(0mm,0mm)\raggedleft  \footnotesize #1\end{textblock*}
     \StrSubstitute{#2}{ }{-}[\safeA]
     \StrDel{\safeA}{,}[\safeB]
     \StrDel{\safeB}{'}[\safeC]
@@ -96,8 +97,7 @@
     \begin{FlushLeft}
     \textrm{{\large\hyperlink{\safe}{#2}}\hfill{\large\tabularnums{#3}}}
     \vspace{0.5em}}
-    {\end{FlushLeft}
-    \begin{textblock*}{\paperwidth-0.1in}(0mm,0mm)\raggedleft  \footnotesize #1\end{textblock*}}
+    {\end{FlushLeft}}
 \newenvironment{card}[3][]
     {\begin{cardbase}[#1]{#2}{#3}\\}
     {\end{cardbase}}
