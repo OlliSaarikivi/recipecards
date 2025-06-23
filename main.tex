@@ -16,8 +16,7 @@
 \usepackage{hyperref}
 \usepackage{microtype}
 \usepackage{ragged2e}
-\usepackage[clock]{ifsym}
-\usepackage{cookingsymbols}
+\usepackage{ifsym}
 \usepackage{xstring}
 \usepackage{xparse}
 
@@ -135,9 +134,9 @@
 \newcommand{\fahrenheit}[1]{#1\textdegree{}F}
 
 \newcommand{\tag}[1]{\hspace{1em}#1}
-\newcommand{\symboltag}[2]{\tag{#1\hspace{0.4em}#2}}
-\newcommand{\totaltime}[1]{\symboltag{\raisebox{-0.1em}{\small\StopWatchEnd}}{#1}}
-\newcommand{\preheat}[1]{\symboltag{\Topbottomheat}{#1}}
+\newcommand{\symboltag}[2]{\tag{#1\hspace{0.3em}#2}}
+\newcommand{\totaltime}[1]{\symboltag{\raisebox{-0.09em}{\small\includegraphics[scale=0.07]{stopwatch.pdf}}}{#1}}
+\newcommand{\preheat}[1]{\symboltag{\raisebox{-0.09em}{\includegraphics[scale=0.09]{oven.pdf}}}{#1}}
 
 \newcommand{\ihead}[1]{\ful{#1}}
 \newcommand{\ijoin}{$\cdot{}$}
@@ -790,7 +789,7 @@ This is a variation on No-Knead Bread with additional folds and higher hydration
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Salmon Pate}{\fahrenheit{300}\totaltime{50 min}}
+\begin{denserecipe}{Salmon Pate}{\preheat{\fahrenheit{300}}\totaltime{50 min}}
 \begin{ingredients}
 1 lb salmon fillet
 zest of 1 lemon
