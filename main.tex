@@ -19,6 +19,7 @@
 \usepackage{ifsym}
 \usepackage{xstring}
 \usepackage{xparse}
+\usepackage{pgfkeys}
 
 \usepackage[absolute]{textpos}
 \textblockorigin{0pt}{\paperheight-0.18in}
@@ -87,7 +88,7 @@
 
 \NewDocumentEnvironment{cardbase}{omm}%[3][]
     {\clearpage
-    \begin{textblock*}{\paperwidth-0.1in}(0mm,0mm)\raggedleft  \footnotesize #1\end{textblock*}
+    \begin{textblock*}{\paperwidth-0.1in}(0mm,0mm)\raggedleft  \footnotesize \CategoryName{#1}\end{textblock*}
     \StrSubstitute{#2}{ }{-}[\safeA]
     \StrDel{\safeA}{,}[\safeB]
     \StrDel{\safeB}{'}[\safeC]
@@ -141,6 +142,68 @@
 \newcommand{\ihead}[1]{\ful{#1}}
 \newcommand{\ijoin}{$\cdot{}$}
 \newcommand{\lihead}[1]{\ihead{#1}\vspace{-0.4em}}
+
+% Recipe categories
+\pgfkeys{
+  /recipecat/appetizer/.initial = Appetizers,
+  /recipecat/dumpling/.initial = Appetizers,
+  /recipecat/joulu/.initial = Joulu,
+  /recipecat/drink/.initial = Drinks,
+  /recipecat/meal/.initial = Meals,
+  /recipecat/bowl/.initial = Meals,
+  /recipecat/pasta/.initial = Pasta \& Noodles,
+  /recipecat/noodle/.initial = Pasta \& Noodles,
+  /recipecat/soup/.initial = Soups \& Stews,
+  /recipecat/stew/.initial = Soups \& Stews,
+  /recipecat/beanstew/.initial = Soups \& Stews,
+  /recipecat/grainbowl/.initial = Porridges \& Grain Bowls,
+  /recipecat/porridge/.initial = Porridges \& Grain Bowls,
+  /recipecat/salad/.initial = Salads \& Cold Preparations,
+  /recipecat/salad_component/.initial = Salads \& Cold Preparations,
+  /recipecat/boundsalad/.initial = Salads \& Cold Preparations,
+  /recipecat/forcemeat/.initial = Salads \& Cold Preparations,
+  /recipecat/spread/.initial = Salads \& Cold Preparations,
+  /recipecat/bread/.initial = Breads \& Pancakes,
+  /recipecat/pancake/.initial = Breads \& Pancakes,
+  /recipecat/savory_pie/.initial = Casseroles \& Savory Pies,
+  /recipecat/casserole/.initial = Casseroles \& Savory Pies,
+  /recipecat/sandwich/.initial = Sandwiches \& Flatbreads,
+  /recipecat/flatbread/.initial = Sandwiches \& Flatbreads,
+  % Recipes for composed meals
+  /recipecat/meat_main/.initial = Meat \& Poultry Mains,
+  /recipecat/poultry_main/.initial = Meat \& Poultry Mains,
+  /recipecat/seafood_main/.initial = Pescatarian Mains,
+  /recipecat/tofu_main/.initial = Pescatarian Mains,
+  /recipecat/egg_main/.initial = Pescatarian Mains,
+  /recipecat/vegetable_main/.initial = Pescatarian Mains,
+  /recipecat/vegetable_side/.initial = Vegetables \& Sides,
+  /recipecat/legume_side/.initial = Vegetables \& Sides,
+  /recipecat/potato_side/.initial = Vegetables \& Sides,
+  /recipecat/grain_side/.initial = Vegetables \& Sides,
+  /recipecat/side/.initial = Vegetables \& Sides,
+  % Sweet Treats
+  /recipecat/pastry/.initial = Pâtisserie,
+  /recipecat/pie/.initial = Pâtisserie,
+  /recipecat/cake/.initial = Pâtisserie,
+  /recipecat/sweet_pancake/.initial = Pâtisserie,
+  /recipecat/batterbake/.initial = Pâtisserie,
+  /recipecat/sweet_bread/.initial = Pâtisserie,
+  /recipecat/dessert/.initial = Desserts,
+  % Components
+  /recipecat/sauce/.initial = Sauces \& Marinades,
+  /recipecat/marinade/.initial = Sauces \& Marinades,
+  /recipecat/dough/.initial = Doughs \& Batters,
+  /recipecat/batter/.initial = Doughs \& Batters,
+  /recipecat/component/.initial = Components,
+}
+
+\newcommand{\CategoryName}[1]{%
+  \if\relax\detokenize{#1}\relax % if empty argument
+    % do nothing
+  \else
+    \pgfkeysvalueof{/recipecat/#1}%
+  \fi
+}
 
 \begin{document}
 
@@ -284,7 +347,7 @@ sweet\ijoin{}chili
 \end{paracol}
 \end{densecard}
 
-\begin{recipe}{Banana Almond Pancakes}{\tag{V}\totaltime{20 min}}
+\begin{recipe}[pancake]{Banana Almond Pancakes}{\tag{V}\totaltime{20 min}}
 \begin{ingredients}
 1 banana
 2 eggs
@@ -304,7 +367,7 @@ Makes 4 large pancakes
 Substitute half of almond flour with protein powder for fluffier pancakes.
 \end{recipe}
 
-\begin{recipe}{Olive Potatoes}{\tag{V}\preheat{\celsius{225}}\totaltime{1 h}}
+\begin{recipe}[potato_side]{Olive Potatoes}{\tag{V}\preheat{\celsius{225}}\totaltime{1 h}}
 \begin{ingredients}
 1 kg new potatoes
 2 tbsp butter
@@ -328,7 +391,7 @@ Serves 6
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Piquant Cabbage Stew}{\totaltime{45 min}}
+\begin{recipe}[stew]{Piquant Cabbage Stew}{\totaltime{45 min}}
 \begin{ingredients}
 500 g white cabbage, shredded
 400 g ground beef
@@ -349,7 +412,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Lentil Soup, World's Best}{\tag{V}\totaltime{1 h}}
+\begin{denserecipe}[soup]{Lentil Soup, World's Best}{\tag{V}\totaltime{1 h}}
 \begin{ingredients}
 2 tbsp coconut oil
 1 large onion, diced
@@ -376,7 +439,7 @@ Serves 6
 Check for salt before serving.
 \end{denserecipe}
 
-\begin{denserecipe}{Pork Chile Verde}{\totaltime{1 h 15 min}}
+\begin{denserecipe}[stew]{Pork Chile Verde}{\totaltime{1 h 15 min}}
 \begin{ingredients}
 2 kg pork shoulder
 4 tomatillos, quartered
@@ -404,7 +467,7 @@ Serves 6 to 8
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Freeze \& Bake Chicken Pot Pies}{\preheat{\celsius{400}}\totaltime{1 h 30 min}}
+\begin{denserecipe}[savory_pie]{Freeze \& Bake Chicken Pot Pies}{\preheat{\celsius{400}}\totaltime{1 h 30 min}}
 \begin{ingredients}
 1/3 cup butter
 1 onion, diced
@@ -432,7 +495,7 @@ Makes 6 small pies
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Pulla}{\tag{V}\preheat{\celsius{220}}\totaltime{1h 15 min}}
+\begin{recipe}[sweet_bread]{Pulla}{\tag{V}\preheat{\celsius{220}}\totaltime{1h 15 min}}
 \begin{ingredients}
 5 dl whole milk, warm
 50 g fresh yeast or 15 g dry
@@ -455,7 +518,7 @@ Makes 6 small pies
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Genius Oatmeal}{\tag{V}\totaltime{25 min}}
+\begin{recipe}[porridge]{Genius Oatmeal}{\tag{V}\totaltime{25 min}}
 \begin{ingredients}
 2 cups water
 1/2 cup rolled oats
@@ -474,7 +537,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Chicken Thighs with Preserved Lemon}{\totaltime{50 min}}
+\begin{recipe}[poultry_main]{Chicken Thighs with Preserved Lemon}{\totaltime{50 min}}
 \begin{ingredients}
 1 tbsp olive oil
 8 bone-in chicken thighs
@@ -494,7 +557,7 @@ Serves 8
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Pannukakku}{\tag{V}\preheat{\celsius{200}}\totaltime{1 h 20 min}}
+\begin{recipe}[batterbake]{Pannukakku}{\tag{V}\preheat{\celsius{200}}\totaltime{1 h 20 min}}
 \begin{ingredients}
 4 dl flour
 1/2-1 dl sugar
@@ -517,7 +580,7 @@ Serves 6 to 8
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Bilberry Oat Pie}{\tag{V}\preheat{\celsius{175}}\totaltime{1 h}}
+\begin{denserecipe}[pie]{Bilberry Oat Pie}{\tag{V}\preheat{\celsius{175}}\totaltime{1 h}}
 \begin{ingredients}
 100 g butter
 3/4 dl sugar
@@ -543,7 +606,7 @@ Serves 8
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Spiced Berry Pie}{\tag{V}\preheat{\celsius{200}}\totaltime{1 h}}
+\begin{denserecipe}[pie]{Spiced Berry Pie}{\tag{V}\preheat{\celsius{200}}\totaltime{1 h}}
 \begin{ingredients}
 100 g butter
 1 + 1/2 dl sugar
@@ -571,7 +634,7 @@ Serves 8
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Healthy Turkey Chili}{\preheat{\celsius{160}\totaltime{2 h}}}
+\begin{denserecipe}[stew]{Healthy Turkey Chili}{\preheat{\celsius{160}\totaltime{2 h}}}
 \begin{ingredients}
 1 yellow onion, chopped
 1 red bell pepper, chopped
@@ -599,7 +662,7 @@ Serves 6
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Classic Chicken Salad}{\totaltime{2 h}}
+\begin{denserecipe}[boundsalad]{Classic Chicken Salad}{\totaltime{2 h}}
 \begin{ingredients}
 1 3/4 lb chicken breasts
 salt and black pepper
@@ -629,7 +692,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Crepes}{\totaltime{15 min}}
+\begin{recipe}[pancake]{Crepes}{\totaltime{15 min}}
 \begin{ingredients}
 1 large eggs
 5/8 cups whole milk
@@ -649,7 +712,7 @@ Makes 4 to 6 large crepes
 Fill sweet crepes with sugar and lemon juice, or whipped cream and berries; savory crepes with mushrooms and ricotta, or ham, cheese and fried eggs.
 \end{recipe}
 
-\begin{denserecipe}{Pressure Cooker Miso Risotto}{\tag{VG}\totaltime{25 min}}
+\begin{denserecipe}[porridge]{Pressure Cooker Miso Risotto}{\tag{VG}\totaltime{25 min}}
 \begin{ingredients}
 6 tbsp olive oil
 1 shallot, minced
@@ -677,7 +740,7 @@ Serves 4 to 6
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Oatmeal Pannukakku}{\tag{V}\preheat{\celsius{200}}\totaltime{35 min}}
+\begin{recipe}[batterbake]{Oatmeal Pannukakku}{\tag{V}\preheat{\celsius{200}}\totaltime{35 min}}
 \begin{ingredients}
 2 dl oatmeal
 2 dl milk
@@ -700,7 +763,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Healthy Imam Bayildi}{\tag{VG}\preheat{\celsius{190}}\totaltime{1 h 20 min}}
+\begin{denserecipe}[vegetable_side]{Healthy Imam Bayildi}{\tag{VG}\preheat{\celsius{190}}\totaltime{1 h 20 min}}
 \begin{ingredients}
 2 large globe eggplants
 2 tbsp olive oil
@@ -729,7 +792,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Pesto}{\tag{V}\totaltime{10 min}}
+\begin{recipe}[sauce]{Pesto}{\tag{V}\totaltime{10 min}}
 \begin{ingredients}
 60 g basil leaves 
 1/2 tsp kosher salt
@@ -749,7 +812,7 @@ zest of 1/2 lemon
 Omit lemon juice if using Pecorino Romano.
 \end{recipe}
 
-\begin{denserecipe}{No-Knead Bread}{\tag{VG}\preheat{\celsius{260}}\totaltime{14 h}}
+\begin{denserecipe}[bread]{No-Knead Bread}{\tag{VG}\preheat{\celsius{260}}\totaltime{14 h}}
 \begin{ingredients}
 400 g bread flour
 8 g salt (2 tsp kosher)
@@ -770,7 +833,7 @@ Omit lemon juice if using Pecorino Romano.
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Low-Knead Bread}{\tag{VG}\totaltime{14 h to 3 days}}
+\begin{denserecipe}[bread]{Low-Knead Bread}{\tag{VG}\totaltime{14 h to 3 days}}
 \begin{ingredients}
 400 g bread flour
 8 g salt (2 tsp kosher)
@@ -789,7 +852,7 @@ This is a variation on No-Knead Bread with additional folds and higher hydration
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Salmon Pate}{\preheat{\celsius{150}}\totaltime{50 min}}
+\begin{denserecipe}[forcemeat]{Salmon Pate}{\preheat{\celsius{150}}\totaltime{50 min}}
 \begin{ingredients}
 1 lb salmon fillet
 zest of 1 lemon
@@ -817,7 +880,7 @@ Good herbs: tarragon, parsley, dill and chives.
 Use as filling for sandwiches, cream puffs or crepes. 
 \end{denserecipe}
 
-\begin{densecard}{Rich Salad Dressings}{\tag{V}\totaltime{10 min}}
+\begin{densecard}[sauce]{Rich Salad Dressings}{\tag{V}\totaltime{10 min}}
 \begin{tabularx}{\textwidth}{@{}XXXXX@{}}
 \toprule
 Base & Aromatics & Sweetness & Acid & Oil \\
@@ -868,7 +931,7 @@ Omit with fatty base
 \end{steps}
 \end{densecard}
 
-\begin{recipe}{Fruit Posset}{\tag{V}\totaltime{4 h 45 min}}
+\begin{recipe}[dessert]{Fruit Posset}{\tag{V}\totaltime{4 h 45 min}}
 \begin{ingredients}
 \ihead{Puree}
 2 cups diced fruit
@@ -894,7 +957,7 @@ Serves 4. Great with berries or stone fruit.
 \end{steps}
 \end{recipe}
 
-\begin{densecard}{Quick Pastas}{\totaltime{20 min}}
+\begin{densecard}[pasta]{Quick Pastas}{\totaltime{20 min}}
 \begin{steps}
     \item Cook sauce ingredients in proper order and boil pasta just short of al dente
     \item Toss pasta in sauce, adding pasta water as necessary, plate and garnish
@@ -923,7 +986,7 @@ Serves 4. Great with berries or stone fruit.
 \end{paracol}
 \end{densecard}
 
-\begin{recipe}{Lighter Fettucine Alfredo}{\tag{V}\totaltime{30 min}}
+\begin{recipe}[pasta]{Lighter Fettucine Alfredo}{\tag{V}\totaltime{30 min}}
 \begin{ingredients}
 140 g parmesan
 2 tbsp heavy cream
@@ -948,7 +1011,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Tangzhong Pain de Mie}{\tag{V}\preheat{\celsius{180}}\totaltime{3h 30 min}}
+\begin{recipe}[bread]{Tangzhong Pain de Mie}{\tag{V}\preheat{\celsius{180}}\totaltime{3h 30 min}}
 \begin{ingredients}
 \ihead{Tangzhong}
 30 g flour
@@ -974,7 +1037,7 @@ Makes one 13"x4"x4" Pullman loaf.
 \end{steps}
 \end{recipe}
 
-\begin{densecard}{Noodles in Pan Fried Sauce}{\totaltime{20 min}}
+\begin{densecard}[noodle]{Noodles in Pan Fried Sauce}{\totaltime{20 min}}
 \begin{steps}
     \item Stir fry and simmer ingredients in order, leaving garnishes for plating
     \item Meanwhile, boil noodles and then toss with the sauce, plate and garnish
@@ -996,7 +1059,7 @@ sichuan\ijoin{}pepper
 \end{paracol}
 \end{densecard}
 
-\begin{denserecipe}{Creamy Vegan Tomato Soup}{\tag{VG}\totaltime{20 min}}
+\begin{denserecipe}[soup]{Creamy Vegan Tomato Soup}{\tag{VG}\totaltime{20 min}}
 \begin{ingredients}
 1 tbsp olive oil
 1 cloves of garlic, grated
@@ -1020,7 +1083,7 @@ Serves 2 to 3
 Garnish with herbs and more olive oil.
 \end{denserecipe}
 
-\begin{recipe}{Pressure Cooker Rice and Beans}{\tag{VG}\totaltime{30 min}}
+\begin{recipe}[grain_side]{Pressure Cooker Rice and Beans}{\tag{VG}\totaltime{30 min}}
 \begin{ingredients}
 2 tbsp oil
 1 onion, chopped
@@ -1039,7 +1102,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Quick Chicken Couscous}{\totaltime{20 min}}
+\begin{denserecipe}[grainbowl]{Quick Chicken Couscous}{\totaltime{20 min}}
 \begin{ingredients}
 1 1/4 cups couscous
 1/2 tsp kosher salt
@@ -1068,7 +1131,7 @@ Serves 2
 Garnish with crumbled feta or yoghurt sauce.
 \end{denserecipe}
 
-\begin{recipe}{Cream Biscuits}{\tag{V}\preheat{\celsius{200}}\totaltime{25 min}}
+\begin{recipe}[bread]{Cream Biscuits}{\tag{V}\preheat{\celsius{200}}\totaltime{25 min}}
 \begin{ingredients}
 2 dl flour
 2 tsp baking powder
@@ -1088,7 +1151,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Sausage Gravy}{\totaltime{20 min}}
+\begin{recipe}[meat_main]{Sausage Gravy}{\totaltime{20 min}}
 \begin{ingredients}
 1 lb breakfast sausage
   or
@@ -1111,7 +1174,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{densecard}{Broiled Sandwiches}{\totaltime{15 min}}
+\begin{densecard}[sandwich]{Broiled Sandwiches}{\totaltime{15 min}}
 \begin{steps}
     \item Assemble onto sliced bread from ingredients in order
     \item Cook under broiler until cheese melts, but before edges burn
@@ -1138,7 +1201,7 @@ Serves 4
 \end{paracol}
 \end{densecard}
 
-\begin{recipe}{Hollandaise Sauce}{\tag{V}\totaltime{10 min}}
+\begin{recipe}[sauce]{Hollandaise Sauce}{\tag{V}\totaltime{10 min}}
 \begin{ingredients}
 2 egg yolks
 1 tbsp lemon juice
@@ -1157,7 +1220,7 @@ Serves 2-3
 Keep the sauce warm in the double boiler, whisking occasionally, until ready to use.
 \end{recipe}
 
-\begin{recipe}{Simple Pie Crust}{\tag{V}\totaltime{1 h 15 min}}
+\begin{recipe}[dough]{Simple Pie Crust}{\tag{V}\totaltime{1 h 15 min}}
 \begin{ingredients}
 150 g flour
 1/4 tsp salt
@@ -1175,7 +1238,7 @@ Makes enough for one 9-inch pie
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Heirloom Tomato Tart}{\tag{V}\preheat{\celsius{190}}\totaltime{1 h 30 min}}
+\begin{denserecipe}[savory_pie]{Heirloom Tomato Tart}{\tag{V}\preheat{\celsius{190}}\totaltime{1 h 30 min}}
 \begin{ingredients}
 simple pie crust
 500 g ripe heirloom tomatoes
@@ -1200,7 +1263,7 @@ Serves 4 to 6
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Miso-Sesame Vinaigrette}{\tag{VG}\preheat{\celsius{180}}\totaltime{10 min}}
+\begin{recipe}[sauce]{Miso-Sesame Vinaigrette}{\tag{VG}\preheat{\celsius{180}}\totaltime{10 min}}
 \begin{ingredients}
 2 tbsp sesame seeds
 2 cloves garlic, smashed
@@ -1224,7 +1287,7 @@ Makes about 1 1/2 cups of dressing
 Can be stored in refrigerator for 3 weeks.
 \end{recipe}
 
-\begin{recipe}{Lemony Asparagus Soup}{\tag{V}\totaltime{15 min}}
+\begin{recipe}[soup]{Lemony Asparagus Soup}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 1 bunch asparagus, chopped
 2 shallots, chopped
@@ -1248,7 +1311,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Peaches in Muscat}{\tag{VG}\totaltime{2 h}}
+\begin{recipe}[dessert]{Peaches in Muscat}{\tag{VG}\totaltime{2 h}}
 \begin{ingredients}
 4 ripe peaches
 1/2 cup sweet Muscat
@@ -1264,7 +1327,7 @@ If peaches are hard to peel, loosen skins in boiling water.
 Serve alone or with whipped cream or ice cream.
 \end{recipe}
 
-\begin{recipe}{Braised Peppers and Onions}{\tag{VG}\totaltime{40 min}}
+\begin{recipe}[vegetable_side]{Braised Peppers and Onions}{\tag{VG}\totaltime{40 min}}
 \begin{ingredients}
 2 tbsp oil
 3 large bell peppers
@@ -1284,7 +1347,7 @@ Serves 4--6 as a side
 Lower heat if necessary to prevent browning.
 \end{recipe}
 
-\begin{recipe}{Potato-Leek Soup}{\tag{V}\totaltime{45 min}}
+\begin{recipe}[soup]{Potato-Leek Soup}{\tag{V}\totaltime{45 min}}
 \begin{ingredients}
 2 tbsp unsalted butter
 2 large leeks
@@ -1308,7 +1371,7 @@ Serves 6
 Serve with sliced chives or scallions.
 \end{recipe}
 
-\begin{recipe}{Green Goddess Dressing}{\totaltime{15 min}}
+\begin{recipe}[sauce]{Green Goddess Dressing}{\totaltime{15 min}}
 \begin{ingredients}
 1 cup parsley
 1 cup spinach
@@ -1336,7 +1399,7 @@ Best when fresh, but will keep a couple of days in refrigerator.
 Replace fish sauce with 2 anchovy fillets.
 \end{recipe}
 
-\begin{denserecipe}{Coq au Vin}{\preheat{\celsius{180}}\totaltime{2 h 30 min}}
+\begin{denserecipe}[meat_main]{Coq au Vin}{\preheat{\celsius{180}}\totaltime{2 h 30 min}}
 \begin{ingredients}
 3 lb chicken dark meat
 2 cups hearty red wine
@@ -1367,7 +1430,7 @@ Replace fish sauce with 2 anchovy fillets.
 \end{steps}
 \end{denserecipe}
 
-\begin{densecard}{Quiche}{\preheat{\celsius{180}}\totaltime{1 h 15 min}}
+\begin{densecard}[savory_pie]{Quiche}{\preheat{\celsius{180}}\totaltime{1 h 15 min}}
 \begin{densesteps}
     \item Blind bake frozen crust 45 minutes (15 minutes at \celsius{220} if not frozen)
     \item Cook raw meats, saute vegetables that release moisture
@@ -1399,7 +1462,7 @@ Replace fish sauce with 2 anchovy fillets.
 \end{paracol}
 \end{densecard}
 
-\begin{denserecipe}{French Macaroni Casserole}{\totaltime{30 minutes}}
+\begin{denserecipe}[casserole]{French Macaroni Casserole}{\totaltime{30 minutes}}
 \begin{ingredients}
 3 cups mornay sauce
 1 1/2 cups macaroni
@@ -1428,7 +1491,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Mornay Sauce}{\totaltime{10 min}}
+\begin{recipe}[sauce]{Mornay Sauce}{\totaltime{10 min}}
 \begin{ingredients}
 3 tbsp butter
 1/4 cup flour
@@ -1451,7 +1514,7 @@ Yields 3 cups
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Mediterranean Roast Cauliflower}{\tag{V}\preheat{\celsius{260}}\totaltime{40 min}}
+\begin{recipe}[vegetable_side]{Mediterranean Roast Cauliflower}{\tag{V}\preheat{\celsius{260}}\totaltime{40 min}}
 \begin{ingredients}
 1 cauliflower
 3+3 tbsp olive oil
@@ -1474,7 +1537,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Lamb Shank Tagine}{\preheat{\celsius{180}}\totaltime{3 h}}
+\begin{denserecipe}[meat_main]{Lamb Shank Tagine}{\preheat{\celsius{180}}\totaltime{3 h}}
 \begin{ingredients}
 4 lamb shanks
 1 tsp each cumin, cinnamon, coriander, garlic
@@ -1501,7 +1564,7 @@ Serves 4 generously
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Snap Pea-Chicken Salad}{\totaltime{40 min}}
+\begin{recipe}[salad]{Snap Pea-Chicken Salad}{\totaltime{40 min}}
 \begin{ingredients}
 1 boneless, skinless chicken breast
 1 lb sugar snap peas
@@ -1518,7 +1581,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Poached Chicken Breast}{\totaltime{1 h 15 min}}
+\begin{recipe}[meat_main]{Poached Chicken Breast}{\totaltime{1 h 15 min}}
 \begin{ingredients}
 2 l cold water
 15 g salt
@@ -1535,7 +1598,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Big Pot of Beans}{\preheat{\celsius{120}}\totaltime{7 h}}
+\begin{denserecipe}[beanstew]{Big Pot of Beans}{\preheat{\celsius{120}}\totaltime{7 h}}
 \begin{ingredients}
 1 lb dried beans
 salt, olive oil
@@ -1560,7 +1623,7 @@ Serves 8
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Pressure Cooker Black Beans}{\totaltime{60 min}}
+\begin{recipe}[beanstew]{Pressure Cooker Black Beans}{\totaltime{60 min}}
 \begin{ingredients}
 1 tbsp oil
 2-3 chorizos or other cured sausages, chopped
@@ -1585,7 +1648,7 @@ Serves 8
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Soy Reduction}{\totaltime{2 h}}
+\begin{recipe}[sauce]{Soy Reduction}{\totaltime{2 h}}
 \begin{ingredients}
 3 dl tamari
 3 dl cheap sake
@@ -1606,7 +1669,7 @@ Serves 8
 Steep aromatics again for pickling eggs.
 \end{recipe}
 
-\begin{recipe}{Salmon Poke Bowl}{\totaltime{20 min}}
+\begin{recipe}[seafood_main]{Salmon Poke}{\totaltime{20 min}}
 \begin{ingredients}
 1 lime, zest and juice
 1/2 inch ginger, grated
@@ -1631,7 +1694,7 @@ Serves 4
 Serve over rice drizzled with Soy Reduction
 \end{recipe}
 
-\begin{recipe}{Carrot Salad}{\tag{V}\totaltime{15 min}}
+\begin{recipe}[salad]{Carrot Salad}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 1 cup pineapple or orange pieces
 1/2 cup golden raisins
@@ -1651,7 +1714,7 @@ Serves 4
 Ideally refrigerate for 1 hour before serving.
 \end{recipe}
 
-\begin{denserecipe}{Thanksgiving Dressing}{\preheat{\celsius{120}}\totaltime{2 h 45 min}}
+\begin{denserecipe}[side]{Thanksgiving Dressing}{\preheat{\celsius{120}}\totaltime{2 h 45 min}}
 \begin{ingredients}
 3/4 cup unsalted butter
 1 lb day-old white bread
@@ -1679,7 +1742,7 @@ Serves 8
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Paneer on Tomato}{\tag{V}\totaltime{15 min}}
+\begin{recipe}[appetizer]{Paneer on Tomato}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 2 ripe tomatoes
 salt and pepper
@@ -1700,7 +1763,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Spicy Corn Salad}{\tag{V}\totaltime{15 min}}
+\begin{denserecipe}[salad]{Spicy Corn Salad}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 2+1 tbsp olive oil
 2 tbsp lime juice
@@ -1725,7 +1788,7 @@ Serves 4
 Garnish with more cilantro.
 \end{denserecipe}
 
-\begin{recipe}{Orange and Radish Salad}{\tag{VG}\totaltime{15 min}}
+\begin{recipe}[salad]{Orange and Radish Salad}{\tag{VG}\totaltime{15 min}}
 \begin{ingredients}
 1/3 cup lemon juice (about 2 lemons)
 2 tbsp sugar
@@ -1746,7 +1809,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{French Lentils}{\tag{VG}\totaltime{40 min}}
+\begin{recipe}[legume_side]{French Lentils}{\tag{VG}\totaltime{40 min}}
 \begin{ingredients}
 3 tbsp olive oil
 1 onion, finely diced
@@ -1768,7 +1831,7 @@ Serves 6
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Gullichsenin Letut}{\tag{V}\totaltime{1 h 10 min}}
+\begin{recipe}[pancake]{Gullichsenin Letut}{\tag{V}\totaltime{1 h 10 min}}
 \begin{ingredients}
 4 dl flour
 1 tsp baking powder
@@ -1791,7 +1854,7 @@ Serves 6
 Serve with: manchego and berries / gouda and fig jam / sour cream and lemon curd / sugar and lemon juice
 \end{recipe}
 
-\begin{recipe}{Harissa and Hot Brown Butter}{\totaltime{60 min}}
+\begin{recipe}[porridge]{Harissa and Hot Brown Butter}{\totaltime{60 min}}
 \begin{ingredients}
 4 cups chicken stock
 1 lb chicken thighs or lamb stew meat, de-skinned and boned
@@ -1814,7 +1877,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Spiced Fruit Torte}{\tag{V}\preheat{\celsius{180}}\totaltime{1 h 15 min}}
+\begin{denserecipe}[cake]{Spiced Fruit Torte}{\tag{V}\preheat{\celsius{180}}\totaltime{1 h 15 min}}
 \begin{ingredients}
 1/2 cup salted butter
 3/4 to 1 cup sugar
@@ -1843,7 +1906,7 @@ Serves 8
 \end{description}
 \end{denserecipe}
 
-\begin{recipe}{Natasha}{\totaltime{5 min}}
+\begin{recipe}[drink]{Natasha}{\totaltime{5 min}}
 \begin{ingredients}
 3 cl seabuckthorn liquour
 2 cl raspberry infused mezcal
@@ -1859,7 +1922,7 @@ Serves 1
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Creamed Spinach}{\tag{V}\totaltime{2 h}}
+\begin{recipe}[vegetable_side]{Creamed Spinach}{\tag{V}\totaltime{2 h}}
 \begin{ingredients}
 3 tbsp butter
 2 shallots, minced
@@ -1885,7 +1948,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Caramelized Onion, Gruyere, Tomato Tart}{\preheat{\celsius{180}}\totaltime{1 h}}
+\begin{recipe}[savory_pie]{Caramelized Onion, Gruyere, Tomato Tart}{\preheat{\celsius{180}}\totaltime{1 h}}
 \begin{ingredients}
 1 vodka pie dough
 2 lb onions, caramelized
@@ -1903,7 +1966,7 @@ Serves 6 to 8
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Vodka Pie Dough}{\totaltime{1 h}}
+\begin{recipe}[dough]{Vodka Pie Dough}{\totaltime{1 h}}
 \begin{ingredients}
 2 1/2 cups  flour
 1 tsp table salt
@@ -1924,7 +1987,7 @@ Fills two 11-inch tart pans
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Reverse Seared Steak}{\preheat{\celsius{120}}\totaltime{50 min}}
+\begin{recipe}[meat_main]{Reverse Seared Steak}{\preheat{\celsius{120}}\totaltime{50 min}}
 \begin{ingredients}
 1 thick steak
 salt and pepper
@@ -1943,7 +2006,7 @@ Serves 1
 Temperature out of oven: \celsius{35} for 1.25", \celsius{38} for 1.5", \celsius{42} for 1.75", \celsius{45} for 2"
 \end{recipe}
 
-\begin{recipe}{Sabudana Khichdi}{\tag{V}\totaltime{4 h 15 min}}
+\begin{recipe}[grainbowl]{Sabudana Khichdi}{\tag{V}\totaltime{4 h 15 min}}
 \begin{ingredients}
 1 cup tapioca pearls, rinsed (sabudana)
 1/4 cup peanuts
@@ -1966,7 +2029,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Egg Salad for Tea Sandwiches}{\tag{V}\totaltime{15 min}}
+\begin{recipe}[boundsalad]{Egg Salad for Tea Sandwiches}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 2 hard boiled eggs
 1 tbsp mayonnaise
@@ -1988,7 +2051,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Choux Pastry}{\tag{V}\preheat{\celsius{200}}\totaltime{20 min}}
+\begin{denserecipe}[dough]{Choux Pastry}{\tag{V}\preheat{\celsius{200}}\totaltime{20 min}}
 \begin{ingredients}
 1 cup (235 g) water or milk
 6 tbsp (85 g) unsalted butter, diced
@@ -2012,7 +2075,7 @@ Makes 18 puffs
 Can wait for 2 hours in piping bag before baking.
 \end{denserecipe}
 
-\begin{denserecipe}{Egg and Tomato}{\tag{V}\totaltime{15 min}}
+\begin{denserecipe}[egg_main]{Egg and Tomato}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 4 eggs
 1/2 tsp kosher salt
@@ -2039,7 +2102,7 @@ Serves 2
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Reliable Carbonara}{\totaltime{30 min}}
+\begin{recipe}[pasta]{Reliable Carbonara}{\totaltime{30 min}}
 \begin{ingredients}
 2 eggs + 2 yolks
 1/2 cup grated parmesan and pecorino
@@ -2060,7 +2123,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Convection Tortilla Pizza}{\preheat{\celsius{200}}\totaltime{15 min}}
+\begin{recipe}[flatbread]{Convection Tortilla Pizza}{\preheat{\celsius{200}}\totaltime{15 min}}
 \begin{ingredients}
 1 flour tortilla
 4 tbsp pizza sauce
@@ -2081,7 +2144,7 @@ Serves 1
 \end{steps}
 \end{recipe}
 
-\begin{densecard}{Potato Salads}{\totaltime{40 min}}
+\begin{densecard}[boundsalad]{Potato Salads}{\totaltime{40 min}}
 \begin{densesteps}
     \item Bring to boil 1 1/2 lb cut up potatoes, 1 tbsp salt, 1/2 tbsp vinegar and 3 cups tepid water in saucepan and cook until fully tender, about 17 minutes
     \item Drain and toss with 1 tbsp vinegar; spread out and cool for 10 minutes
@@ -2127,7 +2190,7 @@ Serves 1
 \end{paracol}
 \end{densecard}
 
-\begin{recipe}{Extra-Light and Foamy Eggnog}{\tag{V}\totaltime{15 min}}
+\begin{recipe}[joulu]{Extra-Light and Foamy Eggnog}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 4 eggs, separated
 70 g sugar
@@ -2149,7 +2212,7 @@ For more complexity, age in refrigerator for up to a year and blend with a fresh
 \end{recipe}
 
 % To be seen if this is solid enough to withstand baking
-\begin{recipe}{Figgy Christmas Star Filling}{\tag{VG}\totaltime{30 min}}
+\begin{recipe}[joulu]{Figgy Christmas Star Filling}{\tag{VG}\totaltime{30 min}}
 \begin{ingredients}
 200 g dried figs, roughly chopped
 3 dl water
@@ -2170,7 +2233,7 @@ Makes 2 cups
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Gin Graved Salmon}{\totaltime{1 day}}
+\begin{recipe}[joulu]{Gin Graved Salmon}{\totaltime{1 day}}
 \begin{ingredients}
 800 g salmon fillet, deboned
 1/4 dl gin
@@ -2190,7 +2253,7 @@ Serves 12
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Rice Porridge}{\tag{V}\totaltime{45 min}}
+\begin{recipe}[joulu]{Rice Porridge}{\tag{V}\totaltime{45 min}}
 \begin{ingredients}
 1 1/2 dl short grain rice
 8 dl whole milk
@@ -2206,7 +2269,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Dried Fruit Soup}{\tag{VG}\totaltime{20 min}}
+\begin{recipe}[joulu]{Dried Fruit Soup}{\tag{VG}\totaltime{20 min}}
 \begin{ingredients}
 250 g dried fruits, such as raisins or apricots
 7 dl water
@@ -2226,7 +2289,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Potato Flat Bread}{\tag{V}\preheat{\celsius{260}}\totaltime{30 min}}
+\begin{recipe}[bread]{Potato Flat Bread}{\tag{V}\preheat{\celsius{260}}\totaltime{30 min}}
 \begin{ingredients}
 3 dl potato puree
 1 1/2 tsp kosher salt
@@ -2244,7 +2307,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Rutabaga Casserole}{\tag{V}\preheat{\celsius{180}}\totaltime{2 h 40 min}}
+\begin{denserecipe}[joulu]{Rutabaga Casserole}{\tag{V}\preheat{\celsius{180}}\totaltime{2 h 40 min}}
 \begin{ingredients}
 1 kg rutabagas, peeled and roughly diced
 2 dl heavy cream
@@ -2268,7 +2331,7 @@ Serves 8
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Creamy Mushroom Salad}{\tag{V}\totaltime{1 h}}
+\begin{recipe}[joulu]{Creamy Mushroom Salad}{\tag{V}\totaltime{1 h}} % joulu
 \begin{ingredients}
 1 lb mixed mushrooms, finely diced
 1 shallot, minced
@@ -2290,7 +2353,7 @@ Serves 8
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Coastal Bread}{\tag{V}\preheat{\celsius{180}}\totaltime{4 h}}
+\begin{denserecipe}[joulu]{Coastal Bread}{\tag{V}\preheat{\celsius{180}}\totaltime{4 h}}
 \begin{ingredients}
 25 g instant yeast, about 3 tbsp
 3 dl beer malts
@@ -2316,7 +2379,7 @@ Makes enough for 3 pans of 1 1/2 liters each
 Coastal bread is at its best after 1 to 2 days.
 \end{denserecipe}
 
-\begin{recipe}{Tart Panna Cotta}{\tag{V}\totaltime{4 h 20 min}}
+\begin{recipe}[dessert]{Tart Panna Cotta}{\tag{V}\totaltime{4 h 20 min}}
 \begin{ingredients}
 1/2 envelope gelatin, just over 1 tsp
 3 tbsp water
@@ -2340,7 +2403,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Fast Caramelized Onions}{\tag{VG}\totaltime{30 min}}
+\begin{recipe}[component]{Fast Caramelized Onions}{\tag{VG}\totaltime{30 min}}
 \begin{ingredients}
 3 lb onions, sliced through root
 3/4 cup water
@@ -2358,7 +2421,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Champagne Sabayon}{\tag{V}\totaltime{15 min}}
+\begin{recipe}[dessert]{Champagne Sabayon}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 3 yolks
 75 g sugar
@@ -2378,7 +2441,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Pomegranate Brussels Sprouts}{\tag{VG}\preheat{\celsius{220}}\totaltime{30 min}}
+\begin{recipe}[vegetable_side]{Pomegranate Brussels Sprouts}{\tag{VG}\preheat{\celsius{220}}\totaltime{30 min}}
 \begin{ingredients}
 1.5 lb brussels sprouts, halved
 3 tbsp olive oil
@@ -2400,7 +2463,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Glögi Syrup}{\tag{VG}\totaltime{40 min}}
+\begin{recipe}[joulu]{Glögi Syrup}{\tag{VG}\totaltime{40 min}}
 \begin{ingredients}
 1 cup water
 2 cups sugar
@@ -2423,7 +2486,7 @@ Will keep in refrigerator for up to 6 months.
 Other spices to try: nutmeg vanilla allspice pink\ijoin{}peppercorns bay\ijoin{}leaves juniper\ijoin{}berries
 \end{recipe}
 
-\begin{recipe}{Piimäjuusto}{\tag{V}\totaltime{7 hours}}
+\begin{recipe}[joulu]{Piimäjuusto}{\tag{V}\totaltime{7 hours}}
 \begin{ingredients}
 1 1/2 l whole milk
 1/2 l piimä or kefir
@@ -2443,7 +2506,7 @@ Other spices to try: nutmeg vanilla allspice pink\ijoin{}peppercorns bay\ijoin{}
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{All-Purpose Enriched Dough}{\tag{V}\totaltime{7 h}}
+\begin{denserecipe}[bread]{All-Purpose Enriched Dough}{\tag{V}\totaltime{7 h}}
 \begin{ingredients}
 250 g whole milk
 50 + 500 g flour
@@ -2465,7 +2528,7 @@ Makes enough for 2 loaves
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Hamburger Buns}{\tag{V}\preheat{\celsius{180}}\totaltime{2 h 30 min}}
+\begin{denserecipe}[bread]{Hamburger Buns}{\tag{V}\preheat{\celsius{180}}\totaltime{2 h 30 min}}
 \begin{ingredients}
 1 batch All-Purpose Enriched Dough, chilled
 1 egg, beaten
@@ -2483,7 +2546,7 @@ Makes 10 buns
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Twice-Seared Pork Medallions}{\totaltime{30 min}}
+\begin{denserecipe}[meat_main]{Twice-Seared Pork Medallions}{\totaltime{30 min}}
 \begin{ingredients}
 1 lb pork tenderloin
 salt and pepper
@@ -2509,7 +2572,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Lentil and Sausage Stew}{\totaltime{1 h 30 min}}
+\begin{denserecipe}[stew]{Lentil and Sausage Stew}{\totaltime{1 h 30 min}}
 \begin{ingredients}
 2 tbsp olive oil
 1 lb sausages, sliced
@@ -2538,7 +2601,7 @@ Serves 6
 Garnish with grated pecorino or parmesan.
 \end{denserecipe}
 
-\begin{denserecipe}{Mushroom Strogaonoff}{\tag{V}\totaltime{30 min}}
+\begin{denserecipe}[vegetable_main]{Mushroom Strogaonoff}{\tag{V}\totaltime{30 min}}
 \begin{ingredients}
 1 onion, finely diced
 1 1/2 lb mixed mushrooms, sliced
@@ -2566,7 +2629,7 @@ Serves 4
 Garnish with paprika and chopped parsley.
 \end{denserecipe}
 
-\begin{densecard}{Egg en Cocotte}{\preheat{\celsius{180}}\totaltime{30 min}}
+\begin{densecard}[egg_main]{Egg en Cocotte}{\preheat{\celsius{180}}\totaltime{30 min}}
 \begin{densesteps}
     \item Grease ramekin, spoon in filling, crack in egg, drizzle with 2 tsp cream, season with salt and pepper
     \item Bake at \celsius{180} in boiling water bath until whites are just set, 15 minutes
@@ -2615,7 +2678,7 @@ salt
 \end{paracol}
 \end{densecard}
 
-\begin{recipe}{Thai Watermelon and Crab}{\totaltime{10 min}}
+\begin{recipe}[appetizer]{Thai Watermelon and Crab}{\totaltime{10 min}}
 \begin{ingredients}
 2 lb watermelon, \hphantom{ } chopped
 2 ripe tomatoes, \hphantom{ } chopped
@@ -2636,7 +2699,7 @@ Serves 6 as appetizer
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Thai Curry Broth with Tofu and Herbs}{\tag{VG}\totaltime{30 min}}
+\begin{denserecipe}[soup]{Thai Curry Broth with Tofu and Herbs}{\tag{VG}\totaltime{30 min}}
 \begin{ingredients}
 28 oz silken tofu, drained
 2 tbsp oil
@@ -2664,7 +2727,7 @@ Serves 6
 Cilantro, basil and dill work well for the herbs. Serve with lime wedges for squeezing.
 \end{denserecipe}
 
-\begin{recipe}{Summer Corn and Tomato Salad}{\tag{VG}\totaltime{15 min}}
+\begin{recipe}[salad]{Summer Corn and Tomato Salad}{\tag{VG}\totaltime{15 min}}
 \begin{ingredients}
 5 ears corn in husks
 1 pint cherry tomatoes, halved
@@ -2686,7 +2749,7 @@ Serves 6
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Orzo, Lentil and Zucchini Salad}{\tag{VG}\totaltime{40 min}}
+\begin{denserecipe}[salad]{Orzo, Lentil and Zucchini Salad}{\tag{VG}\totaltime{40 min}}
 \begin{ingredients}
 1 cup lentils
 1 cup orzo
@@ -2712,7 +2775,7 @@ Serves 6
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Lentil Pasta Stew}{\tag{V}\totaltime{1 h}}
+\begin{denserecipe}[stew]{Lentil Pasta Stew}{\tag{V}\totaltime{1 h}}
 \begin{ingredients}
 3 tbsp olive oil
 1 onion, chopped
@@ -2741,7 +2804,7 @@ Serves 6
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Bay Scallops with Preserved Lemon}{\totaltime{20 min}}
+\begin{recipe}[seafood_main]{Bay Scallops with Preserved Lemon}{\totaltime{20 min}}
 \begin{ingredients}
 2 tbsp butter
 2 sprigs rosemary
@@ -2764,7 +2827,7 @@ Serves 2
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Tangzhong Oat and Carrot Rolls}{\tag{V}\preheat{\celsius{190}}\totaltime{2 h}}
+\begin{denserecipe}[bread]{Tangzhong Oat and Carrot Rolls}{\tag{V}\preheat{\celsius{190}}\totaltime{2 h}}
 \begin{ingredients}
 35 g + 415 g flour
 170 g + 170 g milk
@@ -2788,7 +2851,7 @@ Makes enough to fill 2 baking sheets
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Gochujang Skirt Steak}{\totaltime{1 h}}
+\begin{recipe}[meat_main]{Gochujang Skirt Steak}{\totaltime{1 h}}
 \begin{ingredients}
 3 tbsp gochujang
 3 tbsp olive oil
@@ -2809,7 +2872,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Jello Pudding}{\tag{V}\totaltime{2 h}}
+\begin{denserecipe}[dessert]{Jello Pudding}{\tag{V}\totaltime{2 h}}
 \begin{ingredients}
 1 cup milk
 4 tsp cornstarch
@@ -2839,7 +2902,7 @@ Serves 2
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Brussels Sprouts Caesar Salad}{\tag{V}\preheat{\celsius{220}}\totaltime{35 min}}
+\begin{denserecipe}[salad]{Brussels Sprouts Caesar Salad}{\tag{V}\preheat{\celsius{220}}\totaltime{35 min}}
 \begin{ingredients}
 2 lb brussels sprouts, trimmed, 3/4 halved and 1/4 thinly sliced
 1/3 cup + 3 tbsp olive oil
@@ -2859,7 +2922,7 @@ Serves 4 to 6
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Turkey Meatloaf with Zucchini}{\preheat{\celsius{180}}\totaltime{1 h 15 min}}
+\begin{denserecipe}[poultry_main]{Turkey Meatloaf with Zucchini}{\preheat{\celsius{180}}\totaltime{1 h 15 min}}
 \begin{ingredients}
 1 lb ground turkey
 3/4 cup grated zucchini, squeezed dry
@@ -2883,7 +2946,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Cured Beef Carpaccio}{\totaltime{1 day + 5 h}}
+\begin{denserecipe}[appetizer]{Cured Beef Carpaccio}{\totaltime{1 day + 5 h}}
 \begin{ingredients}
 500 g beef tenderloin
 2 tbsp kosher salt
@@ -2903,7 +2966,7 @@ Serves 10
 Serve with olive oil, flaky salt, black pepper, arugula, parmesan shavings, capers, and fresh thyme leaves.
 \end{denserecipe}
 
-\begin{denserecipe}{Nobis Dressing}{\totaltime{10 min}}
+\begin{denserecipe}[sauce]{Nobis Dressing}{\totaltime{10 min}}
 \begin{ingredients}
 1 egg
 1 tbsp Dijon mustard
@@ -2925,7 +2988,7 @@ Makes 3/4 cup
 Use as salad dressing, for dipping artichokes, over asparagus or on grilled fish.
 \end{denserecipe}
 
-\begin{denserecipe}{Roasted Beef Tenderloin}{\preheat{\celsius{230}}\totaltime{2 h}}
+\begin{denserecipe}[meat_main]{Roasted Beef Tenderloin}{\preheat{\celsius{230}}\totaltime{2 h}}
 \begin{ingredients}
 4 lb beef tenderloin, trimmed and tied
 2 tbsp unsalted butter, melted
@@ -2949,7 +3012,7 @@ Serves 8 to 12
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Lemon Ricotta Pancakes}{\totaltime{30 min}}
+\begin{denserecipe}[sweet_pancake]{Lemon Ricotta Pancakes}{\totaltime{30 min}}
 \begin{ingredients}
 3/4 cup flour
 1 1/2 tsp baking powder
@@ -2977,7 +3040,7 @@ Makes 8 to 10 small pancakes
 Serve with Blueberry Syrup.
 \end{denserecipe}
 
-\begin{recipe}{Blueberry Syrup}{\totaltime{15 min}}
+\begin{recipe}[sauce]{Blueberry Syrup}{\totaltime{15 min}}
 \begin{ingredients}
 2 cups blueberries
 1 tbsp lemon juice
@@ -2993,7 +3056,7 @@ Yields about 1 1/4 cups
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Wontons}{\totaltime{1 h 15 min}}
+\begin{denserecipe}[dumpling]{Wontons}{\totaltime{1 h 15 min}}
 \begin{ingredients}
 12 oz peeled shrimp
 1/2 in fresh ginger
@@ -3018,7 +3081,7 @@ Makes 50 to 60 wontons
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{White Fish in Salty Tomato Sauce}{\totaltime{25 min}}
+\begin{denserecipe}[seafood_main]{White Fish in Salty Tomato Sauce}{\totaltime{25 min}}
 \begin{ingredients}
 4 (8-oz) white fish fillets (e.g., cod, halibut)
 kosher salt and pepper
@@ -3043,7 +3106,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Seared Scallops with Jalapeno Vinaigrette}{\totaltime{15 min}}
+\begin{recipe}[appetizer]{Seared Scallops with Jalapeno Vinaigrette}{\totaltime{15 min}}
 \begin{ingredients}
 1 large jalapeno, seeded
 1/4 cup rice vinegar
@@ -3065,7 +3128,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Spicy Roasted Vegetables and Mozzarella}{\preheat{\celsius{220}}\totaltime{1 h}}
+\begin{denserecipe}[meal]{Spicy Roasted Vegetables and Mozzarella}{\preheat{\celsius{220}}\totaltime{1 h}}
 \begin{ingredients}
 1 1/2 lb carrots, peeled
 4 shallots, peeled
@@ -3093,7 +3156,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Creamy Lemony Pasta}{\totaltime{15 min}}
+\begin{recipe}[pasta]{Creamy Lemony Pasta}{\totaltime{15 min}}
 \begin{ingredients}
 1 lb short curly pasta
 kosher salt
@@ -3114,7 +3177,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Miso-Sesame Cucumber and Avocado Salad}{\totaltime{10 min}}
+\begin{denserecipe}[salad]{Miso-Sesame Cucumber and Avocado Salad}{\totaltime{10 min}}
 \begin{ingredients}
 1/4 cup Miso-Sesame Vinaigrette
 1/2 tsp red-pepper flakes
@@ -3132,7 +3195,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Butter Chicken}{\totaltime{30 min}}
+\begin{denserecipe}[poultry_main]{Butter Chicken}{\totaltime{30 min}}
 \begin{ingredients}
 400 g chicken thighs
 100 g fat free yogurt
@@ -3160,7 +3223,7 @@ Serves 2
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Esquites Salad}{\tag{V}\totaltime{20 min}}
+\begin{denserecipe}[salad]{Esquites Salad}{\tag{V}\totaltime{20 min}}
 \begin{ingredients}
 2 tbsp oil
 4 ears fresh corn kernels
@@ -3185,7 +3248,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Broccoli Aligot}{\tag{V}\totaltime{30 min}}
+\begin{recipe}[vegetable_side]{Broccoli Aligot}{\tag{V}\totaltime{30 min}}
 \begin{ingredients}
 5 to 6 cups broccoli, shaved dark green tops only (about 4 large heads)
 4 tbsp butter
@@ -3206,7 +3269,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Peruvian Green Chile Sauce (Ají Verde)}{\totaltime{10 min}}
+\begin{recipe}[sauce]{Peruvian Green Chile Sauce (Ají Verde)}{\totaltime{10 min}}
 \begin{ingredients}
 1/2 cup mayonnaise
 1 jalapeno, seeded
@@ -3225,7 +3288,7 @@ Makes 3/4 cup
 Huacatay can be found jarred. If unavailable, increase the cilantro to 5 tbsp.
 \end{recipe}
 
-\begin{denserecipe}{Oven-to-Pan Velvet Chicken}{\preheat{\celsius{135}}\totaltime{1 h 15 min}}
+\begin{denserecipe}[poultry_main]{Oven-to-Pan Velvet Chicken}{\preheat{\celsius{135}}\totaltime{1 h 15 min}}
 \begin{ingredients}
 4 boneless, skinless chicken breasts
 2 tsp kosher salt
@@ -3247,7 +3310,7 @@ Serves 4
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Vegetarian Reuben Sandwich}{\tag{V}\totaltime{15 min}}
+\begin{denserecipe}[sandwich]{Vegetarian Reuben Sandwich}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 1/2 cup sauerkraut
 1 tbsp mayonnaise
@@ -3274,7 +3337,7 @@ Serves 1
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Braised Cabbage}{\preheat{\celsius{160}}\totaltime{2 h 35 min}}
+\begin{recipe}[vegetable_side]{Braised Cabbage}{\preheat{\celsius{160}}\totaltime{2 h 35 min}}
 \begin{ingredients}
 1 medium green cabbage (about 2 lbs)
 1 onion, sliced thick
@@ -3295,7 +3358,7 @@ Serves 6 to 8
 Serve warm or at room temperature.
 \end{recipe}
 
-\begin{recipe}{Skillet-Roasted Brussels Sprouts}{\tag{V}\totaltime{20 min}}
+\begin{recipe}[vegetable_side]{Skillet-Roasted Brussels Sprouts}{\tag{V}\totaltime{20 min}}
 \begin{ingredients}
 1 lb small brussels sprouts, halved
 5 tbsp olive oil
@@ -3314,7 +3377,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Olive Oil Tart Shell}{\tag{VG}\preheat{\celsius{180}}\totaltime{45 min}}
+\begin{recipe}[dough]{Olive Oil Tart Shell}{\tag{VG}\preheat{\celsius{180}}\totaltime{45 min}}
 \begin{ingredients}
 1 1/2 cups flour
 5 tbsp sugar
@@ -3332,7 +3395,7 @@ Makes a 9-inch tart
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Lemon–Olive Oil Tart}{\tag{V}\preheat{\celsius{180}}\totaltime{1 h 15 min}}
+\begin{recipe}[pie]{Lemon–Olive Oil Tart}{\tag{V}\preheat{\celsius{180}}\totaltime{1 h 15 min}}
 \begin{ingredients}
 1 Olive Oil Tart Shell
 1 cup sugar
@@ -3355,7 +3418,7 @@ Serves 8
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Oven Ratatouille}{\tag{VG}\preheat{\celsius{200}}\totaltime{2 h}}
+\begin{denserecipe}[vegetable_side]{Oven Ratatouille}{\tag{VG}\preheat{\celsius{200}}\totaltime{2 h}}
 \begin{ingredients}
 1/3 cup olive oil
 8 cloves garlic, smashed
@@ -3384,7 +3447,7 @@ Serves 6 to 8
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{Tender Green Beans in Tomato}{\tag{VG}\preheat{\celsius{135}}\totaltime{1 h 30 min}}
+\begin{denserecipe}[vegetable_side]{Tender Green Beans in Tomato}{\tag{VG}\preheat{\celsius{135}}\totaltime{1 h 30 min}}
 \begin{ingredients}
 5 tbsp olive oil
 1 onion, chopped
@@ -3413,7 +3476,7 @@ Serves 4 to 6
 \end{steps}
 \end{denserecipe}
 
-\begin{denserecipe}{French Apple Cake}{\preheat{\celsius{180}}\totaltime{1 h 45 min}}
+\begin{denserecipe}[cake]{French Apple Cake}{\preheat{\celsius{180}}\totaltime{1 h 45 min}}
 \begin{ingredients}
 4 cups baking apples
 2 tsp apple cider vinegar
@@ -3444,7 +3507,7 @@ Serves 8
 Serve with powdered sugar, rum whipped cream.
 \end{denserecipe}
 
-\begin{recipe}{Chicken Miso Meatballs}{\preheat{\celsius{220}}\totaltime{20 min}}
+\begin{recipe}[poultry_main]{Chicken Miso Meatballs}{\preheat{\celsius{220}}\totaltime{20 min}}
 \begin{ingredients}
 1/4 cup whole milk
 3 tbsp white miso
@@ -3465,7 +3528,7 @@ Serves 4
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Warm Tomato-Ginger Vinaigrette}{\tag{V}\totaltime{20 min}}
+\begin{recipe}[sauce]{Warm Tomato-Ginger Vinaigrette}{\tag{V}\totaltime{20 min}}
 \begin{ingredients}
 2+2 tbsp olive oil
 1 shallot, minced
@@ -3489,7 +3552,7 @@ Makes about 2 cups
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Roasted Balsamic Beets}{\tag{V}\preheat{\celsius{190}}\totaltime{1 h 30 min}}
+\begin{recipe}[salad_component]{Roasted Balsamic Beets}{\tag{V}\preheat{\celsius{190}}\totaltime{1 h 30 min}}
 \begin{ingredients}
 1 1/2 lb beets
 olive oil
@@ -3506,7 +3569,7 @@ Serves 6
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Crispy Herbed Goat Cheese}{\preheat{\celsius{250}}\totaltime{1 h 20 min}}
+\begin{recipe}[salad_component]{Crispy Herbed Goat Cheese}{\preheat{\celsius{250}}\totaltime{1 h 20 min}}
 \begin{ingredients}
 200 g panko bread crumbs
 550 g goat cheese
@@ -3528,7 +3591,7 @@ Serves 6
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Blonde Balsamic Vinaigrette}{\tag{V}\totaltime{10 min}}
+\begin{recipe}[sauce]{Blonde Balsamic Vinaigrette}{\tag{V}\totaltime{10 min}}
 \begin{ingredients}
 1/4 cup white balsamic vinegar
 1 tbsp minced shallot
@@ -3546,7 +3609,7 @@ Serves 6
 \end{steps}
 \end{recipe}
 
-\begin{denserecipe}{Beet and Goat Cheese Salad}{\tag{V}\totaltime{15 min}}
+\begin{denserecipe}[salad]{Beet and Goat Cheese Salad}{\tag{V}\totaltime{15 min}}
 \begin{ingredients}
 6 servings Roasted Balsamic Beets
 2 pucks Crispy Herbed Goat Cheese
@@ -3566,7 +3629,7 @@ Serves 6
 \end{steps}
 \end{denserecipe}
 
-\begin{recipe}{Helen's Grilling Glaze}{\tag{VG}\totaltime{5 min}}
+\begin{recipe}[marinade]{Helen's Grilling Glaze}{\tag{VG}\totaltime{5 min}}
 \begin{ingredients}
 1 tbsp soy sauce
 1 tbsp dijon mustard
@@ -3583,7 +3646,7 @@ Makes 1/2 cup
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Gazpacho Dressing}{\tag{VG}\totaltime{15 min}}
+\begin{recipe}[salad_component]{Gazpacho Dressing}{\tag{VG}\totaltime{15 min}}
 \begin{ingredients}
 1/2 cucumber, peeled
 1 1/2 bell pepper
@@ -3609,7 +3672,7 @@ Makes 8 cups
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Gazpacho Pasta Salad}{\tag{VG}\totaltime{1 day}}
+\begin{recipe}[salad]{Gazpacho Pasta Salad}{\tag{VG}\totaltime{1 day}}
 \begin{ingredients}
 8 cups Gazpacho Dressing
 1 lb elbow macaroni
@@ -3630,7 +3693,7 @@ Serves
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Harissa-Honey Pork Tenderloin}{\preheat{\celsius{190}}\totaltime{35 min}}
+\begin{recipe}[meat_main]{Harissa-Honey Pork Tenderloin}{\preheat{\celsius{190}}\totaltime{35 min}}
 \begin{ingredients}
 1 pork tenderloin
 1 tsp kosher salt
@@ -3651,7 +3714,7 @@ Serves 3
 \end{steps}
 \end{recipe}
 
-\begin{recipe}{Hot Green Spice Blend}{\tag{VG}\totaltime{5 min}}
+\begin{recipe}[component]{Hot Green Spice Blend}{\tag{VG}\totaltime{5 min}}
 \begin{ingredients}
 2 parts freeze dried chives
 2 parts freeze dried shallots
