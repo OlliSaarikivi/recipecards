@@ -19,7 +19,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
-          post_compile: "cp main.pdf recipe_cards.pdf"
+          post_compile: "cp build/main.pdf recipe_cards.pdf"
       - name: Create release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
