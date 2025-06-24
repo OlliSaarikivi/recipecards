@@ -165,26 +165,26 @@
 \begin{document}
 \clearpage
 \edef\hmm{\pdfpagewidth=\the\pdfpagewidth \pdfpageheight=\the\pdfpageheight\relax}
-\pdfpagewidth=8.5in
-\pdfpageheight=11in
-\newgeometry{top=1in,left=1in,textwidth=6.5in,textheight=9in}
+\pdfpagewidth=5in
+\pdfpageheight=6.471in
+\newgeometry{top=0.3in,left=0.3in,textwidth=4.4in,textheight=5.871in}
 \begin{center}
-    \Huge\rmfamily Recipe Cards
+    \Large\rmfamily Recipe Cards
 \end{center}
-\vspace{1em}
+\vspace{0.5em}
 
+{\scriptsize
 This is a collection of recipes that I want to have easily referenceable in my kitchen. These are printable onto 3x5 inch index cards. Beware that some of the recipes are heavily abbreviated to fit the small format, which might make them hard to follow if they are not familiar in advance.
+
 --\,Olli Saarikivi
-\vspace{1em}
 
 \begin{multicols}{2}
     \raggedcolumns
     \tableofcontents
 \end{multicols}
+}
 \restoregeometry
 \hmm
-
-\setcounter{page}{1}
 
 \include{info}
 \include{appetizers}
