@@ -15,6 +15,7 @@
 \usepackage{soul}
 \usepackage{color}
 \usepackage{hyperref}
+\usepackage{hyphenat}
 \usepackage{multicol}
 \usepackage{microtype}
 \usepackage{ragged2e}
@@ -23,6 +24,9 @@
 \usepackage{xparse}
 \usepackage{pgfkeys}
 \usepackage{calc}
+\usepackage{accents}
+
+\hyphenation{car-a-mel-ized}
 
 \usepackage[absolute]{textpos}
 \textblockorigin{0pt}{\paperheight-0.18in}
@@ -88,17 +92,39 @@
 
 \newcommand{\CategoryName}{}
 
+\newcounter{recipecategory}
+\renewcommand{\therecipecategory}{\arabic{recipecategory}}
+\newcounter{cardsection}[recipecategory]
+\renewcommand{\thecardsection}{\therecipecategory}
+
+\newcommand{\RemoveAccents}[1]{%
+  \StrSubstitute{#1}{ö}{o}[\tmpa]%
+  \StrSubstitute{\tmpa}{ä}{a}[\tmpb]%
+  \StrSubstitute{\tmpb}{å}{a}[\tmpc]%
+  \StrSubstitute{\tmpc}{Ö}{O}[\tmpd]%
+  \StrSubstitute{\tmpd}{Ä}{A}[\tmpe]%
+  \StrSubstitute{\tmpe}{Å}{A}[\tmpf]%
+  \StrSubstitute{\tmpf}{é}{e}[\tmpg]%
+  \StrSubstitute{\tmpg}{É}{E}[\tmph]%
+  \StrSubstitute{\tmph}{ü}{u}[\tmpi]%
+  \StrSubstitute{\tmpi}{Ü}{U}[\tmpj]%
+}
+
 \NewDocumentEnvironment{cardbase}{omm}%[3][]
     {\clearpage
+    \refstepcounter{cardsection}%
     \phantomsection
     \addcontentsline{toc}{subsection}{#2}%
     \begin{textblock*}{\paperwidth-0.1in}(0.1in,0mm)\footnotesize #1\end{textblock*}
-    \begin{textblock*}{\paperwidth-0.1in}(0mm,0mm)\raggedleft  \footnotesize \CategoryName\end{textblock*}
+    \begin{textblock*}{\paperwidth-0.1in}(0mm,0mm)\raggedleft  \footnotesize \therecipecategory{}\enspace\CategoryName{}\end{textblock*}
     \StrSubstitute{#2}{ }{-}[\safeA]
     \StrDel{\safeA}{,}[\safeB]
     \StrDel{\safeB}{'}[\safeC]
     \StrSubstitute{\safeC}{\&}{and}[\safe]
-    \hypertarget{\safe}{}
+    \RemoveAccents{\safe}
+    \edef\sanitizedRecipeName{\tmpj}
+    \hypertarget{\safe}{}%
+    \label{card:\sanitizedRecipeName}%
     \begin{FlushLeft}
     \textrm{{\large\hyperlink{\safe}{#2}}\hfill{\large\tabularnums{#3}}}
     \vspace{0.5em}}
@@ -112,7 +138,8 @@
     {\end{card}}
 \newenvironment{recipe}[3][]
     {\begin{cardbase}[#1]{#2}{#3}
-    \columnratio{0.333}
+    \columnratio{0.34}
+    \setlength{\columnsep}{10pt}
     \begin{paracol}{2}}
     {\end{paracol}\end{cardbase}}
 \newenvironment{denserecipe}[3][]
@@ -129,30 +156,40 @@
     \leftskip=1em
     \parindent=-1em}
     {\end{obeylines}}
+\newcommand{\ibreak}{\\\hspace*{1em}}
 \newenvironment{steps}
     {\begin{enumerate}[leftmargin=*,topsep=0pt]}
     {\end{enumerate}}
 \newenvironment{densesteps}
     {\begin{enumerate}[leftmargin=*,topsep=0pt,itemsep=0pt]}
     {\end{enumerate}}
-\newcommand{\reciperef}[1]{%
+\newcommand{\reciperefcore}[2]{% #1 = recipe name, #2 = show number (bool)
     \StrSubstitute{#1}{ }{-}[\safeA]%
     \StrDel{\safeA}{,}[\safeB]%
     \StrDel{\safeB}{'}[\safeC]%
     \StrSubstitute{\safeC}{\&}{and}[\safe]%
+    \RemoveAccents{\safe}%
+    \edef\sanitizedRef{\tmpj}%
     \hyperlink{\safe}{#1}%
+    \ifnum#2=1
+      \,\allowbreak(\S\ref{card:\sanitizedRef})%
+    \fi
 }
+\newcommand{\reciperef}[1]{\reciperefcore{#1}{1}}
+\newcommand{\reciperefplain}[1]{\reciperefcore{#1}{0}}
 
 \setlength{\cftbeforesecskip}{0pt}
 \setlength{\cftbeforesubsecskip}{0pt}
 \cftpagenumbersoff{section}
+\cftpagenumberson{subsection}
 \renewcommand{\cftsubsecdotsep}{1}
 
 \makeatletter
 \renewcommand{\@cftmaketoctitle}{}
 \newcommand{\BeginCategoryTOC}[1]{%
+  \stepcounter{recipecategory}%
   \phantomsection
-  \addcontentsline{toc}{section}{#1}%
+  \addcontentsline{toc}{section}{\therecipecategory~#1}%
   \renewcommand{\CategoryName}{#1}%
 }
 \makeatother
@@ -174,14 +211,18 @@
 \clearpage
 \edef\hmm{\pdfpagewidth=\the\pdfpagewidth \pdfpageheight=\the\pdfpageheight\relax}
 \newlength{\tocmargin}
-\setlength{\tocmargin}{0.3in}
+\setlength{\tocmargin}{0.2in}
+\newlength{\tocwidth}
+\setlength{\tocwidth}{5in}
+\newlength{\toctextwidth}
+\setlength{\toctextwidth}{\tocwidth-2\tocmargin}
 \newlength{\tocheight}
 \setlength{\tocheight}{6.471in}
 \newlength{\toctextheight}
 \setlength{\toctextheight}{\tocheight-2\tocmargin}
-\pdfpagewidth=5in
+\pdfpagewidth=\tocwidth
 \pdfpageheight=\tocheight
-\newgeometry{top=\tocmargin,left=\tocmargin,textwidth=4.4in,textheight=\toctextheight}
+\newgeometry{top=\tocmargin,left=\tocmargin,textwidth=\toctextwidth,textheight=\toctextheight}
 \begin{center}
     \Large\rmfamily Recipe Cards
 \end{center}
@@ -208,7 +249,6 @@ This is a collection of recipes that I want to have easily referenceable in my k
 \include{casseroles_and_savory_pies}
 \include{sandwiches_and_flatbreads}
 \include{pasta_and_noodles}
-\include{meals}
 \include{meat_and_poultry_mains}
 \include{pescatarian_mains}
 \include{vegetables_and_sides}
