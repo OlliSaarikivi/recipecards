@@ -24,7 +24,7 @@ OLDDIR="$TMPDIR/old"
 echo "Checking out $GITREF and building in $OLDDIR..."
 git worktree add --detach "$OLDDIR" "$GITREF"
 pushd "$OLDDIR" >/dev/null
-latexmk -pdf "$TEXFILE"
+latexmk -quiet "$TEXFILE"
 popd >/dev/null
 
 cp "$OLDDIR/build/main.pdf" "$TMPDIR/old_main.pdf"
@@ -45,17 +45,27 @@ fi
 awk -F '[{}]' '/contentsline {subsection}/ {print $4 "|" $6}' "$TOC1" > "$TMPDIR/toc_old.txt"
 awk -F '[{}]' '/contentsline {subsection}/ {print $4 "|" $6}' "$TOC2" > "$TMPDIR/toc_new.txt"
 
+normalize_title() {
+    # Lowercase, remove all non-a-z
+    tr '[:upper:]' '[:lower:]' | tr -cd 'a-z'
+}
+
 # --- Compare by card title, not page ---
 echo "Finding changed or new cards..."
 CHANGED_PAGES_LIST=()
 while IFS='|' read -r title newpage; do
-    # Find the page for this card in the old version (if any)
-    oldpage=$(awk -F'|' -v t="$title" '$1==t{print $2}' "$TMPDIR/toc_old.txt" || true)
+    norm_title=$(echo "$title" | normalize_title)
+    oldpage=$(awk -F'|' -v nt="$norm_title" '
+        {
+            # Normalize old title
+            norm = tolower($1)
+            gsub(/[^a-z]/, "", norm)
+            if (norm == nt) print $2
+        }' "$TMPDIR/toc_old.txt")
     if [ -z "$oldpage" ]; then
         echo "NEW: $title (page $newpage)"
         CHANGED_PAGES_LIST+=("$newpage")
     else
-        # Compare the content of the pages
         pdftotext -f "$oldpage" -l "$oldpage" "$PDF1" "$TMPDIR/old.txt"
         pdftotext -f "$newpage" -l "$newpage" "$PDF2" "$TMPDIR/new.txt"
         if ! cmp -s "$TMPDIR/old.txt" "$TMPDIR/new.txt"; then
