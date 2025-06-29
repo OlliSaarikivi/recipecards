@@ -163,20 +163,23 @@
 \newenvironment{densesteps}
     {\begin{enumerate}[leftmargin=*,topsep=0pt,itemsep=0pt]}
     {\end{enumerate}}
-\newcommand{\reciperefcore}[2]{% #1 = recipe name, #2 = show number (bool)
+\newcommand{\reciperefcore}[3]{%
     \StrSubstitute{#1}{ }{-}[\safeA]%
     \StrDel{\safeA}{,}[\safeB]%
     \StrDel{\safeB}{'}[\safeC]%
     \StrSubstitute{\safeC}{\&}{and}[\safe]%
     \RemoveAccents{\safe}%
     \edef\sanitizedRef{\tmpj}%
-    \hyperlink{\safe}{#1}%
+    \ifnum#3=1
+        \hyperlink{\safe}{#1}%
+    \fi
     \ifnum#2=1
       \,\allowbreak(\S\ref{card:\sanitizedRef})%
     \fi
 }
-\newcommand{\reciperef}[1]{\reciperefcore{#1}{1}}
-\newcommand{\reciperefplain}[1]{\reciperefcore{#1}{0}}
+\newcommand{\reciperef}[1]{\reciperefcore{#1}{1}{1}}
+\newcommand{\recipesecref}[1]{\reciperefcore{#1}{1}{0}}
+\newcommand{\reciperefplain}[1]{\reciperefcore{#1}{0}{1}}
 
 \setlength{\cftbeforesecskip}{0pt}
 \setlength{\cftbeforesubsecskip}{0pt}
