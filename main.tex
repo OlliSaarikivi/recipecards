@@ -22,6 +22,7 @@
 \usepackage{xstring}
 \usepackage{xparse}
 \usepackage{pgfkeys}
+\usepackage{calc}
 
 \usepackage[absolute]{textpos}
 \textblockorigin{0pt}{\paperheight-0.18in}
@@ -134,6 +135,13 @@
 \newenvironment{densesteps}
     {\begin{enumerate}[leftmargin=*,topsep=0pt,itemsep=0pt]}
     {\end{enumerate}}
+\newcommand{\reciperef}[1]{%
+    \StrSubstitute{#1}{ }{-}[\safeA]%
+    \StrDel{\safeA}{,}[\safeB]%
+    \StrDel{\safeB}{'}[\safeC]%
+    \StrSubstitute{\safeC}{\&}{and}[\safe]%
+    \hyperlink{\safe}{#1}%
+}
 
 \setlength{\cftbeforesecskip}{0pt}
 \setlength{\cftbeforesubsecskip}{0pt}
@@ -165,9 +173,15 @@
 \begin{document}
 \clearpage
 \edef\hmm{\pdfpagewidth=\the\pdfpagewidth \pdfpageheight=\the\pdfpageheight\relax}
+\newlength{\tocmargin}
+\setlength{\tocmargin}{0.3in}
+\newlength{\tocheight}
+\setlength{\tocheight}{6.471in}
+\newlength{\toctextheight}
+\setlength{\toctextheight}{\tocheight-2\tocmargin}
 \pdfpagewidth=5in
-\pdfpageheight=6.471in
-\newgeometry{top=0.3in,left=0.3in,textwidth=4.4in,textheight=5.871in}
+\pdfpageheight=\tocheight
+\newgeometry{top=\tocmargin,left=\tocmargin,textwidth=4.4in,textheight=\toctextheight}
 \begin{center}
     \Large\rmfamily Recipe Cards
 \end{center}
