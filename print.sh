@@ -82,17 +82,13 @@ if [ "${#CHANGED_PAGES_LIST[@]}" -eq 0 ]; then
     exit 0
 fi
 
-CHANGED_PAGES=$(IFS=, ; echo "${CHANGED_PAGES_LIST[*]}")
-
 # --- Extract changed pages from current PDF ---
-if command -v qpdf &>/dev/null; then
-    qpdf "$PDF2" --pages . $CHANGED_PAGES -- "$OUTPDF"
-    echo "Created $OUTPDF with just changed/new cards."
-elif command -v pdftk &>/dev/null; then
+if command -v pdftk &>/dev/null; then
+    CHANGED_PAGES=$(IFS=' '; echo "${CHANGED_PAGES_LIST[*]}")
     pdftk "$PDF2" cat $CHANGED_PAGES output "$OUTPDF"
     echo "Created $OUTPDF with just changed/new cards."
 else
-    echo "Install qpdf or pdftk to extract changed pages automatically."
+    echo "Install pdftk to extract changed pages automatically."
     exit 1
 fi
 
