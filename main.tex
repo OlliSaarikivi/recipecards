@@ -108,7 +108,16 @@
   \StrSubstitute{\tmpg}{É}{E}[\tmph]%
   \StrSubstitute{\tmph}{ü}{u}[\tmpi]%
   \StrSubstitute{\tmpi}{Ü}{U}[\tmpj]%
+  \StrSubstitute{\tmpj}{í}{i}[\tmpk]%
+  \StrSubstitute{\tmpk}{Í}{I}[\tmpl]%
+  \StrSubstitute{\tmpl}{ó}{o}[\tmpm]%
+  \StrSubstitute{\tmpm}{Ó}{O}[\tmpn]%
+  \StrSubstitute{\tmpn}{ñ}{n}[\tmpo]%
+  \StrSubstitute{\tmpo}{Ñ}{N}[\tmpp]%
 }
+
+\newwrite\slugfile
+\immediate\openout\slugfile=slugs.txt
 
 \NewDocumentEnvironment{cardbase}{omm}%[3][]
     {\clearpage
@@ -122,11 +131,12 @@
     \StrDel{\safeB}{'}[\safeC]
     \StrSubstitute{\safeC}{\&}{and}[\safe]
     \RemoveAccents{\safe}
-    \edef\sanitizedRecipeName{\tmpj}
+    \edef\sanitizedRecipeName{\tmpp}
+    \immediate\write\slugfile{\thepage:\sanitizedRecipeName}
     \hypertarget{\safe}{}%
     \label{card:\sanitizedRecipeName}%
     \begin{FlushLeft}
-    \textrm{{\large\hyperlink{\safe}{#2}}\hfill{\large\tabularnums{#3}}}
+    \textrm{{\large\href{https://olli.saarikivi.fi/card/\sanitizedRecipeName.jpg}{#2}}\hfill{\large\tabularnums{#3}}}
     \vspace{0.5em}}
     {\end{FlushLeft}}
 \newenvironment{card}[3][]
@@ -281,3 +291,4 @@ Serves
 
 \fi
 \end{document}
+\immediate\closeout\slugfile

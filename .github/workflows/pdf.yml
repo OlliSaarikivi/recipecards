@@ -20,6 +20,8 @@ jobs:
         with:
           root_file: main.tex
           post_compile: "cp build/main.pdf recipe_cards.pdf"
+      - name: Export per-card images
+        run: ./export_cards.sh
       - name: Create release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -29,14 +31,16 @@ jobs:
           title: "Latest PDF"
           files: |
             recipe_cards.pdf
-      - name: Push to pages
+      - name: Push PDF and card images to pages
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source_file: 'recipe_cards.pdf'
+          source_file: |
+            recipe_cards.pdf
+            card/*.jpg
           destination_repo: 'OlliSaarikivi/homepage'
           destination_branch: 'master'
           user_email: 'olli.saarikivi@iki.fi'
           user_name: 'Olli Saarikivi'
-          commit_message: 'Update recipe cards PDF to latest release'
+          commit_message: 'Update recipe cards PDF and images to latest release'
