@@ -19,12 +19,7 @@ jobs:
           sudo ln -sf /bin/true /usr/bin/mandb
           sudo apt-get update
           sudo apt-get install -y \
-            texlive \
-            texlive-latex-extra \
-            texlive-fonts-extra \
-            texlive-science \
-            texlive-extra-utils \
-            latexmk \
+            texlive-full \
             poppler-utils \
             tree \
             pdf2svg \
@@ -32,9 +27,6 @@ jobs:
             fonts-dejavu-core \
             perl \
             wget
-          sudo mktexlsr
-          tlmgr init-usertree
-          tlmgr install cmvtt
 
       - name: Build PDF with latexmk
         run: latexmk
