@@ -23,6 +23,7 @@ jobs:
             texlive \
             texlive-latex-extra \
             texlive-fonts-extra \
+            texlive-science \
             latexmk \
             poppler-utils \
             tree
