@@ -20,9 +20,8 @@ jobs:
           sudo apt-get clean
           sudo apt-get update
           sudo apt-get install -y \
-            texlive-latex-recommended \
+            texlive \
             texlive-latex-extra \
-            texlive-fonts-recommended \
             texlive-fonts-extra \
             latexmk \
             poppler-utils \
