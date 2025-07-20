@@ -23,12 +23,18 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-extra \
             texlive-science \
+            texlive-extra-utils \
             latexmk \
             poppler-utils \
             tree \
             pdf2svg \
             fontconfig \
-            fonts-dejavu-core
+            fonts-dejavu-core \
+            perl \
+            wget
+          sudo mktexlsr
+          sudo tlmgr init-usertree
+          tlmgr install cmvtt
 
       - name: Build PDF with latexmk
         run: latexmk
