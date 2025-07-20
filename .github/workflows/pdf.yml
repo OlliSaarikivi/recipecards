@@ -28,6 +28,11 @@ jobs:
             poppler-utils \
             tree
 
+      - name: Sanity check for accents.sty
+        run: |
+          find /usr/share/texlive/ -name accents.sty || echo "Not found"
+          find /usr/local/texlive/ -name accents.sty || echo "Not found"
+
       - name: Build PDF with latexmk
         run: latexmk
 
