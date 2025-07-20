@@ -8,6 +8,13 @@ OUTDIR="card"
 mkdir -p "$OUTDIR"
 rm -f "$OUTDIR"/*
 
+echo "=== Working directory: $(pwd)"
+echo "=== Filesystem tree before export ==="
+tree
+
+echo "=== $SLUGS contents ==="
+cat $SLUGS || echo "$SLUGS not found!"
+
 # Parse slugs.txt into an associative array: page -> slug
 declare -A slugs
 while IFS=':' read -r page slug; do
