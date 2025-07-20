@@ -114,6 +114,7 @@
   \StrSubstitute{\tmpm}{Ó}{O}[\tmpn]%
   \StrSubstitute{\tmpn}{ñ}{n}[\tmpo]%
   \StrSubstitute{\tmpo}{Ñ}{N}[\tmpp]%
+  \StrSubstitute{\tmpo}{ù}{u}[\tmpq]%
 }
 
 \newwrite\slugfile
@@ -131,7 +132,7 @@
     \StrDel{\safeB}{'}[\safeC]
     \StrSubstitute{\safeC}{\&}{and}[\safe]
     \RemoveAccents{\safe}
-    \edef\sanitizedRecipeName{\tmpp}
+    \edef\sanitizedRecipeName{\tmpq}
     \immediate\write\slugfile{\thepage:\sanitizedRecipeName}
     \hypertarget{\safe}{}%
     \label{card:\sanitizedRecipeName}%
