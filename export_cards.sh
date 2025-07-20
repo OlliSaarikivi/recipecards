@@ -37,4 +37,7 @@ for page in $(seq "$minpage" "$maxpage"); do
     rm "$pdf"  # Remove intermediate PDF
 done
 
+echo "PDF fonts for debugging"
+pdffonts "$PDF"
+
 echo "All JPEGs and SVGs exported to $OUTDIR/"
