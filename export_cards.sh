@@ -24,14 +24,17 @@ maxpage=${sorted_pages[-1]}
 # Split PDF pages (one per card)
 pdfseparate -f "$minpage" -l "$maxpage" "$PDF" "$OUTDIR/card-%d.pdf"
 
-# For each extracted PDF, rename and convert to JPEG
+# For each extracted PDF, rename and convert to JPEG and SVG
 for page in $(seq "$minpage" "$maxpage"); do
     slug="${slugs[$page]}"
     pdf="$OUTDIR/card-$page.pdf"
     jpg_base="$OUTDIR/${slug}"
+    svg_file="$OUTDIR/${slug}.svg"
     # Convert PDF to JPEG at good quality/resolution
     pdftoppm -jpeg -jpegopt quality=95 -rx 400 -ry 400 -singlefile "$pdf" "$jpg_base"
+    # Convert PDF to SVG
+    pdf2svg "$pdf" "$svg_file" 1
     rm "$pdf"  # Remove intermediate PDF
 done
 
-echo "All JPEGs exported to $OUTDIR/"
+echo "All JPEGs and SVGs exported to $OUTDIR/"
