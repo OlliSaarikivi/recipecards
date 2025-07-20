@@ -33,7 +33,7 @@ jobs:
             perl \
             wget
           sudo mktexlsr
-          sudo tlmgr init-usertree
+          tlmgr init-usertree
           tlmgr install cmvtt
 
       - name: Build PDF with latexmk
