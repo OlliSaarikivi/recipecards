@@ -28,11 +28,6 @@ jobs:
             poppler-utils \
             tree
 
-      - name: Sanity check for accents.sty
-        run: |
-          find /usr/share/texlive/ -name accents.sty || echo "Not found"
-          find /usr/local/texlive/ -name accents.sty || echo "Not found"
-
       - name: Build PDF with latexmk
         run: latexmk
 
@@ -57,9 +52,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source_file: |
-            recipe_cards.pdf
-            card/*.jpg
+          source_file: 'recipe_cards.pdf card/'
           destination_repo: 'OlliSaarikivi/homepage'
           destination_branch: 'master'
           user_email: 'olli.saarikivi@iki.fi'
