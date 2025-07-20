@@ -24,13 +24,6 @@ maxpage=${sorted_pages[-1]}
 # Split PDF pages (one per card)
 pdfseparate -f "$minpage" -l "$maxpage" "$PDF" "$OUTDIR/card-%d.pdf"
 
-echo "=== Working directory: $(pwd)"
-echo "=== Filesystem tree before export ==="
-tree
-
-echo "=== $SLUGS contents ==="
-cat $SLUGS || echo "$SLUGS not found!"
-
 # For each extracted PDF, rename and convert to JPEG
 for page in $(seq "$minpage" "$maxpage"); do
     slug="${slugs[$page]}"

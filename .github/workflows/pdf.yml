@@ -52,7 +52,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source_file: 'recipe_cards.pdf card/'
+          source_file: recipe_cards.pdf card/
           destination_repo: 'OlliSaarikivi/homepage'
           destination_branch: 'master'
           user_email: 'olli.saarikivi@iki.fi'
