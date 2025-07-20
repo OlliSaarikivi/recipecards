@@ -25,7 +25,8 @@ jobs:
             texlive-science \
             latexmk \
             poppler-utils \
-            tree
+            tree \
+            pdf2svg
 
       - name: Build PDF with latexmk
         run: latexmk
