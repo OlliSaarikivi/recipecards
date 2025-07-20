@@ -17,9 +17,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo ln -sf /bin/true /usr/bin/mandb
-          sudo apt-get clean
           sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get install -y --no-install-recommends \
             texlive \
             texlive-latex-extra \
             texlive-fonts-extra \
@@ -47,14 +46,36 @@ jobs:
       - name: Export per-card images
         run: ./export_cards.sh
 
-      - name: Push PDF and card images to pages
-        uses: dmnemec/copy_file_to_another_repo_action@main
+      - name: Push PDF and card images to homepage repo
         env:
-          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-        with:
-          source_file: recipe_cards.pdf card/
-          destination_repo: 'OlliSaarikivi/homepage'
-          destination_branch: 'master'
-          user_email: 'olli.saarikivi@iki.fi'
-          user_name: 'Olli Saarikivi'
-          commit_message: 'Update recipe cards PDF and images to latest release'
+          GITHUB_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
+          TARGET_REPO: OlliSaarikivi/homepage
+          TARGET_BRANCH: master
+          USER_NAME: "Olli Saarikivi"
+          USER_EMAIL: "olli.saarikivi@iki.fi"
+        run: |
+          set -euxo pipefail
+
+          # Configure git
+          git config --global user.name "$USER_NAME"
+          git config --global user.email "$USER_EMAIL"
+
+          # Clone the destination repo
+          git clone --single-branch --branch "$TARGET_BRANCH" \
+            "https://$GITHUB_TOKEN@github.com/$TARGET_REPO.git" outrepo
+
+          # Copy new files into the repo
+          cp -v recipe_cards.pdf outrepo/
+          cp -vr card/* outrepo/card/ || true  # in case card/ is empty
+
+          # Go to the repo directory
+          cd outrepo
+
+          # Stage and commit any changes
+          git add recipe_cards.pdf card/
+          if ! git diff --cached --quiet; then
+            git commit -m "Update recipe cards PDF and images to latest release"
+            git push
+          else
+            echo "No changes to commit."
+          fi
