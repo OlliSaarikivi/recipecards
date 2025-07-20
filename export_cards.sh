@@ -8,13 +8,6 @@ OUTDIR="card"
 mkdir -p "$OUTDIR"
 rm -f "$OUTDIR"/*
 
-echo "=== Working directory: $(pwd)"
-echo "=== Filesystem tree before export ==="
-tree
-
-echo "=== $SLUGS contents ==="
-cat $SLUGS || echo "$SLUGS not found!"
-
 # Parse slugs.txt into an associative array: page -> slug
 declare -A slugs
 while IFS=':' read -r page slug; do
@@ -30,6 +23,13 @@ maxpage=${sorted_pages[-1]}
 
 # Split PDF pages (one per card)
 pdfseparate -f "$minpage" -l "$maxpage" "$PDF" "$OUTDIR/card-%d.pdf"
+
+echo "=== Working directory: $(pwd)"
+echo "=== Filesystem tree before export ==="
+tree
+
+echo "=== $SLUGS contents ==="
+cat $SLUGS || echo "$SLUGS not found!"
 
 # For each extracted PDF, rename and convert to JPEG
 for page in $(seq "$minpage" "$maxpage"); do

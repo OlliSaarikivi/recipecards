@@ -5,27 +5,31 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/xu-cheng/texlive-full:latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y poppler-utils tree
-      - name: Build PDF
-        uses: xu-cheng/latex-action@v2
-        with:
-          root_file: main.tex
-          post_compile: "cp build/main.pdf recipe_cards.pdf"
+        run: apt-get update && apt-get install -y poppler-utils tree
+
+      - name: Build PDF with latexmk
+        run: latexmk
+
+      - name: Copy built PDF for release
+        run: cp build/main.pdf recipe_cards.pdf
+
       - name: Export per-card images
         run: ./export_cards.sh
+
       - name: Create release
-        uses: "marvinpinto/action-automatic-releases@latest"
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
@@ -33,6 +37,7 @@ jobs:
           title: "Latest PDF"
           files: |
             recipe_cards.pdf
+
       - name: Push PDF and card images to pages
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
