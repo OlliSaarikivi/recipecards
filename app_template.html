@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://fontlibrary.org//face/coelacanth" type="text/css"/>
   <style>
 html, body {
+  color: #040F0F;
   background: #f8f8f7;
   margin: 0;
   padding: 0;
@@ -49,7 +50,6 @@ html, body {
   font-size: 1.2rem;
   letter-spacing: 0.01em;
   font-family: 'Coelacanth', Georgia, serif;
-  color: #333;
 }
 .card-stack {
   display: flex;
@@ -62,8 +62,6 @@ html, body {
 /* --- Card --- */
 .card {
   height: auto;
-  background: #fff !important;
-  background-color: #fff !important;
   border-radius: 0;
   border: none;
   overflow: hidden;
@@ -79,14 +77,18 @@ html, body {
     min-width 0.2s ease,
     max-width 0.2s ease,
     box-shadow 0.2s ease,
+    height 0.2s ease,
+    min-height 0.2s ease,
     max-height 0.2s ease,
     margin 0.2s ease;
-  will-change: width, min-width, max-width, box-shadow, max-height, margin;
+  will-change: width, min-width, max-width, box-shadow, height, min-height, max-height, margin;
   z-index: 1;
 }
 
 .card.collapsed {
-  max-height: 50px;
+  height: 0.5in;
+  min-height: 0.5in;
+  max-height: 0.5in;
   width: 100%;
   margin-left: 0;
   margin-right: 0;
@@ -98,18 +100,30 @@ html, body {
 }
 
 .card.expanded {
-  max-height: 90vh;
   min-width: 5.2in;
   max-width: 5.2in;
+  margin-top: -0.05in;
   margin-left: -0.1in;
   margin-right: -0.1in;
-  margin-bottom: 12px;
+  margin-bottom: 0.2in;
   z-index: 2;
   box-shadow:
     0 6px 12px -3px rgba(0,0,0,0.1),
     0 -6px 12px -3px rgba(0,0,0,0.1),
     -6px 0 12px -3px rgba(0,0,0,0.1),
     6px 0 12px -3px rgba(0,0,0,0.1);
+}
+
+.card.collapsed:hover {
+  margin-top: -0.05in;
+  height: 0.55in;
+  min-height: 0.55in;
+  max-height: 0.55in;
+}
+
+
+.card.collapsed:last-child:hover {
+  margin-bottom: 0.05in;
 }
 
 .card.collapsed:last-child {
@@ -143,11 +157,19 @@ html, body {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
+
+ /* --- Focus modal --- */
+  #focus-modal .focused-cards-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
 }
 
 /* ---------- Modal for Focused Cards ---------- */
 #focus-modal {
   display: none;
+  flex-direction: column;
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -186,34 +208,68 @@ html, body {
   padding: 0.78rem 1.1rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #333;
   cursor: pointer;
   transition: background 0.15s;
+  transition: color 0.13s;
+}
+
+.nav-btn:hover, .nav-btn:focus {
+  color: #9B3928;
+}
+
+#focus-modal .focused-cards-outer {
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  padding-top: 4.2rem;
+  padding-bottom: 2rem;
+  overflow: auto;
 }
 
 #focus-modal .focused-cards-grid {
-  margin: 4.2rem auto 1.2rem auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 2rem 2.5vw;
-  width: min(100vw, 1600px);
+  grid-template-columns: repeat(auto-fit, 5.2in);
+  grid-template-rows: masonry;
+  gap: 0.9rem;
+  width: 100%;
+  margin: 0 auto;
   box-sizing: border-box;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: center; /* This is the key! */
 }
+
+
+#focus-modal .focused-cards-grid .card {
+  margin: 0 !important;
+  position: relative;
+  cursor: default;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.45rem;
+  background: none;
+  border: none;
+  font-size: 1.7rem;
+  color: #b7b7b7;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  opacity: 0.82;
+  transition: color 0.13s, opacity 0.13s;
+}
+.remove-btn:hover, .remove-btn:focus {
+  color: #9B3928;
+  opacity: 1;
+  outline: none;
+}
+
 
 #show-focused-btn .eye {
   margin-right: 0.65em;
   font-size: 1.3em;
   vertical-align: -0.08em;
-}
-
-@media (max-width: 900px) {
-  #focus-modal .focused-cards-grid {
-    grid-template-columns: 1fr;
-    gap: 1.3rem 0;
-    width: 98vw;
-  }
 }
 
   </style>
@@ -231,8 +287,10 @@ html, body {
     <div class="modal-header">
       <button id="close-focus-modal" class="nav-btn" aria-label="Back to all cards">Back</button>
     </div>
-    <div class="focused-cards-grid" id="focused-cards-grid">
-      <!-- Focused cards rendered here -->
+    <div class="focused-cards-outer">
+      <div class="focused-cards-grid" id="focused-cards-grid">
+        <!-- Focused cards rendered here -->
+      </div>
     </div>
   </div>
 
@@ -346,27 +404,18 @@ html, body {
 
         // Add close/remove button to modalCard
         const removeBtn = document.createElement('button');
-        removeBtn.innerHTML = "–";
+        removeBtn.className = "remove-btn";
+        removeBtn.innerHTML = "&times;"; // Unicode X symbol
         removeBtn.setAttribute('aria-label', "Remove from focus");
-        removeBtn.style.position = "absolute";
-        removeBtn.style.top = "12px";
-        removeBtn.style.right = "20px";
-        removeBtn.style.fontSize = "1.5em";
-        removeBtn.style.background = "rgba(255,255,255,0.85)";
-        removeBtn.style.border = "none";
-        removeBtn.style.borderRadius = "2em";
-        removeBtn.style.cursor = "pointer";
-        removeBtn.style.padding = "0.15em 0.6em 0.21em 0.6em";
-        removeBtn.style.boxShadow = "0 1px 6px rgba(0,0,0,0.09)";
         removeBtn.onmousedown = e => e.stopPropagation();
         removeBtn.onclick = e => {
-          // Un-expand in main view
           card.classList.remove('expanded');
           card.classList.add('collapsed');
           updateShowFocusedBtn();
           renderFocusedModal();
         };
         modalCard.appendChild(removeBtn);
+
         focusGrid.appendChild(modalCard);
       });
     }
