@@ -143,7 +143,12 @@ html, body {
     const categoriesRow = document.getElementById("categories-row");
     categoriesRow.innerHTML = "";
 
-    Object.entries(slugs).forEach(([catTitle, catSlugs]) => {
+    const sortedCategories = Object.entries(slugs).sort(
+      ([aTitle, aSlugs], [bTitle, bSlugs]) => bSlugs.length - aSlugs.length
+    );
+
+    // Then, instead of `Object.entries(slugs).forEach(...)`:
+    sortedCategories.forEach(([catTitle, catSlugs]) => {
       const col = document.createElement("div");
       col.className = "category-col";
 
