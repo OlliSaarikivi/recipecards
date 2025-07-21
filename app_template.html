@@ -27,19 +27,18 @@ html, body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-  gap: 2rem 2.5vw;    /* Vertical gap, then horizontal gap */
+  gap: 2rem 2.5vw;
   width: 100%;
   box-sizing: border-box;
+  margin-top: 4.2rem;
 }
-
 .category-col {
   display: flex;
   flex-direction: column;
   width: 5.2in;
   min-width: 5.2in;
   max-width: 5.2in;
-  margin-bottom: 2rem;   /* vertical spacing between rows (for old browsers if needed) */
-  /* margin-left/right is not needed with gap, but you can add if you want more horizontal space */
+  margin-bottom: 2rem;
   box-sizing: border-box;
 }
 
@@ -130,13 +129,90 @@ html, body {
 
 @media (max-width: 5.2in) {
   .category-col,
-  .card,
   .card.expanded {
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
+  }
+  .card {
+    width: 97% !important;
+    min-width: 0 !important;
+    max-width: 97% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* ---------- Modal for Focused Cards ---------- */
+#focus-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(10px) brightness(0.96);
+  -webkit-backdrop-filter: blur(10px) brightness(0.96);
+  animation: fadeIn 0.18s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#focus-modal .modal-header {
+  height: 0; /* prevents extra vertical offset */
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  background: transparent;
+}
+
+.nav-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.94);
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.11);
+  padding: 0.78rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#focus-modal .focused-cards-grid {
+  margin: 4.2rem auto 1.2rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2rem 2.5vw;
+  width: min(100vw, 1600px);
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#show-focused-btn .eye {
+  margin-right: 0.65em;
+  font-size: 1.3em;
+  vertical-align: -0.08em;
+}
+
+@media (max-width: 900px) {
+  #focus-modal .focused-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.3rem 0;
+    width: 98vw;
   }
 }
 
@@ -146,6 +222,20 @@ html, body {
   <div class="container">
     <div class="categories-row" id="categories-row"></div>
   </div>
+
+  <!-- Show Focused Cards Button -->
+  <button id="show-focused-btn" class="nav-btn" style="display:none;">Focus</button>
+
+  <!-- Focused Cards Modal -->
+  <div id="focus-modal" aria-modal="true" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button id="close-focus-modal" class="nav-btn" aria-label="Back to all cards">Back</button>
+    </div>
+    <div class="focused-cards-grid" id="focused-cards-grid">
+      <!-- Focused cards rendered here -->
+    </div>
+  </div>
+
   <script>
     // New: slugs is a dict of categories -> [list of card slugs]
     SLUGS_MAP
@@ -157,10 +247,10 @@ html, body {
     categoriesRow.innerHTML = "";
 
     const sortedCategories = Object.entries(slugs).sort(
-      ([aTitle, aSlugs], [bTitle, bSlugs]) => bSlugs.length - aSlugs.length
+      ([, aSlugs], [, bSlugs]) => bSlugs.length - aSlugs.length
     );
 
-    // Then, instead of `Object.entries(slugs).forEach(...)`:
+    // --- Render all cards per category ---
     sortedCategories.forEach(([catTitle, catSlugs]) => {
       const col = document.createElement("div");
       col.className = "category-col";
@@ -199,6 +289,7 @@ html, body {
               card.classList.remove('collapsed');
               card.classList.add('expanded');
           }
+          updateShowFocusedBtn();
         };
         card.onkeydown = (e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -213,6 +304,117 @@ html, body {
       col.appendChild(stack);
       categoriesRow.appendChild(col);
     });
+
+    // --- Focused Cards Modal Logic ---
+
+    function getAllExpandedCards() {
+      return Array.from(document.querySelectorAll('#categories-row .card.expanded'));
+    }
+
+    function updateShowFocusedBtn() {
+      const expanded = getAllExpandedCards();
+      const btn = document.getElementById('show-focused-btn');
+      if (expanded.length === 0) {
+        btn.style.display = "none";
+      } else {
+        btn.style.display = "flex";
+      }
+    }
+    updateShowFocusedBtn();
+
+    // Show Focused Cards modal
+    const showFocusedBtn = document.getElementById('show-focused-btn');
+    const focusModal = document.getElementById('focus-modal');
+    const focusGrid = document.getElementById('focused-cards-grid');
+    const closeModalBtn = document.getElementById('close-focus-modal');
+
+    function renderFocusedModal() {
+      focusGrid.innerHTML = "";
+      const expanded = getAllExpandedCards();
+      if (expanded.length === 0) {
+        // nothing to show, just close modal
+        hideFocusModal();
+        return;
+      }
+      expanded.forEach(card => {
+        // Clone card for modal, but keep it in sync with main view
+        const slug = card.getAttribute('data-slug');
+        const modalCard = card.cloneNode(true);
+
+        // Remove tabIndex from clones
+        modalCard.tabIndex = -1;
+
+        // Add close/remove button to modalCard
+        const removeBtn = document.createElement('button');
+        removeBtn.innerHTML = "–";
+        removeBtn.setAttribute('aria-label', "Remove from focus");
+        removeBtn.style.position = "absolute";
+        removeBtn.style.top = "12px";
+        removeBtn.style.right = "20px";
+        removeBtn.style.fontSize = "1.5em";
+        removeBtn.style.background = "rgba(255,255,255,0.85)";
+        removeBtn.style.border = "none";
+        removeBtn.style.borderRadius = "2em";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.style.padding = "0.15em 0.6em 0.21em 0.6em";
+        removeBtn.style.boxShadow = "0 1px 6px rgba(0,0,0,0.09)";
+        removeBtn.onmousedown = e => e.stopPropagation();
+        removeBtn.onclick = e => {
+          // Un-expand in main view
+          card.classList.remove('expanded');
+          card.classList.add('collapsed');
+          updateShowFocusedBtn();
+          renderFocusedModal();
+        };
+        modalCard.appendChild(removeBtn);
+        focusGrid.appendChild(modalCard);
+      });
+    }
+
+    function showFocusModal() {
+      renderFocusedModal();
+      focusModal.style.display = "flex";
+      // Calculate scrollbar width and add padding to body to prevent shift
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = scrollBarWidth + "px";
+      }
+      document.body.style.overflow = "hidden"; // prevent background scroll
+      focusModal.focus();
+    }
+
+    function hideFocusModal() {
+      focusModal.style.display = "none";
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = ""; // remove the padding
+    }
+
+    showFocusedBtn.onclick = showFocusModal;
+    closeModalBtn.onclick = hideFocusModal;
+
+    // ESC key to close modal
+    focusModal.addEventListener('keydown', function(e){
+      if (e.key === "Escape") {
+        hideFocusModal();
+      }
+    });
+
+    // Optional: trap focus inside modal when open
+    focusModal.addEventListener('focusin', function(e) {
+      if (focusModal.style.display === "flex") {
+        // Trap focus within modal
+        const focusableEls = focusModal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+        const firstEl = focusableEls[0], lastEl = focusableEls[focusableEls.length - 1];
+        if (e.target === lastEl && e.relatedTarget === firstEl) {
+          firstEl.focus();
+          e.preventDefault();
+        }
+      }
+    });
+
+    // For demo: expose update function in window for manual test
+    window.updateShowFocusedBtn = updateShowFocusedBtn;
+
   </script>
 </body>
 </html>
