@@ -71,7 +71,7 @@ jobs:
           mkdir -p outrepo/card
           cp -v card/* outrepo/card/
           mkdir -p outrepo/recipes
-          cp app.html outrepo/recipes/index.html
+          cp index.html outrepo/recipes/index.html
 
           # Go to the repo directory
           cd outrepo

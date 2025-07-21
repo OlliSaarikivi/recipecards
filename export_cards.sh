@@ -5,7 +5,7 @@ PDF="build/main.pdf"
 SLUGS="build/slugs.txt"
 OUTDIR="card"
 TEMPLATE="app_template.html"
-OUTPUT="app.html"
+OUTPUT="index.html"
 PLACEHOLDER='SLUGS_MAP'
 
 mkdir -p "$OUTDIR"
@@ -77,10 +77,8 @@ for page in $(seq "$minpage" "$maxpage"); do
     svg_file="$OUTDIR/${slug}.svg"
     pdftoppm -jpeg -jpegopt quality=95 -rx 400 -ry 400 -singlefile "$pdf" "$jpg_base"
     pdf2svg "$pdf" "$svg_file" 1
+    sed -i '0,/<svg[^>]*>/s//&\n<rect width="100%" height="100%" fill="white" \/>/' "$svg_file"
     rm "$pdf"
 done
-
-echo "PDF fonts for debugging"
-pdffonts "$PDF"
 
 echo "All JPEGs and SVGs exported to $OUTDIR/"
