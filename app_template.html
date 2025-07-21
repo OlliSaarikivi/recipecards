@@ -63,7 +63,8 @@ html, body {
 /* --- Card --- */
 .card {
   height: auto;
-  background: white;
+  background: #fff !important;
+  background-color: #fff !important;
   border-radius: 0;
   border: none;
   overflow: hidden;
@@ -125,6 +126,18 @@ html, body {
   pointer-events: none;
   user-select: none;
   background: transparent;
+}
+
+@media (max-width: 5.2in) {
+  .category-col,
+  .card,
+  .card.expanded {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 }
 
   </style>
