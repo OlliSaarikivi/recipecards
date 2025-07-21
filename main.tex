@@ -207,9 +207,9 @@
 \newcommand{\SanitizeSlug}[1]{%
   \RemoveAccents{#1}%
   \StrSubstitute{\tmpremoveaccents}{\&}{and}[\tmpA]%
-  \StrSubstitute{\tmpA}{ }{_}[\tmpB]%
+  \StrSubstitute{\tmpA}{ }{-}[\tmpB]%
   \StrSubstitute{\tmpB}{,}{}[\tmpC]%
-  \StrSubstitute{\tmpC}{-}{_}[\slug]%
+  \StrSubstitute{\tmpC}{'}{}[\slug]%
 }
 
 \newwrite\slugfile

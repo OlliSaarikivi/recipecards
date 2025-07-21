@@ -70,12 +70,14 @@ jobs:
           rm -rf outrepo/card
           mkdir -p outrepo/card
           cp -v card/* outrepo/card/
+          mkdir -p outrepo/recipes
+          cp app.html outrepo/recipes/index.html
 
           # Go to the repo directory
           cd outrepo
 
           # Stage and commit any changes
-          git add recipe_cards.pdf card/
+          git add recipe_cards.pdf card/ recipes/
           if ! git diff --cached --quiet; then
             git commit -m "Update recipe cards PDF and images to latest release"
             git push
