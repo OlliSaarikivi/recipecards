@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recipe Cards Desktop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fontlibrary.org//face/coelacanth" type="text/css"/>
+  <style>
+html, body {
+  background: #f8f8f7;
+  margin: 0;
+  padding: 0;
+  font-family: "Georgia", serif;
+  min-height: 100vh;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+.categories-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem 2.5vw;    /* Vertical gap, then horizontal gap */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-col {
+  display: flex;
+  flex-direction: column;
+  width: 5.2in;
+  min-width: 5.2in;
+  max-width: 5.2in;
+  margin-bottom: 2rem;   /* vertical spacing between rows (for old browsers if needed) */
+  /* margin-left/right is not needed with gap, but you can add if you want more horizontal space */
+  box-sizing: border-box;
+}
+
+.category-title {
+  text-align: center;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  font-family: 'Coelacanth', Georgia, serif;
+  color: #333;
+}
+.card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  align-items: center;
+}
+
+/* --- Card --- */
+.card {
+  height: auto;
+  background: white;
+  border-radius: 0;
+  border: none;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: 5in;
+  min-width: 5in;
+  max-width: 5in;
+  transition:
+    width 0.2s ease,
+    min-width 0.2s ease,
+    max-width 0.2s ease,
+    box-shadow 0.2s ease,
+    max-height 0.2s ease,
+    margin 0.2s ease;
+  will-change: width, min-width, max-width, box-shadow, max-height, margin;
+  z-index: 1;
+}
+
+.card.collapsed {
+  max-height: 60px;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  box-shadow:
+    0 -2px 6px -2px rgba(0,0,0,0.1),
+    -2px 0 6px -2px rgba(0,0,0,0.1),
+    2px 0 6px -2px rgba(0,0,0,0.1);
+}
+
+.card.expanded {
+  max-height: 90vh;
+  min-width: 5.2in;
+  max-width: 5.2in;
+  margin-left: -0.1in;
+  margin-right: -0.1in;
+  margin-bottom: 12px;
+  z-index: 2;
+  box-shadow:
+    0 6px 12px -3px rgba(0,0,0,0.1),
+    0 -6px 12px -3px rgba(0,0,0,0.1),
+    -6px 0 12px -3px rgba(0,0,0,0.1),
+    6px 0 12px -3px rgba(0,0,0,0.1);
+}
+
+.card.collapsed:last-child {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  background: transparent;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="categories-row" id="categories-row"></div>
+  </div>
+  <script>
+    // New: slugs is a dict of categories -> [list of card slugs]
+    /* $SLUGS_MAP */
+
+    const svgBase = "https://olli.saarikivi.fi/card/";
+
+    // Render categories and their cards
+    const categoriesRow = document.getElementById("categories-row");
+    categoriesRow.innerHTML = "";
+
+    Object.entries(slugs).forEach(([catTitle, catSlugs]) => {
+      const col = document.createElement("div");
+      col.className = "category-col";
+
+      // Category title
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "category-title";
+      titleDiv.textContent = catTitle;
+      col.appendChild(titleDiv);
+
+      // Cards for this category
+      const stack = document.createElement("div");
+      stack.className = "card-stack";
+      catSlugs.forEach((slug, idx) => {
+        const card = document.createElement("div");
+        card.className = "card collapsed";
+        card.tabIndex = 0;
+        card.setAttribute("data-idx", idx);
+        card.setAttribute("data-slug", slug);
+
+        // SVG
+        const svgUrl = `${svgBase}${slug}.svg`;
+        const svgWrap = document.createElement("div");
+        svgWrap.className = "svg-wrap";
+        svgWrap.innerHTML = `
+          <img src="${svgUrl}" alt="${slug} recipe card" style="width:100%;display:block;" draggable="false" />
+        `;
+        card.appendChild(svgWrap);
+
+        // Click/tap handler
+        card.onclick = (e) => {
+          if (card.classList.contains('expanded')) {
+              card.classList.remove('expanded');
+              card.classList.add('collapsed');
+          } else {
+              card.classList.remove('collapsed');
+              card.classList.add('expanded');
+          }
+        };
+        card.onkeydown = (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            card.click();
+            e.preventDefault();
+          }
+        };
+
+        stack.appendChild(card);
+      });
+
+      col.appendChild(stack);
+      categoriesRow.appendChild(col);
+    });
+  </script>
+</body>
+</html>

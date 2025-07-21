@@ -4,37 +4,72 @@ set -euo pipefail
 PDF="build/main.pdf"
 SLUGS="build/slugs.txt"
 OUTDIR="card"
+TEMPLATE="app_template.html"
+OUTPUT="app.html"
+PLACEHOLDER='/* $SLUGS_MAP */'
 
 mkdir -p "$OUTDIR"
 rm -f "$OUTDIR"/*
 
-# Parse slugs.txt into an associative array: page -> slug
+# --- Parse category titles to arrays of slugs, and page->slug map ---
+declare -A cat_slugs
 declare -A slugs
-while IFS=':' read -r page slug; do
-    [[ -z "$slug" ]] && continue
-    slugs[$page]=$slug
+
+while IFS=':' read -r page category_title recipe_slug; do
+    [[ -z "$recipe_slug" ]] && continue
+    slugs[$page]="$recipe_slug"
+    if [[ -z "${cat_slugs[$category_title]:-}" ]]; then
+        cat_slugs["$category_title"]="$recipe_slug"
+    else
+        cat_slugs["$category_title"]+=",${recipe_slug}"
+    fi
 done < "$SLUGS"
 
-# Determine the page range from slugs.txt
+# --- Compose JS object ---
+jsmap="const slugs = {\n"
+for cat in "${!cat_slugs[@]}"; do
+    jsmap+="  \"${cat}\": [\n"
+    IFS=',' read -ra arr <<< "${cat_slugs[$cat]}"
+    for slug in "${arr[@]}"; do
+        jsmap+="    \"${slug}\",\n"
+    done
+    jsmap+="  ],\n"
+done
+jsmap+="};"
+
+# --- Replace placeholder in template and write output ---
+if ! grep -q "$PLACEHOLDER" "$TEMPLATE"; then
+    echo "Error: Placeholder $PLACEHOLDER not found in $TEMPLATE"
+    exit 1
+fi
+
+awk -v map="$jsmap" -v placeholder="$PLACEHOLDER" '
+    { 
+      if (index($0, placeholder)) {
+        sub(placeholder, map)
+        print
+      } else print
+    }
+' "$TEMPLATE" > "$OUTPUT"
+
+echo "Wrote JS map into $OUTPUT"
+
+# --- Extract and convert PDFs ---
 pages=("${!slugs[@]}")
 IFS=$'\n' sorted_pages=($(sort -n <<<"${pages[*]}"))
 minpage=${sorted_pages[0]}
 maxpage=${sorted_pages[-1]}
 
-# Split PDF pages (one per card)
 pdfseparate -f "$minpage" -l "$maxpage" "$PDF" "$OUTDIR/card-%d.pdf"
 
-# For each extracted PDF, rename and convert to JPEG and SVG
 for page in $(seq "$minpage" "$maxpage"); do
     slug="${slugs[$page]}"
     pdf="$OUTDIR/card-$page.pdf"
     jpg_base="$OUTDIR/${slug}"
     svg_file="$OUTDIR/${slug}.svg"
-    # Convert PDF to JPEG at good quality/resolution
     pdftoppm -jpeg -jpegopt quality=95 -rx 400 -ry 400 -singlefile "$pdf" "$jpg_base"
-    # Convert PDF to SVG
     pdf2svg "$pdf" "$svg_file" 1
-    rm "$pdf"  # Remove intermediate PDF
+    rm "$pdf"
 done
 
 echo "PDF fonts for debugging"
