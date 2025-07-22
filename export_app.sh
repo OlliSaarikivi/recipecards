@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SLUGS="build/slugs.txt"
+SLUGS="build_svg/slugs.txt"
 TEMPLATE="app_template.html"
 OUTPUT="index.html"
 PLACEHOLDER='SLUGS_MAP'

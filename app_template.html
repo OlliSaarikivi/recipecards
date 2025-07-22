@@ -172,26 +172,33 @@ html, body {
   background: transparent;
 }
 
-/* placeholder look */
-.svg-wrap {
-  background-color: white;
-  position: relative;
-  width: 100%;
-  /* ensure it’s at least the collapsed height */
-  min-height: var(--card-height-collapsed);
-  overflow: hidden;
+.card:focus {
+  outline: none;
 }
 
-/* hide the img until loaded */
-.svg-wrap img {
+.svg-obj {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 3; /* 5in x 3in for your cards; set to your true SVG ratio */
   display: block;
-  width: 100%;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  min-height: var(--card-height-collapsed); /* Fallback for collapsed cards */
+  background-color: white;
+  pointer-events: auto;
 }
 
-.svg-wrap.loaded img {
+.svg-fade {
+  position: absolute;
+  inset: 0;
+  background: white;
   opacity: 1;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.svg-wrap.loaded .svg-fade {
+  opacity: 0;
+  transition: opacity 0.4s;
 }
 
 /* ---------- Modal for Focused Cards ---------- */
@@ -295,6 +302,19 @@ html, body {
   outline: none;
 }
 
+.card.highlighted {
+  outline: 0px solid #9B3928;
+  outline-offset: 0px;
+  animation: outline-flash 0.8s;
+  z-index: 10;
+}
+
+@keyframes outline-flash {
+  0%   { outline-width: 0px; outline-offset: 0px; }
+  20%  { outline-width: 6px;  outline-offset: -2px; }
+  100% { outline-width: 0px;  outline-offset: 0px; }
+}
+
   </style>
 </head>
 <body>
@@ -321,7 +341,8 @@ html, body {
     // slugs is a dict of categories -> [list of card slugs]
   SLUGS_MAP
 
-  const svgBase = "https://olli.saarikivi.fi/card/";
+  // const svgBase = "https://olli.saarikivi.fi/card/";
+  const svgBase = "card/";
 
   // Render categories and their cards
   const categoriesRow = document.getElementById("categories-row");
@@ -332,49 +353,78 @@ html, body {
     ([, aSlugs], [, bSlugs]) => bSlugs.length - aSlugs.length
   );
 
+  function decodeHTMLEntities(str) {
+    const el = document.createElement('textarea');
+    el.innerHTML = str;
+    return el.value;
+  }
+
   sortedCategories.forEach(([catTitle, catSlugs]) => {
-    // Column wrapper
     const col = document.createElement("div");
     col.className = "category-col";
 
-    // Category title
     const titleDiv = document.createElement("div");
     titleDiv.className = "category-title";
-    titleDiv.textContent = catTitle;
+    titleDiv.textContent = decodeHTMLEntities(catTitle);
     col.appendChild(titleDiv);
 
-    // Stack of cards
     const stack = document.createElement("div");
     stack.className = "card-stack";
 
     catSlugs.forEach((slug, idx) => {
-      // Card container
       const card = document.createElement("div");
       card.className = "card collapsed";
       card.tabIndex = 0;
       card.setAttribute("data-idx", idx);
       card.setAttribute("data-slug", slug);
 
-      // SVG wrap with grey placeholder background
       const svgWrap = document.createElement("div");
       svgWrap.className = "svg-wrap";
 
-      // The actual <img> that will fade in once loaded
-      const img = document.createElement("img");
-      img.src = `${svgBase}${slug}.svg`;
-      img.alt = `${slug} recipe card`;
-      img.loading = "lazy";
-      img.draggable = false;
+      const obj = document.createElement("object");
+      obj.data = `${svgBase}${slug}.svg`;
+      obj.type = "image/svg+xml";
+      obj.className = "svg-obj";
+      obj.setAttribute("aria-label", `${slug} recipe card`);
+      obj.tabIndex = -1;
+      obj.draggable = false;
 
-      // When SVG finishes loading, strip placeholder and fade in
-      img.onload = () => {
+      obj.onload = () => {
         svgWrap.classList.add("loaded");
+        const svgDoc = obj.contentDocument;
+        if (svgDoc) {
+          const svgLinks = svgDoc.querySelectorAll('a');
+          svgLinks.forEach(a => {
+            let href = a.getAttribute('xlink:href') || a.getAttribute('href');
+            if (!href) return;
+
+            a.addEventListener('click', e => {
+              e.preventDefault();
+
+              if (href.endsWith('.svg')) {
+                const slug = href.replace(/\.svg.*$/, '');
+                onRecipeRefClick(slug);
+              }
+            });
+          });
+
+          const svgEl = svgDoc.querySelector('svg');
+          if (svgEl) {
+            svgEl.addEventListener('click', function(e) {
+              if (e.target.closest('a')) return;
+              card.click();
+            });
+          }
+        }
       };
 
-      svgWrap.appendChild(img);
+      const fade = document.createElement("div");
+      fade.className = "svg-fade";
+
+      svgWrap.appendChild(obj);
+      svgWrap.appendChild(fade);
       card.appendChild(svgWrap);
 
-      // Toggle expand/collapse on click
       card.onclick = () => {
         card.classList.toggle("expanded");
         card.classList.toggle("collapsed");
@@ -394,7 +444,29 @@ html, body {
     categoriesRow.appendChild(col);
   });
 
-  // ——— Focused Cards Modal Logic ———
+  function onRecipeRefClick(slug) {
+    const card = document.querySelector(`.card[data-slug="${slug}"]`);
+    if (card) {
+      if (!card.classList.contains('expanded')) {
+        card.classList.add('expanded');
+        card.classList.remove('collapsed');
+        updateShowFocusedBtn();
+      }
+
+      const focusModal = document.getElementById('focus-modal');
+      if (focusModal.style.display === "flex") return;
+
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      highlightCard(card);
+    }
+  }
+
+  function highlightCard(card) {
+    card.classList.add('highlighted');
+    setTimeout(() => card.classList.remove('highlighted'), 500);
+    card.focus && card.focus();
+  }
 
   function getAllExpandedCards() {
     return Array.from(document.querySelectorAll('#categories-row .card.expanded'));
@@ -423,7 +495,6 @@ html, body {
       const modalCard = card.cloneNode(true);
       modalCard.tabIndex = -1;
 
-      // Add remove “×” button
       const removeBtn = document.createElement('button');
       removeBtn.className = "remove-btn";
       removeBtn.innerHTML = "&times;";
@@ -460,12 +531,10 @@ html, body {
   showFocusedBtn.onclick   = showFocusModal;
   closeModalBtn.onclick    = hideFocusModal;
 
-  // Close on ESC
   focusModal.addEventListener('keydown', (e) => {
     if (e.key === "Escape") hideFocusModal();
   });
 
-  // Trap focus inside modal
   focusModal.addEventListener('focusin', (e) => {
     if (focusModal.style.display === "flex") {
       const focusable = focusModal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
@@ -476,9 +545,6 @@ html, body {
       }
     }
   });
-
-  // Expose for debugging
-  window.updateShowFocusedBtn = updateShowFocusedBtn;
 </script>
 </body>
 </html>

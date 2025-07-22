@@ -105,83 +105,83 @@
 
 \newcommand{\HtmlSanitizeLimited}[1]{%
   % Block 1 (accents, HTML, ligatures)
-  \StrSubstitute{#1}{&}{\string&\string;amp;}[\tmpA]%
-  \StrSubstitute{\tmpA}{<}{\string&\string;lt;}[\tmpB]%
-  \StrSubstitute{\tmpB}{>}{\string&\string;gt;}[\tmpC]%
-  \StrSubstitute{\tmpC}{"}{\string&\string;quot;}[\tmpD]%
-  \StrSubstitute{\tmpD}{'}{\string&\string;apos;}[\tmpE]%
-  \StrSubstitute{\tmpE}{á}{\string&\string;aacute;}[\tmpF]%
-  \StrSubstitute{\tmpF}{à}{\string&\string;agrave;}[\tmpG]%
-  \StrSubstitute{\tmpG}{ä}{\string&\string;auml;}[\tmpH]%
-  \StrSubstitute{\tmpH}{â}{\string&\string;acirc;}[\tmpI]%
+  \StrSubstitute{#1}{&}{\string&amp;}[\tmpA]%
+  \StrSubstitute{\tmpA}{<}{\string&lt;}[\tmpB]%
+  \StrSubstitute{\tmpB}{>}{\string&gt;}[\tmpC]%
+  \StrSubstitute{\tmpC}{"}{\string&quot;}[\tmpD]%
+  \StrSubstitute{\tmpD}{'}{\string&apos;}[\tmpE]%
+  \StrSubstitute{\tmpE}{á}{\string&aacute;}[\tmpF]%
+  \StrSubstitute{\tmpF}{à}{\string&agrave;}[\tmpG]%
+  \StrSubstitute{\tmpG}{ä}{\string&auml;}[\tmpH]%
+  \StrSubstitute{\tmpH}{â}{\string&acirc;}[\tmpI]%
   % Block 2
-  \StrSubstitute{\tmpI}{ã}{\string&\string;atilde;}[\tmpA]%
-  \StrSubstitute{\tmpA}{å}{\string&\string;aring;}[\tmpB]%
-  \StrSubstitute{\tmpB}{ç}{\string&\string;ccedil;}[\tmpC]%
-  \StrSubstitute{\tmpC}{é}{\string&\string;eacute;}[\tmpD]%
-  \StrSubstitute{\tmpD}{è}{\string&\string;egrave;}[\tmpE]%
-  \StrSubstitute{\tmpE}{ë}{\string&\string;euml;}[\tmpF]%
-  \StrSubstitute{\tmpF}{ê}{\string&\string;ecirc;}[\tmpG]%
-  \StrSubstitute{\tmpG}{í}{\string&\string;iacute;}[\tmpH]%
-  \StrSubstitute{\tmpH}{ì}{\string&\string;igrave;}[\tmpI]%
+  \StrSubstitute{\tmpI}{ã}{\string&atilde;}[\tmpA]%
+  \StrSubstitute{\tmpA}{å}{\string&aring;}[\tmpB]%
+  \StrSubstitute{\tmpB}{ç}{\string&ccedil;}[\tmpC]%
+  \StrSubstitute{\tmpC}{é}{\string&eacute;}[\tmpD]%
+  \StrSubstitute{\tmpD}{è}{\string&egrave;}[\tmpE]%
+  \StrSubstitute{\tmpE}{ë}{\string&euml;}[\tmpF]%
+  \StrSubstitute{\tmpF}{ê}{\string&ecirc;}[\tmpG]%
+  \StrSubstitute{\tmpG}{í}{\string&iacute;}[\tmpH]%
+  \StrSubstitute{\tmpH}{ì}{\string&igrave;}[\tmpI]%
   % Block 3
-  \StrSubstitute{\tmpI}{ï}{\string&\string;iuml;}[\tmpA]%
-  \StrSubstitute{\tmpA}{î}{\string&\string;icirc;}[\tmpB]%
-  \StrSubstitute{\tmpB}{ñ}{\string&\string;ntilde;}[\tmpC]%
-  \StrSubstitute{\tmpC}{ó}{\string&\string;oacute;}[\tmpD]%
-  \StrSubstitute{\tmpD}{ò}{\string&\string;ograve;}[\tmpE]%
-  \StrSubstitute{\tmpE}{ö}{\string&\string;ouml;}[\tmpF]%
-  \StrSubstitute{\tmpF}{ô}{\string&\string;ocirc;}[\tmpG]%
-  \StrSubstitute{\tmpG}{õ}{\string&\string;otilde;}[\tmpH]%
-  \StrSubstitute{\tmpH}{ø}{\string&\string;oslash;}[\tmpI]%
+  \StrSubstitute{\tmpI}{ï}{\string&iuml;}[\tmpA]%
+  \StrSubstitute{\tmpA}{î}{\string&icirc;}[\tmpB]%
+  \StrSubstitute{\tmpB}{ñ}{\string&ntilde;}[\tmpC]%
+  \StrSubstitute{\tmpC}{ó}{\string&oacute;}[\tmpD]%
+  \StrSubstitute{\tmpD}{ò}{\string&ograve;}[\tmpE]%
+  \StrSubstitute{\tmpE}{ö}{\string&ouml;}[\tmpF]%
+  \StrSubstitute{\tmpF}{ô}{\string&ocirc;}[\tmpG]%
+  \StrSubstitute{\tmpG}{õ}{\string&otilde;}[\tmpH]%
+  \StrSubstitute{\tmpH}{ø}{\string&oslash;}[\tmpI]%
   % Block 4
-  \StrSubstitute{\tmpI}{ú}{\string&\string;uacute;}[\tmpA]%
-  \StrSubstitute{\tmpA}{ù}{\string&\string;ugrave;}[\tmpB]%
-  \StrSubstitute{\tmpB}{ü}{\string&\string;uuml;}[\tmpC]%
-  \StrSubstitute{\tmpC}{û}{\string&\string;ucirc;}[\tmpD]%
-  \StrSubstitute{\tmpD}{ý}{\string&\string;yacute;}[\tmpE]%
-  \StrSubstitute{\tmpE}{ÿ}{\string&\string;yuml;}[\tmpF]%
-  \StrSubstitute{\tmpF}{œ}{\string&\string;oe;}[\tmpG]%
-  \StrSubstitute{\tmpG}{š}{\string&\string;scaron;}[\tmpH]%
-  \StrSubstitute{\tmpH}{ž}{\string&\string;zcaron;}[\tmpI]%
+  \StrSubstitute{\tmpI}{ú}{\string&uacute;}[\tmpA]%
+  \StrSubstitute{\tmpA}{ù}{\string&ugrave;}[\tmpB]%
+  \StrSubstitute{\tmpB}{ü}{\string&uuml;}[\tmpC]%
+  \StrSubstitute{\tmpC}{û}{\string&ucirc;}[\tmpD]%
+  \StrSubstitute{\tmpD}{ý}{\string&yacute;}[\tmpE]%
+  \StrSubstitute{\tmpE}{ÿ}{\string&yuml;}[\tmpF]%
+  \StrSubstitute{\tmpF}{œ}{\string&oe;}[\tmpG]%
+  \StrSubstitute{\tmpG}{š}{\string&scaron;}[\tmpH]%
+  \StrSubstitute{\tmpH}{ž}{\string&zcaron;}[\tmpI]%
   % Block 5 (uppercase, ligatures, etc)
-  \StrSubstitute{\tmpI}{ß}{\string&\string;szlig;}[\tmpA]%
-  \StrSubstitute{\tmpA}{Á}{\string&\string;Aacute;}[\tmpB]%
-  \StrSubstitute{\tmpB}{À}{\string&\string;Agrave;}[\tmpC]%
-  \StrSubstitute{\tmpC}{Ä}{\string&\string;Auml;}[\tmpD]%
-  \StrSubstitute{\tmpD}{Â}{\string&\string;Acirc;}[\tmpE]%
-  \StrSubstitute{\tmpE}{Ã}{\string&\string;Atilde;}[\tmpF]%
-  \StrSubstitute{\tmpF}{Å}{\string&\string;Aring;}[\tmpG]%
-  \StrSubstitute{\tmpG}{Ç}{\string&\string;Ccedil;}[\tmpH]%
-  \StrSubstitute{\tmpH}{É}{\string&\string;Eacute;}[\tmpI]%
+  \StrSubstitute{\tmpI}{ß}{\string&szlig;}[\tmpA]%
+  \StrSubstitute{\tmpA}{Á}{\string&Aacute;}[\tmpB]%
+  \StrSubstitute{\tmpB}{À}{\string&Agrave;}[\tmpC]%
+  \StrSubstitute{\tmpC}{Ä}{\string&Auml;}[\tmpD]%
+  \StrSubstitute{\tmpD}{Â}{\string&Acirc;}[\tmpE]%
+  \StrSubstitute{\tmpE}{Ã}{\string&Atilde;}[\tmpF]%
+  \StrSubstitute{\tmpF}{Å}{\string&Aring;}[\tmpG]%
+  \StrSubstitute{\tmpG}{Ç}{\string&Ccedil;}[\tmpH]%
+  \StrSubstitute{\tmpH}{É}{\string&Eacute;}[\tmpI]%
   % Block 6
-  \StrSubstitute{\tmpI}{È}{\string&\string;Egrave;}[\tmpA]%
-  \StrSubstitute{\tmpA}{Ë}{\string&\string;Euml;}[\tmpB]%
-  \StrSubstitute{\tmpB}{Ê}{\string&\string;Ecirc;}[\tmpC]%
-  \StrSubstitute{\tmpC}{Í}{\string&\string;Iacute;}[\tmpD]%
-  \StrSubstitute{\tmpD}{Ì}{\string&\string;Igrave;}[\tmpE]%
-  \StrSubstitute{\tmpE}{Ï}{\string&\string;Iuml;}[\tmpF]%
-  \StrSubstitute{\tmpF}{Î}{\string&\string;Icirc;}[\tmpG]%
-  \StrSubstitute{\tmpG}{Ñ}{\string&\string;Ntilde;}[\tmpH]%
-  \StrSubstitute{\tmpH}{Ó}{\string&\string;Oacute;}[\tmpI]%
+  \StrSubstitute{\tmpI}{È}{\string&Egrave;}[\tmpA]%
+  \StrSubstitute{\tmpA}{Ë}{\string&Euml;}[\tmpB]%
+  \StrSubstitute{\tmpB}{Ê}{\string&Ecirc;}[\tmpC]%
+  \StrSubstitute{\tmpC}{Í}{\string&Iacute;}[\tmpD]%
+  \StrSubstitute{\tmpD}{Ì}{\string&Igrave;}[\tmpE]%
+  \StrSubstitute{\tmpE}{Ï}{\string&Iuml;}[\tmpF]%
+  \StrSubstitute{\tmpF}{Î}{\string&Icirc;}[\tmpG]%
+  \StrSubstitute{\tmpG}{Ñ}{\string&Ntilde;}[\tmpH]%
+  \StrSubstitute{\tmpH}{Ó}{\string&Oacute;}[\tmpI]%
   % Block 7
-  \StrSubstitute{\tmpI}{Ò}{\string&\string;Ograve;}[\tmpA]%
-  \StrSubstitute{\tmpA}{Ö}{\string&\string;Ouml;}[\tmpB]%
-  \StrSubstitute{\tmpB}{Ô}{\string&\string;Ocirc;}[\tmpC]%
-  \StrSubstitute{\tmpC}{Õ}{\string&\string;Otilde;}[\tmpD]%
-  \StrSubstitute{\tmpD}{Ø}{\string&\string;Oslash;}[\tmpE]%
-  \StrSubstitute{\tmpE}{Ú}{\string&\string;Uacute;}[\tmpF]%
-  \StrSubstitute{\tmpF}{Ù}{\string&\string;Ugrave;}[\tmpG]%
-  \StrSubstitute{\tmpG}{Ü}{\string&\string;Uuml;}[\tmpH]%
-  \StrSubstitute{\tmpH}{Û}{\string&\string;Ucirc;}[\tmpI]%
+  \StrSubstitute{\tmpI}{Ò}{\string&Ograve;}[\tmpA]%
+  \StrSubstitute{\tmpA}{Ö}{\string&Ouml;}[\tmpB]%
+  \StrSubstitute{\tmpB}{Ô}{\string&Ocirc;}[\tmpC]%
+  \StrSubstitute{\tmpC}{Õ}{\string&Otilde;}[\tmpD]%
+  \StrSubstitute{\tmpD}{Ø}{\string&Oslash;}[\tmpE]%
+  \StrSubstitute{\tmpE}{Ú}{\string&Uacute;}[\tmpF]%
+  \StrSubstitute{\tmpF}{Ù}{\string&Ugrave;}[\tmpG]%
+  \StrSubstitute{\tmpG}{Ü}{\string&Uuml;}[\tmpH]%
+  \StrSubstitute{\tmpH}{Û}{\string&Ucirc;}[\tmpI]%
   % Block 8
-  \StrSubstitute{\tmpI}{Ý}{\string&\string;Yacute;}[\tmpA]%
-  \StrSubstitute{\tmpA}{Ÿ}{\string&\string;Yuml;}[\tmpB]%
-  \StrSubstitute{\tmpB}{Œ}{\string&\string;OElig;}[\tmpC]%
-  \StrSubstitute{\tmpC}{Š}{\string&\string;Scaron;}[\tmpD]%
-  \StrSubstitute{\tmpD}{Ž}{\string&\string;Zcaron;}[\tmpE]%
-  \StrSubstitute{\tmpE}{Æ}{\string&\string;AElig;}[\tmpH]%
-  \StrSubstitute{\tmpH}{Ø}{\string&\string;Oslash;}[\htmlsafe]%
+  \StrSubstitute{\tmpI}{Ý}{\string&Yacute;}[\tmpA]%
+  \StrSubstitute{\tmpA}{Ÿ}{\string&Yuml;}[\tmpB]%
+  \StrSubstitute{\tmpB}{Œ}{\string&OElig;}[\tmpC]%
+  \StrSubstitute{\tmpC}{Š}{\string&Scaron;}[\tmpD]%
+  \StrSubstitute{\tmpD}{Ž}{\string&Zcaron;}[\tmpE]%
+  \StrSubstitute{\tmpE}{Æ}{\string&AElig;}[\tmpH]%
+  \StrSubstitute{\tmpH}{Ø}{\string&Oslash;}[\htmlsafe]%
 }
 \makeatother
 
@@ -231,7 +231,7 @@
     \hypertarget{\slug}{}%
     \label{card:\sanitizedRecipeName}%
     \begin{FlushLeft}
-    \textrm{{\large\href{https://olli.saarikivi.fi/card/\sanitizedRecipeName.jpg}{#2}}\hfill{\large\tabularnums{#3}}}
+    \textrm{{\large #2}\hfill{\large\tabularnums{#3}}}
     \vspace{0.5em}}
     {\end{FlushLeft}}
 \newenvironment{card}[3][]
@@ -284,7 +284,7 @@
     \fi%
     % Now produce the link or not:
     \ifdefined\svgbuild%
-        \href[title={#1}]{\slug.svg}{\reciperefcontent}%
+        \href{\slug.svg}{\reciperefcontent}%
     \else%
         \hyperlink{\slug}{\reciperefcontent}%
     \fi%

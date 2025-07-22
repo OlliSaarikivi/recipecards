@@ -44,6 +44,6 @@
 *blx.bib
 .bak 
 .mtc
-build/
+build*/
 card/
 index.html

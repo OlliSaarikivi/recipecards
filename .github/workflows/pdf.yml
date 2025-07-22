@@ -36,8 +36,8 @@ jobs:
       - name: Export cards
         run: ./export_cards.sh
 
-      - name: Build app
-        run: ./build_app.sh
+      - name: Export app
+        run: ./export_app.sh
 
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest

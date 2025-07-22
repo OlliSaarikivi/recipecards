@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PDF="build/main.pdf"
-DVI="build/main.dvi"
-SLUGS="build/slugs.txt"
+PDF="build_svg/main.pdf"
+DVI="build_svg/main.dvi"
+SLUGS="build_svg/slugs.txt"
 OUTDIR="card"
 
 # DVI needed for SVGs
-latexmk -dvi -latex="latex %O '\\def\\svgbuild{}\\input{%S}'"
+latexmk -dvi -output-directory="build_svg" -latex="latex %O '\\def\\svgbuild{}\\input{%S}'"
 
 mkdir -p "$OUTDIR"
 rm -f "$OUTDIR"/*
