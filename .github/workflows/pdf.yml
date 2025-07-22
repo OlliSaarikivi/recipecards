@@ -69,7 +69,6 @@ jobs:
 
           # Copy new files into the repo
           cp -v recipe_cards.pdf outrepo/
-          rm -rf outrepo/card
           rm -rf outrepo/recipes
           mkdir -p outrepo/recipes
           cp -v recipes/* outrepo/recipes/
