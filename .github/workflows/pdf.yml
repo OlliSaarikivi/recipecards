@@ -29,10 +29,15 @@ jobs:
             wget
 
       - name: Build PDF with latexmk
-        run: latexmk
+        run: |
+          latexmk
+          cp build/main.pdf recipe_cards.pdf
 
-      - name: Copy built PDF for release
-        run: cp build/main.pdf recipe_cards.pdf
+      - name: Export cards
+        run: ./export_cards.sh
+
+      - name: Build app
+        run: ./build_app.sh
 
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
@@ -43,9 +48,6 @@ jobs:
           title: "Latest PDF"
           files: |
             recipe_cards.pdf
-
-      - name: Export per-card images
-        run: ./export_cards.sh
 
       - name: Push PDF and card images to homepage repo
         env:
