@@ -568,6 +568,9 @@ a path, a rect, a circle, a polygon, a polyline, a line {
       card.classList.add('collapsed');
       updateShowFocusedBtn();
       modalCard.remove();
+      if (getAllExpandedCards().length === 0) {
+        hideFocusModal();
+      }
     };
     modalCard.appendChild(removeBtn);
 
