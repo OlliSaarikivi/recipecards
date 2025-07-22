@@ -7,6 +7,9 @@ TEMPLATE="app_template/index.html"
 OUTDIR="recipes"
 OUTPUT="$OUTDIR/index.html"
 PLACEHOLDER='SLUGS_MAP'
+GIT_HASH=$(git rev-parse --short HEAD)
+SW_TEMPLATE="$APP_DIR/sw.js"
+SW_OUTPUT="$OUTDIR/sw.js"
 
 mkdir -p "$OUTDIR"
 cp -r $APP_DIR/* "$OUTDIR/"
@@ -60,4 +63,6 @@ perl -0777 -pe '
 
 rm tmp_slugs_map.js
 
-echo "Wrote JS map into $OUTPUT"
+sed "s/__GIT_HASH__/$GIT_HASH/g" "$SW_TEMPLATE" > "$SW_OUTPUT"
+
+echo "Exported app."

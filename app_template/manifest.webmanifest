@@ -5,6 +5,7 @@
   "display": "standalone",
   "background_color": "#f8f8f7",
   "theme_color": "#214545",
+  "scope": "/recipes/",
   "icons": [
     {
       "src": "icon-192.png",
