@@ -6,142 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://fontlibrary.org//face/coelacanth" type="text/css"/>
   <style>
-html, body {
-  color: #040F0F;
-  background: #f8f8f7;
-  margin: 0;
-  padding: 0;
-  font-family: "Georgia", serif;
-  min-height: 100vh;
-}
-.container {
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-}
-.categories-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2rem 2.5vw;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 4.2rem;
-}
-.category-col {
-  display: flex;
-  flex-direction: column;
-  width: 5.2in;
-  min-width: 5.2in;
-  max-width: 5.2in;
-  margin-bottom: 2rem;
-  box-sizing: border-box;
+:root {
+  --cbw: 5in;
+  --cs: 1.2;
+  --card-expansion: calc(0.2in * var(--cs));
+  --card-width: calc(var(--cbw) * var(--cs));
+  --card-width-expanded: calc(var(--cbw) * var(--cs) + var(--card-expansion));
+  --card-height-collapsed: calc(0.5in * var(--cs));
 }
 
-.category-title {
-  text-align: center;
-  margin-bottom: 0.8rem;
-  font-weight: 500;
-  font-size: 1.2rem;
-  letter-spacing: 0.01em;
-  font-family: 'Coelacanth', Georgia, serif;
-}
-.card-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 100%;
-  align-items: center;
-}
-
-/* --- Card --- */
-.card {
-  height: auto;
-  border-radius: 0;
-  border: none;
-  overflow: hidden;
-  cursor: pointer;
-  position: relative;
-  margin: 0 auto;
-  padding: 0;
-  width: 5in;
-  min-width: 5in;
-  max-width: 5in;
-  transition:
-    width 0.2s ease,
-    min-width 0.2s ease,
-    max-width 0.2s ease,
-    box-shadow 0.2s ease,
-    height 0.2s ease,
-    min-height 0.2s ease,
-    max-height 0.2s ease,
-    margin 0.2s ease;
-  will-change: width, min-width, max-width, box-shadow, height, min-height, max-height, margin;
-  z-index: 1;
-}
-
-.card.collapsed {
-  height: 0.5in;
-  min-height: 0.5in;
-  max-height: 0.5in;
-  width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 0;
-  box-shadow:
-    0 -2px 6px -2px rgba(0,0,0,0.1),
-    -2px 0 6px -2px rgba(0,0,0,0.1),
-    2px 0 6px -2px rgba(0,0,0,0.1);
-}
-
-.card.expanded {
-  min-width: 5.2in;
-  max-width: 5.2in;
-  margin-top: -0.05in;
-  margin-left: -0.1in;
-  margin-right: -0.1in;
-  margin-bottom: 0.2in;
-  z-index: 2;
-  box-shadow:
-    0 6px 12px -3px rgba(0,0,0,0.1),
-    0 -6px 12px -3px rgba(0,0,0,0.1),
-    -6px 0 12px -3px rgba(0,0,0,0.1),
-    6px 0 12px -3px rgba(0,0,0,0.1);
-}
-
-.card.collapsed:hover {
-  margin-top: -0.05in;
-  height: 0.55in;
-  min-height: 0.55in;
-  max-height: 0.55in;
-}
-
-
-.card.collapsed:last-child:hover {
-  margin-bottom: 0.05in;
-}
-
-.card.collapsed:last-child {
-  height: auto;
-  min-height: 0;
-  max-height: none;
-}
-
-.card img {
-  width: 100%;
-  height: auto;
-  display: block;
-  pointer-events: none;
-  user-select: none;
-  background: transparent;
-}
-
-@media (max-width: 5.2in) {
+@media (max-width: 6.5in) {
   .category-col,
   .card.expanded {
     width: 100% !important;
@@ -164,6 +38,160 @@ html, body {
     width: 100% !important;
     padding: 0 !important;
   }
+}
+
+html, body {
+  color: #062525;
+  background: #f8f8f7;
+  margin: 0;
+  padding: 0;
+  font-family: "Georgia", serif;
+  min-height: 100vh;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+.categories-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4.2rem;
+}
+.category-col {
+  display: flex;
+  flex-direction: column;
+  width: var(--card-width-expanded);
+  min-width: var(--card-width-expanded);
+  max-width: var(--card-width-expanded);
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+}
+
+.category-title {
+  text-align: center;
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+  font-family: 'Coelacanth', Georgia, serif;
+}
+.card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  align-items: center;
+}
+
+/* --- Card --- */
+.card {
+  height: auto;
+  border-radius: 0;
+  border: none;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: var(--card-width);
+  min-width: var(--card-width);
+  max-width: var(--card-width);
+  transition:
+    width 0.2s ease,
+    min-width 0.2s ease,
+    max-width 0.2s ease,
+    box-shadow 0.2s ease,
+    height 0.2s ease,
+    min-height 0.2s ease,
+    max-height 0.2s ease,
+    margin 0.2s ease;
+  will-change: width, min-width, max-width, box-shadow, height, min-height, max-height, margin;
+  z-index: 1;
+}
+
+.card.collapsed {
+  height: var(--card-height-collapsed);
+  min-height: var(--card-height-collapsed);
+  max-height: var(--card-height-collapsed);
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  box-shadow:
+    0 -2px 6px -2px rgba(0,0,0,0.1),
+    -2px 0 6px -2px rgba(0,0,0,0.1),
+    2px 0 6px -2px rgba(0,0,0,0.1);
+}
+
+.card.expanded {
+  min-width: var(--card-width-expanded);
+  max-width: var(--card-width-expanded);
+  margin-top: calc(var(--card-expansion) / -4);
+  margin-left: calc(var(--card-expansion) / -2);
+  margin-right: calc(var(--card-expansion) / -2);
+  margin-bottom: var(--card-expansion);
+  z-index: 2;
+  box-shadow:
+    0 6px 12px -3px rgba(0,0,0,0.1),
+    0 -6px 12px -3px rgba(0,0,0,0.1),
+    -6px 0 12px -3px rgba(0,0,0,0.1),
+    6px 0 12px -3px rgba(0,0,0,0.1);
+}
+
+.card.collapsed:hover {
+  margin-top: calc(var(--card-expansion) / -4);
+  height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+  min-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+  max-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+}
+
+
+.card.collapsed:last-child:hover {
+  margin-bottom: calc(var(--card-expansion) / 4);
+}
+
+.card.collapsed:last-child {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  background: transparent;
+}
+
+/* placeholder look */
+.svg-wrap {
+  background-color: white;
+  position: relative;
+  width: 100%;
+  /* ensure it’s at least the collapsed height */
+  min-height: var(--card-height-collapsed);
+  overflow: hidden;
+}
+
+/* hide the img until loaded */
+.svg-wrap img {
+  display: block;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.svg-wrap.loaded img {
+  opacity: 1;
 }
 
 /* ---------- Modal for Focused Cards ---------- */
@@ -211,6 +239,7 @@ html, body {
   cursor: pointer;
   transition: background 0.15s;
   transition: color 0.13s;
+  color: #053333;
 }
 
 .nav-btn:hover, .nav-btn:focus {
@@ -228,7 +257,7 @@ html, body {
 
 #focus-modal .focused-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 5.2in);
+  grid-template-columns: repeat(auto-fit, var(--card-width-expanded));
   grid-template-rows: masonry;
   gap: 0.9rem;
   width: 100%;
@@ -259,17 +288,11 @@ html, body {
   opacity: 0.82;
   transition: color 0.13s, opacity 0.13s;
 }
+
 .remove-btn:hover, .remove-btn:focus {
   color: #9B3928;
   opacity: 1;
   outline: none;
-}
-
-
-#show-focused-btn .eye {
-  margin-right: 0.65em;
-  font-size: 1.3em;
-  vertical-align: -0.08em;
 }
 
   </style>
@@ -295,175 +318,167 @@ html, body {
   </div>
 
   <script>
-    // New: slugs is a dict of categories -> [list of card slugs]
-    SLUGS_MAP
+    // slugs is a dict of categories -> [list of card slugs]
+  SLUGS_MAP
 
-    const svgBase = "https://olli.saarikivi.fi/card/";
+  const svgBase = "https://olli.saarikivi.fi/card/";
 
-    // Render categories and their cards
-    const categoriesRow = document.getElementById("categories-row");
-    categoriesRow.innerHTML = "";
+  // Render categories and their cards
+  const categoriesRow = document.getElementById("categories-row");
+  categoriesRow.innerHTML = "";
 
-    const sortedCategories = Object.entries(slugs).sort(
-      ([, aSlugs], [, bSlugs]) => bSlugs.length - aSlugs.length
-    );
+  // Sort categories by descending number of cards
+  const sortedCategories = Object.entries(slugs).sort(
+    ([, aSlugs], [, bSlugs]) => bSlugs.length - aSlugs.length
+  );
 
-    // --- Render all cards per category ---
-    sortedCategories.forEach(([catTitle, catSlugs]) => {
-      const col = document.createElement("div");
-      col.className = "category-col";
+  sortedCategories.forEach(([catTitle, catSlugs]) => {
+    // Column wrapper
+    const col = document.createElement("div");
+    col.className = "category-col";
 
-      // Category title
-      const titleDiv = document.createElement("div");
-      titleDiv.className = "category-title";
-      titleDiv.textContent = catTitle;
-      col.appendChild(titleDiv);
+    // Category title
+    const titleDiv = document.createElement("div");
+    titleDiv.className = "category-title";
+    titleDiv.textContent = catTitle;
+    col.appendChild(titleDiv);
 
-      // Cards for this category
-      const stack = document.createElement("div");
-      stack.className = "card-stack";
-      catSlugs.forEach((slug, idx) => {
-        const card = document.createElement("div");
-        card.className = "card collapsed";
-        card.tabIndex = 0;
-        card.setAttribute("data-idx", idx);
-        card.setAttribute("data-slug", slug);
+    // Stack of cards
+    const stack = document.createElement("div");
+    stack.className = "card-stack";
 
-        // SVG
-        const svgUrl = `${svgBase}${slug}.svg`;
-        const svgWrap = document.createElement("div");
-        svgWrap.className = "svg-wrap";
-        svgWrap.innerHTML = `
-          <img src="${svgUrl}" alt="${slug} recipe card" style="width:100%;display:block;" draggable="false" />
-        `;
-        card.appendChild(svgWrap);
+    catSlugs.forEach((slug, idx) => {
+      // Card container
+      const card = document.createElement("div");
+      card.className = "card collapsed";
+      card.tabIndex = 0;
+      card.setAttribute("data-idx", idx);
+      card.setAttribute("data-slug", slug);
 
-        // Click/tap handler
-        card.onclick = (e) => {
-          if (card.classList.contains('expanded')) {
-              card.classList.remove('expanded');
-              card.classList.add('collapsed');
-          } else {
-              card.classList.remove('collapsed');
-              card.classList.add('expanded');
-          }
-          updateShowFocusedBtn();
-        };
-        card.onkeydown = (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            card.click();
-            e.preventDefault();
-          }
-        };
+      // SVG wrap with grey placeholder background
+      const svgWrap = document.createElement("div");
+      svgWrap.className = "svg-wrap";
 
-        stack.appendChild(card);
-      });
+      // The actual <img> that will fade in once loaded
+      const img = document.createElement("img");
+      img.src = `${svgBase}${slug}.svg`;
+      img.alt = `${slug} recipe card`;
+      img.loading = "lazy";
+      img.draggable = false;
 
-      col.appendChild(stack);
-      categoriesRow.appendChild(col);
-    });
+      // When SVG finishes loading, strip placeholder and fade in
+      img.onload = () => {
+        svgWrap.classList.add("loaded");
+      };
 
-    // --- Focused Cards Modal Logic ---
+      svgWrap.appendChild(img);
+      card.appendChild(svgWrap);
 
-    function getAllExpandedCards() {
-      return Array.from(document.querySelectorAll('#categories-row .card.expanded'));
-    }
-
-    function updateShowFocusedBtn() {
-      const expanded = getAllExpandedCards();
-      const btn = document.getElementById('show-focused-btn');
-      if (expanded.length === 0) {
-        btn.style.display = "none";
-      } else {
-        btn.style.display = "flex";
-      }
-    }
-    updateShowFocusedBtn();
-
-    // Show Focused Cards modal
-    const showFocusedBtn = document.getElementById('show-focused-btn');
-    const focusModal = document.getElementById('focus-modal');
-    const focusGrid = document.getElementById('focused-cards-grid');
-    const closeModalBtn = document.getElementById('close-focus-modal');
-
-    function renderFocusedModal() {
-      focusGrid.innerHTML = "";
-      const expanded = getAllExpandedCards();
-      if (expanded.length === 0) {
-        // nothing to show, just close modal
-        hideFocusModal();
-        return;
-      }
-      expanded.forEach(card => {
-        // Clone card for modal, but keep it in sync with main view
-        const slug = card.getAttribute('data-slug');
-        const modalCard = card.cloneNode(true);
-
-        // Remove tabIndex from clones
-        modalCard.tabIndex = -1;
-
-        // Add close/remove button to modalCard
-        const removeBtn = document.createElement('button');
-        removeBtn.className = "remove-btn";
-        removeBtn.innerHTML = "&times;"; // Unicode X symbol
-        removeBtn.setAttribute('aria-label', "Remove from focus");
-        removeBtn.onmousedown = e => e.stopPropagation();
-        removeBtn.onclick = e => {
-          card.classList.remove('expanded');
-          card.classList.add('collapsed');
-          updateShowFocusedBtn();
-          renderFocusedModal();
-        };
-        modalCard.appendChild(removeBtn);
-
-        focusGrid.appendChild(modalCard);
-      });
-    }
-
-    function showFocusModal() {
-      renderFocusedModal();
-      focusModal.style.display = "flex";
-      // Calculate scrollbar width and add padding to body to prevent shift
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-      if (scrollBarWidth > 0) {
-        document.body.style.paddingRight = scrollBarWidth + "px";
-      }
-      document.body.style.overflow = "hidden"; // prevent background scroll
-      focusModal.focus();
-    }
-
-    function hideFocusModal() {
-      focusModal.style.display = "none";
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = ""; // remove the padding
-    }
-
-    showFocusedBtn.onclick = showFocusModal;
-    closeModalBtn.onclick = hideFocusModal;
-
-    // ESC key to close modal
-    focusModal.addEventListener('keydown', function(e){
-      if (e.key === "Escape") {
-        hideFocusModal();
-      }
-    });
-
-    // Optional: trap focus inside modal when open
-    focusModal.addEventListener('focusin', function(e) {
-      if (focusModal.style.display === "flex") {
-        // Trap focus within modal
-        const focusableEls = focusModal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
-        const firstEl = focusableEls[0], lastEl = focusableEls[focusableEls.length - 1];
-        if (e.target === lastEl && e.relatedTarget === firstEl) {
-          firstEl.focus();
+      // Toggle expand/collapse on click
+      card.onclick = () => {
+        card.classList.toggle("expanded");
+        card.classList.toggle("collapsed");
+        updateShowFocusedBtn();
+      };
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          card.click();
           e.preventDefault();
         }
-      }
+      };
+
+      stack.appendChild(card);
     });
 
-    // For demo: expose update function in window for manual test
-    window.updateShowFocusedBtn = updateShowFocusedBtn;
+    col.appendChild(stack);
+    categoriesRow.appendChild(col);
+  });
 
-  </script>
+  // ——— Focused Cards Modal Logic ———
+
+  function getAllExpandedCards() {
+    return Array.from(document.querySelectorAll('#categories-row .card.expanded'));
+  }
+
+  function updateShowFocusedBtn() {
+    const expanded = getAllExpandedCards();
+    const btn = document.getElementById('show-focused-btn');
+    btn.style.display = expanded.length ? "flex" : "none";
+  }
+  updateShowFocusedBtn();
+
+  const showFocusedBtn = document.getElementById('show-focused-btn');
+  const focusModal     = document.getElementById('focus-modal');
+  const focusGrid      = document.getElementById('focused-cards-grid');
+  const closeModalBtn  = document.getElementById('close-focus-modal');
+
+  function renderFocusedModal() {
+    focusGrid.innerHTML = "";
+    const expanded = getAllExpandedCards();
+    if (!expanded.length) {
+      hideFocusModal();
+      return;
+    }
+    expanded.forEach(card => {
+      const modalCard = card.cloneNode(true);
+      modalCard.tabIndex = -1;
+
+      // Add remove “×” button
+      const removeBtn = document.createElement('button');
+      removeBtn.className = "remove-btn";
+      removeBtn.innerHTML = "&times;";
+      removeBtn.setAttribute('aria-label', "Remove from focus");
+      removeBtn.onmousedown = e => e.stopPropagation();
+      removeBtn.onclick = () => {
+        card.classList.remove('expanded');
+        card.classList.add('collapsed');
+        updateShowFocusedBtn();
+        renderFocusedModal();
+      };
+      modalCard.appendChild(removeBtn);
+      focusGrid.appendChild(modalCard);
+    });
+  }
+
+  function showFocusModal() {
+    renderFocusedModal();
+    focusModal.style.display = "flex";
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollBarWidth > 0) {
+      document.body.style.paddingRight = scrollBarWidth + "px";
+    }
+    document.body.style.overflow = "hidden";
+    focusModal.focus();
+  }
+
+  function hideFocusModal() {
+    focusModal.style.display = "none";
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  }
+
+  showFocusedBtn.onclick   = showFocusModal;
+  closeModalBtn.onclick    = hideFocusModal;
+
+  // Close on ESC
+  focusModal.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") hideFocusModal();
+  });
+
+  // Trap focus inside modal
+  focusModal.addEventListener('focusin', (e) => {
+    if (focusModal.style.display === "flex") {
+      const focusable = focusModal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.target === last && e.relatedTarget === first) {
+        first.focus();
+        e.preventDefault();
+      }
+    }
+  });
+
+  // Expose for debugging
+  window.updateShowFocusedBtn = updateShowFocusedBtn;
+</script>
 </body>
 </html>
