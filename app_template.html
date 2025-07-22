@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Recipe Cards Desktop</title>
+  <title>Recipe Cards</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://fontlibrary.org//face/coelacanth" type="text/css"/>
   <style>
@@ -390,32 +390,7 @@ html, body {
       obj.draggable = false;
 
       obj.onload = () => {
-        svgWrap.classList.add("loaded");
-        const svgDoc = obj.contentDocument;
-        if (svgDoc) {
-          const svgLinks = svgDoc.querySelectorAll('a');
-          svgLinks.forEach(a => {
-            let href = a.getAttribute('xlink:href') || a.getAttribute('href');
-            if (!href) return;
-
-            a.addEventListener('click', e => {
-              e.preventDefault();
-
-              if (href.endsWith('.svg')) {
-                const slug = href.replace(/\.svg.*$/, '');
-                onRecipeRefClick(slug);
-              }
-            });
-          });
-
-          const svgEl = svgDoc.querySelector('svg');
-          if (svgEl) {
-            svgEl.addEventListener('click', function(e) {
-              if (e.target.closest('a')) return;
-              card.click();
-            });
-          }
-        }
+        wireSvgObject(obj, card, svgWrap);
       };
 
       const fade = document.createElement("div");
@@ -444,6 +419,50 @@ html, body {
     categoriesRow.appendChild(col);
   });
 
+  function wireSvgObject(obj, owningCard, wrapEl) {
+    const doWire = () => {
+      wrapEl && wrapEl.classList.add('loaded');
+
+      const svgDoc = obj.contentDocument;
+      if (!svgDoc) return;
+
+      // Intercept recipe-card links
+      svgDoc.querySelectorAll('a').forEach(a => {
+        let href = a.getAttribute('xlink:href') || a.getAttribute('href');
+        if (!href) return;
+
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          if (href.endsWith('.svg')) {
+            const slug = href.replace(/\.svg.*$/, '');
+            onRecipeRefClick(slug);
+          } else {
+            // External link? open normally (or however you want)
+            window.open(href, '_blank', 'noopener');
+          }
+        });
+      });
+
+      // Clicking on blank SVG area toggles card (only for the main view)
+      if (owningCard) {
+        const svgEl = svgDoc.querySelector('svg');
+        if (svgEl) {
+          svgEl.addEventListener('click', e => {
+            if (e.target.closest('a')) return;
+            owningCard.click();
+          });
+        }
+      }
+    };
+
+    // If it’s already loaded, contentDocument is there; otherwise wait
+    if (obj.contentDocument) {
+      doWire();
+    } else {
+      obj.addEventListener('load', doWire, { once: true });
+    }
+  }
+
   function onRecipeRefClick(slug) {
     const card = document.querySelector(`.card[data-slug="${slug}"]`);
     if (card) {
@@ -453,12 +472,15 @@ html, body {
         updateShowFocusedBtn();
       }
 
-      const focusModal = document.getElementById('focus-modal');
-      if (focusModal.style.display === "flex") return;
+      if (focusModal.style.display === "flex") {
+        modalCard = addCardToFocus(card);
+        highlightCard(modalCard);
+      }
 
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
-
-      highlightCard(card);
+      if (focusModal.style.display !== "flex") {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        highlightCard(card);
+      }
     }
   }
 
@@ -484,31 +506,44 @@ html, body {
   const focusGrid      = document.getElementById('focused-cards-grid');
   const closeModalBtn  = document.getElementById('close-focus-modal');
 
+  function cloneCardForModal(card) {
+    const modalCard = card.cloneNode(true);
+    modalCard.tabIndex = -1;
+
+    // Add the remove (×) button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = "remove-btn";
+    removeBtn.innerHTML = "&times;";
+    removeBtn.setAttribute('aria-label', "Remove from focus");
+    removeBtn.onmousedown = e => e.stopPropagation();
+    removeBtn.onclick = () => {
+      card.classList.remove('expanded');
+      card.classList.add('collapsed');
+      updateShowFocusedBtn();
+      modalCard.remove();
+    };
+    modalCard.appendChild(removeBtn);
+
+    // Re-wire the SVG inside the clone
+    const clonedObj  = modalCard.querySelector('object');
+    const clonedWrap = modalCard.querySelector('.svg-wrap');
+    wireSvgObject(clonedObj, null, clonedWrap); // no toggle click in modal
+
+    return modalCard;
+  }
+
+  function addCardToFocus(card) {
+    const slug = card.dataset.slug;
+    existingCard = focusGrid.querySelector(`.card[data-slug="${slug}"]`)
+    if (existingCard) return existingCard; // already there
+    const modalCard = cloneCardForModal(card);
+    focusGrid.appendChild(modalCard);
+    return modalCard;
+  }
+
   function renderFocusedModal() {
     focusGrid.innerHTML = "";
-    const expanded = getAllExpandedCards();
-    if (!expanded.length) {
-      hideFocusModal();
-      return;
-    }
-    expanded.forEach(card => {
-      const modalCard = card.cloneNode(true);
-      modalCard.tabIndex = -1;
-
-      const removeBtn = document.createElement('button');
-      removeBtn.className = "remove-btn";
-      removeBtn.innerHTML = "&times;";
-      removeBtn.setAttribute('aria-label', "Remove from focus");
-      removeBtn.onmousedown = e => e.stopPropagation();
-      removeBtn.onclick = () => {
-        card.classList.remove('expanded');
-        card.classList.add('collapsed');
-        updateShowFocusedBtn();
-        renderFocusedModal();
-      };
-      modalCard.appendChild(removeBtn);
-      focusGrid.appendChild(modalCard);
-    });
+    getAllExpandedCards().forEach(addCardToFocus);
   }
 
   function showFocusModal() {
