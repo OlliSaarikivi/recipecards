@@ -7,7 +7,7 @@ SLUGS="build/slugs.txt"
 OUTDIR="card"
 
 # DVI needed for SVGs
-latexmk -dvi
+latexmk -dvi -latex="latex %O '\\def\\svgbuild{}\\input{%S}'"
 
 mkdir -p "$OUTDIR"
 rm -f "$OUTDIR"/*
@@ -41,7 +41,7 @@ for page in $(seq "$minpage" "$maxpage"); do
     pdftoppm -jpeg -jpegopt quality=95 -rx 400 -ry 400 -singlefile -f "$page" -l "$page" "$PDF" "$jpg_base"
 
     svg_file="$OUTDIR/${slug}.svg"
-    dvisvgm --font-format=woff --bbox=papersize --page="$page" -o "$svg_file" "$DVI"
+    dvisvgm --font-format=woff --bbox=papersize --linkmark=none --page="$page" -o "$svg_file" "$DVI"
 done
 
 echo "All JPEGs and SVGs exported to $OUTDIR/"

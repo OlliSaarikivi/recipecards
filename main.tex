@@ -14,7 +14,11 @@
 \usepackage{booktabs}
 \usepackage{soul}
 \usepackage{color}
-\usepackage[breaklinks,hidelinks]{hyperref}
+\ifdefined\svgbuild
+    \usepackage[breaklinks,hidelinks,hypertex,hypertexnames=false]{hyperref}
+\else
+    \usepackage[breaklinks,hidelinks,hypertexnames=false]{hyperref}
+\fi
 \usepackage{hyphenat}
 \usepackage{multicol}
 \usepackage{microtype}
@@ -264,19 +268,30 @@
 \newenvironment{densesteps}
     {\begin{enumerate}[leftmargin=*,topsep=0pt,itemsep=0pt]}
     {\end{enumerate}}
-\newcommand{\reciperefcore}[3]{%
-    \SanitizeSlug{#1}
+\newcommand{\reciperefcore}[2]{%
+    \SanitizeSlug{#1}%
     \edef\sanitizedRef{\slug}%
-    \ifnum#3=1
-        \hyperlink{\slug}{#1}%
-    \fi
-    \ifnum#2=1
-      \,\allowbreak(\S\ref{card:\sanitizedRef})%
-    \fi
+    % Compose the display content:
+    \def\reciperefcontent{}%
+    \ifnum#2=0 %
+        \def\reciperefcontent{#1\,\allowbreak(\S\getrefnumber{card:\slug})}%
+    \fi%
+    \ifnum#2=1 %
+        \def\reciperefcontent{#1}%
+    \fi%
+    \ifnum#2=2 %
+        \def\reciperefcontent{(\S\getrefnumber{card:\slug})}%
+    \fi%
+    % Now produce the link or not:
+    \ifdefined\svgbuild%
+        \href[title={#1}]{\slug.svg}{\reciperefcontent}%
+    \else%
+        \hyperlink{\slug}{\reciperefcontent}%
+    \fi%
 }
-\newcommand{\reciperef}[1]{\reciperefcore{#1}{1}{1}}
-\newcommand{\recipesecref}[1]{\reciperefcore{#1}{1}{0}}
-\newcommand{\reciperefplain}[1]{\reciperefcore{#1}{0}{1}}
+\newcommand{\reciperef}[1]{\reciperefcore{#1}{0}}
+\newcommand{\reciperefplain}[1]{\reciperefcore{#1}{1}}
+\newcommand{\recipesecref}[1]{\reciperefcore{#1}{2}}
 
 \setlength{\cftbeforesecskip}{0pt}
 \setlength{\cftbeforesubsecskip}{0pt}
