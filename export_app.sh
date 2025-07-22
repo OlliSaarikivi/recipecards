@@ -3,8 +3,12 @@ set -euo pipefail
 
 SLUGS="build_svg/slugs.txt"
 TEMPLATE="app_template.html"
-OUTPUT="index.html"
+OUTDIR="recipes"
+OUTPUT="$OUTDIR/index.html"
 PLACEHOLDER='SLUGS_MAP'
+
+mkdir -p "$OUTDIR"
+rm -f "$OUTDIR"/index.html
 
 # --- Parse category titles to arrays of slugs, and page->slug map ---
 declare -A cat_slugs

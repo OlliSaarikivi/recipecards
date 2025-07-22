@@ -4,13 +4,14 @@ set -euo pipefail
 PDF="build_svg/main.pdf"
 DVI="build_svg/main.dvi"
 SLUGS="build_svg/slugs.txt"
-OUTDIR="card"
+OUTDIR="recipes"
 
 # DVI needed for SVGs
 latexmk -dvi -output-directory="build_svg" -latex="latex %O '\\def\\svgbuild{}\\input{%S}'"
 
 mkdir -p "$OUTDIR"
-rm -f "$OUTDIR"/*
+rm -f "$OUTDIR"/*.jpg
+rm -f "$OUTDIR"/*.svg
 
 # --- Parse category titles to arrays of slugs, and page->slug map ---
 declare -A cat_slugs
