@@ -13,6 +13,7 @@
   <link rel="shortcut icon" href="favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="print.css" type="text/css"/>
   <style>
 :root {
   --cbw: 5in;
@@ -402,12 +403,13 @@ a path, a rect, a circle, a polygon, a polyline, a line {
   </div>
 
   <!-- Show Focused Cards Button -->
-  <button id="show-focused-btn" class="nav-btn" style="display:none;" aria-label="Show open cards">focus</button>
+  <button id="show-focused-btn" class="nav-btn" style="display:none;" aria-label="Show open cards">Focus</button>
 
   <!-- Focused Cards Modal -->
   <div id="focus-modal" aria-modal="true" role="dialog" tabindex="-1">
     <div class="modal-header">
-      <button id="close-focus-modal" class="nav-btn" aria-label="Back to all cards">Back</button>
+      <button id="close-focused-btn" class="nav-btn" aria-label="Back to all cards">Back</button>
+      <button id="print-expanded-btn" class="nav-btn" aria-label="Print open cards">Print</button>
     </div>
     <div class="focused-cards-outer">
       <div class="focused-cards-grid" id="focused-cards-grid">
@@ -592,7 +594,7 @@ a path, a rect, a circle, a polygon, a polyline, a line {
   const showFocusedBtn = document.getElementById('show-focused-btn');
   const focusModal     = document.getElementById('focus-modal');
   const focusGrid      = document.getElementById('focused-cards-grid');
-  const closeModalBtn  = document.getElementById('close-focus-modal');
+  const closeModalBtn  = document.getElementById('close-focused-btn');
 
   function cloneCardForModal(card) {
     const modalCard = card.cloneNode(true);
@@ -671,6 +673,22 @@ a path, a rect, a circle, a polygon, a polyline, a line {
       }
     }
   });
+
+  const printBtn = document.getElementById('print-expanded-btn');
+  printBtn.onclick = () => {
+    // Ensure all SVGs are loaded before printing
+    const pending = Array.from(document.querySelectorAll('.svg-wrap:not(.loaded)'));
+    if (pending.length) {
+      Promise.all(pending.map(w => new Promise(res => {
+        const obs = new MutationObserver(() => {
+          if (w.classList.contains('loaded')) { obs.disconnect(); res(); }
+        });
+        obs.observe(w, { attributes: true });
+      }))).then(() => window.print());
+    } else {
+      window.print();
+    }
+  };
 </script>
 </body>
 </html>

@@ -1,0 +1,121 @@
+@media print {
+  :root {
+    --crop-len: 0.25in;
+    /* length of each mark */
+    --crop-gap: 0.08in;
+    /* clear gap between trim edge and start of mark */
+    --crop-thick: 1pt;
+    /* line weight */
+  }
+
+  @page {
+    margin: 0.5in;
+  }
+
+  #focus-modal,
+  #show-focused-btn,
+  .nav-btn,
+  .category-title,
+  .card.collapsed {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: white !important;
+    color: #000 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Use a simple block flow */
+  .container,
+  .categories-row,
+  .category-col,
+  .card-stack {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: none !important;
+    width: 5in !important;
+    /* your real card width */
+    max-width: 5in !important;
+    margin: calc(var(--crop-len) + 2 * var(--crop-gap)) !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    overflow: visible;
+  }
+
+  .svg-wrap svg {
+    width: 100% !important;
+    height: auto !important;
+    background: white !important;
+  }
+
+  /* Kill hover transitions that confuse printers */
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  /* Remove link styling */
+  a {
+    color: white;
+  }
+
+  a:hover,
+  a:focus {
+    color: white;
+  }
+
+  /* Horizontal marks (left/right) */
+  .card::before {
+    content: "";
+    position: absolute;
+    top: calc(-0.5 * var(--crop-thick));
+    bottom: calc(-0.5 * var(--crop-thick));
+    left: calc(-1 * var(--crop-gap) - var(--crop-len));
+    right: calc(-1 * var(--crop-gap) - var(--crop-len));
+    background:
+      /* top-left  */
+      linear-gradient(#000 0 0) 0 0 / var(--crop-len) var(--crop-thick),
+      /* top-right */
+      linear-gradient(#000 0 0) 100% 0 / var(--crop-len) var(--crop-thick),
+      /* bot-left  */
+      linear-gradient(#000 0 0) 0 100% / var(--crop-len) var(--crop-thick),
+      /* bot-right */
+      linear-gradient(#000 0 0) 100% 100% / var(--crop-len) var(--crop-thick);
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Vertical marks (top/bottom) */
+  .card::after {
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--crop-gap) - var(--crop-len));
+    bottom: calc(-1 * var(--crop-gap) - var(--crop-len));
+    left: calc(-0.5 * var(--crop-thick));
+    right: calc(-0.5 * var(--crop-thick));
+    background:
+      /* top-left  */
+      linear-gradient(#000 0 0) 0 0 / var(--crop-thick) var(--crop-len),
+      /* top-right */
+      linear-gradient(#000 0 0) 100% 0 / var(--crop-thick) var(--crop-len),
+      /* bot-left  */
+      linear-gradient(#000 0 0) 0 100% / var(--crop-thick) var(--crop-len),
+      /* bot-right */
+      linear-gradient(#000 0 0) 100% 100% / var(--crop-thick) var(--crop-len);
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 9999;
+  }
+}
