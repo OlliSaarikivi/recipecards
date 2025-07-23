@@ -1,15 +1,11 @@
 @media print {
   :root {
-    --crop-len: 0.25in;
+    --crop-len: 0.2in;
     /* length of each mark */
-    --crop-gap: 0.08in;
+    --crop-gap: 0.05in;
     /* clear gap between trim edge and start of mark */
-    --crop-thick: 1pt;
+    --crop-thick: 1px;
     /* line weight */
-  }
-
-  @page {
-    margin: 0.5in;
   }
 
   #focus-modal,
@@ -44,13 +40,22 @@
   .card {
     box-shadow: none !important;
     border: none !important;
-    width: 5in !important;
-    /* your real card width */
-    max-width: 5in !important;
-    margin: calc(var(--crop-len) + 2 * var(--crop-gap)) !important;
+    width: calc(5in + 2 * var(--crop-len) + 2 * var(--crop-gap)) !important;
+    height: calc(3in + 2 * var(--crop-len) + 2 * var(--crop-gap)) !important;
+    margin: 0 !important;
+    margin-bottom: calc(-1 * var(--crop-len)) !important;
+    padding: 0 !important;
     break-inside: avoid;
     page-break-inside: avoid;
     overflow: visible;
+  }
+
+  .svg-wrap {
+    position: relative;
+    top: calc(var(--crop-len) + var(--crop-gap)) !important;
+    left: calc(var(--crop-len) + var(--crop-gap)) !important;
+    width: 5in !important;
+    max-width: 5in !important;
   }
 
   .svg-wrap svg {
@@ -76,7 +81,7 @@
   }
 
   /* Horizontal marks (left/right) */
-  .card::before {
+  .svg-wrap::before {
     content: "";
     position: absolute;
     top: calc(-0.5 * var(--crop-thick));
@@ -98,7 +103,7 @@
   }
 
   /* Vertical marks (top/bottom) */
-  .card::after {
+  .svg-wrap::after {
     content: "";
     position: absolute;
     top: calc(-1 * var(--crop-gap) - var(--crop-len));

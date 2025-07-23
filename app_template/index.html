@@ -215,13 +215,6 @@ body {
   to   { opacity: 1; }
 }
 
-#focus-modal .modal-header {
-  height: 0; /* prevents extra vertical offset */
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
-  background: transparent;
-}
-
 .nav-btn {
   position: fixed;
   top: clamp(6.0000px, calc(-10.6667px + 4.4444vw), 16.0000px);
@@ -246,6 +239,27 @@ body {
 
 .nav-btn:hover, .nav-btn:focus {
   color: #053333;
+}
+
+#focus-modal .modal-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: clamp(6px, calc(-10.6667px + 4.4444vw), 16px);
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  background: transparent;
+  pointer-events: none;          /* header itself transparent */
+  z-index: 1101;
+}
+
+#focus-modal .modal-header .nav-btn{
+  position: static;              /* no fixed positioning */
+  top: auto; left: auto;         /* clear inherited values */
+  pointer-events: auto;          /* clickable */
+  margin: 0;
 }
 
 #focus-modal .focused-cards-outer {
@@ -409,7 +423,6 @@ a path, a rect, a circle, a polygon, a polyline, a line {
   <div id="focus-modal" aria-modal="true" role="dialog" tabindex="-1">
     <div class="modal-header">
       <button id="close-focused-btn" class="nav-btn" aria-label="Back to all cards">Back</button>
-      <button id="print-expanded-btn" class="nav-btn" aria-label="Print open cards">Print</button>
     </div>
     <div class="focused-cards-outer">
       <div class="focused-cards-grid" id="focused-cards-grid">
@@ -673,22 +686,6 @@ a path, a rect, a circle, a polygon, a polyline, a line {
       }
     }
   });
-
-  const printBtn = document.getElementById('print-expanded-btn');
-  printBtn.onclick = () => {
-    // Ensure all SVGs are loaded before printing
-    const pending = Array.from(document.querySelectorAll('.svg-wrap:not(.loaded)'));
-    if (pending.length) {
-      Promise.all(pending.map(w => new Promise(res => {
-        const obs = new MutationObserver(() => {
-          if (w.classList.contains('loaded')) { obs.disconnect(); res(); }
-        });
-        obs.observe(w, { attributes: true });
-      }))).then(() => window.print());
-    } else {
-      window.print();
-    }
-  };
 </script>
 </body>
 </html>
