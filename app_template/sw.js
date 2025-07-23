@@ -35,18 +35,20 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET' || url.origin !== self.location.origin) return;
 
   // SVG cards: cache as visited
-  if (req.url.includes('/card/') && req.url.endsWith('.svg')) {
-    event.respondWith(
-      caches.match(req).then(res =>
-        res ||
-        fetch(req).then(netRes => {
-          if (netRes.ok) {
-            caches.open(CACHE).then(cache => cache.put(req, netRes.clone()));
-          }
-          return netRes;
-        })
-      )
-    );
+  if (req.url.endsWith('.svg')) {
+    event.respondWith((async () => {
+      const cached = await caches.match(req);
+      if (cached) {
+        return cached;
+      }
+      const netRes = await fetch(req);
+      if (netRes && netRes.ok) {
+        const clone = netRes.clone();
+        const cache = await caches.open(CACHE);
+        await cache.put(req, clone);
+      }
+      return netRes;
+    })());
     return;
   }
 

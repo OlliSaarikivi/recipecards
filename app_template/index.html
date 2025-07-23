@@ -4,12 +4,15 @@
   <meta charset="UTF-8">
   <title>Recipe Cards</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#214545">
+  <meta name="apple-mobile-web-app-title" content="Recipes" />
   <meta name="mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon-180.png">
-  <link rel="icon" href="icon-192.png" type="image/png">
+  <meta name="theme-color" content="#214545">
   <link rel="stylesheet" href="https://fontlibrary.org//face/coelacanth" type="text/css"/>
+  <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest">
   <style>
 :root {
   --cbw: 5in;
@@ -47,7 +50,7 @@
 
 html, body {
   color: #122121;
-  background: #f8f8f7;
+  background: #f7f6f4;
   margin: 0;
   padding: 0;
   font-family: "Georgia", serif;
@@ -103,6 +106,7 @@ body {
 
 /* --- Card --- */
 .card {
+  background: white;
   height: auto;
   border-radius: 0;
   border: none;
@@ -187,7 +191,7 @@ body {
   outline: none;
 }
 
-.svg-obj {
+.svg-wrap svg {
   width: 100%;
   height: auto;
   aspect-ratio: 5 / 3; /* 5in x 3in for your cards; set to your true SVG ratio */
@@ -326,6 +330,20 @@ body {
   100% { outline-width: 0px;  outline-offset: 0px; }
 }
 
+a {
+  color: #511e15;
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: #053333;
+}
+
+/* Make link contents follow that color */
+a text, a tspan { fill: currentColor !important; }
+a path, a rect, a circle, a polygon, a polyline, a line {
+  stroke: currentColor !important;
+  fill: currentColor !important; /* in case your text was converted to paths */
+}
   </style>
 </head>
 <body>
@@ -404,24 +422,13 @@ body {
       const svgWrap = document.createElement("div");
       svgWrap.className = "svg-wrap";
 
-      const obj = document.createElement("object");
-      obj.data = `${slug}.svg`;
-      obj.type = "image/svg+xml";
-      obj.className = "svg-obj";
-      obj.setAttribute("aria-label", `${slug} recipe card`);
-      obj.tabIndex = -1;
-      obj.draggable = false;
-
-      obj.onload = () => {
-        wireSvgObject(obj, card, svgWrap);
-      };
-
       const fade = document.createElement("div");
       fade.className = "svg-fade";
-
-      svgWrap.appendChild(obj);
       svgWrap.appendChild(fade);
       card.appendChild(svgWrap);
+
+      // Load SVG via JS and insert inline
+      loadAndInsertSVG(`${slug}.svg`, svgWrap, fade, card, slug);
 
       card.onclick = () => {
         card.classList.toggle("expanded");
@@ -442,71 +449,54 @@ body {
     categoriesRow.appendChild(col);
   });
 
-  const SVG_LINK_STYLE = `
-a {
-  color: #511e15;
-  text-decoration: none;
-}
-a:hover, a:focus {
-  color: #053333;
-}
+  function loadAndInsertSVG(url, container, fadeEl, cardEl, slug) {
+    fetch(url)
+      .then(resp => resp.text())
+      .then(svgText => {
+        container.classList.add('loaded');
+        container.querySelector('.svg-inline')?.remove();
 
-/* Make link contents follow that color */
-a text, a tspan { fill: currentColor !important; }
-a path, a rect, a circle, a polygon, a polyline, a line {
-  stroke: currentColor !important;
-  fill: currentColor !important; /* in case your text was converted to paths */
-}
-`;
+        // Insert SVG as inline HTML
+        const wrapper = document.createElement('div');
+        wrapper.className = 'svg-inline';
+        wrapper.innerHTML = svgText;
 
-  function injectSvgStyles(svgDoc) {
-    const styleEl = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'style');
-    styleEl.textContent = SVG_LINK_STYLE;
-    svgDoc.documentElement.appendChild(styleEl);
+        wireInlineSVGInteractions(wrapper, cardEl);
+
+        container.insertBefore(wrapper, fadeEl);
+      });
   }
 
-  function wireSvgObject(obj, owningCard, wrapEl) {
-    const doWire = () => {
-      wrapEl && wrapEl.classList.add('loaded');
+  function wireInlineSVGInteractions(wrapper, cardEl) {
+    // Clicking anywhere on SVG background or inside (except links) toggles card
+    wrapper.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      cardEl.click();
+    });
 
-      const svgDoc = obj.contentDocument;
-      if (!svgDoc) return;
-      injectSvgStyles(svgDoc);
-
-      // Intercept recipe-card links
-      svgDoc.querySelectorAll('a').forEach(a => {
-        let href = a.getAttribute('xlink:href') || a.getAttribute('href');
-        if (!href) return;
-
-        a.addEventListener('click', e => {
-          e.preventDefault();
-          if (href.endsWith('.svg')) {
-            const slug = href.replace(/\.svg.*$/, '');
-            onRecipeRefClick(slug);
-          } else {
-            // External link? open normally (or however you want)
-            window.open(href, '_blank', 'noopener');
-          }
-        });
-      });
-
-      // Clicking on blank SVG area toggles card (only for the main view)
-      if (owningCard) {
-        const svgEl = svgDoc.querySelector('svg');
-        if (svgEl) {
-          svgEl.addEventListener('click', e => {
-            if (e.target.closest('a')) return;
-            owningCard.click();
-          });
+    // Add handler to all SVG links
+    wrapper.querySelectorAll('a').forEach(a => {
+      let href = a.getAttribute('xlink:href') || a.getAttribute('href');
+      if (!href) return;
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (href.endsWith('.svg')) {
+          const linkSlug = href.replace(/\.svg.*$/, '');
+          onRecipeRefClick(linkSlug);
+        } else {
+          window.open(href, '_blank', 'noopener');
         }
-      }
-    };
+      });
+    });
 
-    // If it’s already loaded, contentDocument is there; otherwise wait
-    if (obj.contentDocument) {
-      doWire();
-    } else {
-      obj.addEventListener('load', doWire, { once: true });
+    // Also cover cases where SVG is present for bubbling
+    const svg = wrapper.querySelector('svg');
+    if (svg) {
+      svg.addEventListener('click', e => {
+        if (e.target.closest('a')) return;
+        cardEl.click();
+      });
     }
   }
 
@@ -557,6 +547,11 @@ a path, a rect, a circle, a polygon, a polyline, a line {
     const modalCard = card.cloneNode(true);
     modalCard.tabIndex = -1;
 
+    const wrapper = modalCard.querySelector('.svg-inline');
+    if (wrapper) {
+      wireInlineSVGInteractions(wrapper, modalCard);
+    }
+
     // Add the remove (×) button
     const removeBtn = document.createElement('button');
     removeBtn.className = "remove-btn";
@@ -573,11 +568,6 @@ a path, a rect, a circle, a polygon, a polyline, a line {
       }
     };
     modalCard.appendChild(removeBtn);
-
-    // Re-wire the SVG inside the clone
-    const clonedObj  = modalCard.querySelector('object');
-    const clonedWrap = modalCard.querySelector('.svg-wrap');
-    wireSvgObject(clonedObj, null, clonedWrap); // no toggle click in modal
 
     return modalCard;
   }
