@@ -13,403 +13,8 @@
   <link rel="shortcut icon" href="favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="main.css" type="text/css"/>
   <link rel="stylesheet" href="print.css" type="text/css"/>
-  <style>
-:root {
-  --cbw: 5in;
-  --cs: 1.2;
-  --card-expansion: calc(0.2in * var(--cs));
-  --card-width: calc(var(--cbw) * var(--cs));
-  --card-width-expanded: calc(var(--cbw) * var(--cs) + var(--card-expansion));
-  --card-height-collapsed: calc(0.5in * var(--cs));
-  --card-height-collapsed-mobile: 8.5vw;
-  --card-popup-mobile: 1.5vw;
-}
-
-html, body {
-  color: #122121;
-  background: #f7f6f4;
-  margin: 0;
-  padding: 0;
-  font-family: "Georgia", serif;
-  min-height: 100svh;
-}
-body {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.container {
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-}
-.categories-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 1em;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
-}
-.category-col {
-  display: flex;
-  flex-direction: column;
-  width: var(--card-width-expanded);
-  min-width: var(--card-width-expanded);
-  max-width: var(--card-width-expanded);
-  margin-bottom: 2rem;
-  box-sizing: border-box;
-}
-
-.category-title {
-  text-align: center;
-  margin-bottom: 0.8rem;
-  font-size: 1.2rem;
-  font-family: 'Coelacanth', Georgia, serif;
-}
-.card-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 100%;
-  align-items: center;
-}
-
-/* --- Card --- */
-.card {
-  background: white;
-  height: auto;
-  border-radius: 0;
-  border: none;
-  overflow: hidden;
-  cursor: pointer;
-  position: relative;
-  margin: 0 auto;
-  padding: 0;
-  width: var(--card-width);
-  min-width: var(--card-width);
-  max-width: var(--card-width);
-  transition:
-    width 0.2s ease,
-    min-width 0.2s ease,
-    max-width 0.2s ease,
-    box-shadow 0.2s ease,
-    height 0.2s ease,
-    min-height 0.2s ease,
-    max-height 0.2s ease,
-    margin 0.2s ease;
-  will-change: width, min-width, max-width, box-shadow, height, min-height, max-height, margin;
-  z-index: 1;
-}
-
-.card.collapsed {
-  height: var(--card-height-collapsed);
-  min-height: var(--card-height-collapsed);
-  max-height: var(--card-height-collapsed);
-  width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 0;
-  box-shadow:
-    0 -2px 6px -2px rgba(0,0,0,0.1),
-    -2px 0 6px -2px rgba(0,0,0,0.1),
-    2px 0 6px -2px rgba(0,0,0,0.1);
-}
-
-.card.expanded {
-  overflow: visible;
-  min-width: var(--card-width-expanded);
-  max-width: var(--card-width-expanded);
-  margin-top: calc(var(--card-expansion) / -4);
-  margin-left: calc(var(--card-expansion) / -2);
-  margin-right: calc(var(--card-expansion) / -2);
-  margin-bottom: var(--card-expansion);
-  z-index: 2;
-  box-shadow:
-    0 6px 12px -3px rgba(0,0,0,0.1),
-    0 -6px 12px -3px rgba(0,0,0,0.1),
-    -6px 0 12px -3px rgba(0,0,0,0.1),
-    6px 0 12px -3px rgba(0,0,0,0.1);
-}
-
-.card.collapsed:hover {
-  margin-top: calc(var(--card-expansion) / -4);
-  height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
-  min-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
-  max-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
-}
-
-
-.card.collapsed:last-child:hover {
-  margin-bottom: calc(var(--card-expansion) / 4);
-}
-
-.card.collapsed:last-child {
-  height: auto;
-  min-height: 0;
-  max-height: none;
-}
-
-.card img {
-  width: 100%;
-  height: auto;
-  display: block;
-  pointer-events: none;
-  user-select: none;
-  background: transparent;
-}
-
-.card:focus {
-  outline: none;
-}
-
-.svg-wrap svg {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 5 / 3; /* 5in x 3in for your cards; set to your true SVG ratio */
-  display: block;
-  min-height: var(--card-height-collapsed); /* Fallback for collapsed cards */
-  background-color: white;
-  pointer-events: auto;
-}
-
-.svg-fade {
-  position: absolute;
-  inset: 0;
-  background: white;
-  opacity: 1;
-  transition: opacity 0.4s;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.svg-wrap.loaded .svg-fade {
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-
-/* ---------- Modal for Focused Cards ---------- */
-#focus-modal {
-  display: none;
-  flex-direction: column;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  width: 100vw;
-  height: 100vh;
-  overflow-y: auto;
-  background: rgba(255,255,255,0.4);
-  backdrop-filter: blur(10px) brightness(0.96);
-  -webkit-backdrop-filter: blur(10px) brightness(0.96);
-  animation: fadeIn 0.18s;
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.nav-btn {
-  position: fixed;
-  top: clamp(6.0000px, calc(-10.6667px + 4.4444vw), 16.0000px);
-  left: clamp(6.0000px, calc(-10.6667px + 4.4444vw), 16.0000px);
-  z-index: 1100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.94);
-  border: none;
-  border-radius: 2rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.11);
-  padding: 0.78rem 1.1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-  transition: color 0.13s;
-  color: #7a2d1f;
-  font-family: 'Coelacanth', Georgia, serif;
-}
-
-.nav-btn:hover, .nav-btn:focus {
-  color: #053333;
-}
-
-#focus-modal .modal-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: clamp(6px, calc(-10.6667px + 4.4444vw), 16px);
-  display: flex;
-  justify-content: space-between;
-  gap: .5rem;
-  background: transparent;
-  pointer-events: none;          /* header itself transparent */
-  z-index: 1101;
-}
-
-#focus-modal .modal-header .nav-btn{
-  position: static;              /* no fixed positioning */
-  top: auto; left: auto;         /* clear inherited values */
-  pointer-events: auto;          /* clickable */
-  margin: 0;
-}
-
-#focus-modal .focused-cards-outer {
-  height: 100svh;
-  width: 100vw;
-  box-sizing: border-box;
-  padding-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
-  padding-bottom: 3rem;
-  overflow: auto;
-}
-
-#focus-modal .focused-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, var(--card-width-expanded));
-  grid-template-rows: masonry;
-  gap: 0.9rem;
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-  justify-content: center; /* This is the key! */
-}
-
-
-#focus-modal .focused-cards-grid .card {
-  margin: 0 !important;
-  position: relative;
-  cursor: default;
-}
-
-.remove-btn {
-  position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 1.5rem;
-  color: #b7b7b7;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 3;
-  display: flex;
-  opacity: 0;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  border: none;
-  border-radius: 2rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.11);
-  cursor: pointer;
-  transition: color 0.13s, opacity 0.13s;
-  color: #7a2d1f;
-  font-family: 'Coelacanth', Georgia, serif;
-  overflow: visible;
-}
-
-.remove-btn:hover, .remove-btn:focus {
-  color: #053333;
-}
-
-
-.card:hover .remove-btn,
-.card:focus-within .remove-btn,
-.remove-btn:focus {
-  opacity: 1;
-}
-
-.card.highlighted {
-  outline: 0px solid #9B3928;
-  outline-offset: 0px;
-  animation: outline-flash 0.8s;
-  z-index: 10;
-}
-
-@keyframes outline-flash {
-  0%   { outline-width: 0px; outline-offset: 0px; }
-  20%  { outline-width: 4px;  outline-offset: -1px; }
-  100% { outline-width: 0px;  outline-offset: 0px; }
-}
-
-a {
-  color: #511e15;
-  text-decoration: none;
-}
-a:hover, a:focus {
-  color: #053333;
-}
-
-/* Make link contents follow that color */
-a text, a tspan { fill: currentColor !important; }
-a path, a rect, a circle, a polygon, a polyline, a line {
-  stroke: currentColor !important;
-  fill: currentColor !important; /* in case your text was converted to paths */
-}
-
-@media (max-width: 6.5in) {
-  .category-col {
-    width: 99%;
-    min-width: 0;
-    max-width: 99%;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .card.expanded {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .card {
-    width: 96%;
-    min-width: 0;
-    max-width: 96%;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .card.collapsed {
-    height: 9vw;
-    min-height: 9vw;
-    max-height: 9vw;
-  }
-
-  .card.collapsed:hover {
-    margin-top: calc(-1.5vw);
-    height: calc(9vw + 1.5vw);
-    min-height: calc(9vw + 1.5vw);
-    max-height: calc(9vw + 1.5vw);
-  }
-
-  .card.collapsed:last-child:hover {
-    margin-bottom: 1.5vw;
-  }
-
-  .card.collapsed:last-child {
-    height: auto;
-    min-height: 0;
-    max-height: none;
-  }
-
-  .remove-btn {
-    right: 0.25rem;
-  }
-
-  /* --- Focus modal --- */
-  #focus-modal .focused-cards-grid {
-    grid-template-columns: 1fr;
-    width: 99%;
-  }
-}
-  </style>
 </head>
 <body>
   <div class="container">
@@ -417,16 +22,32 @@ a path, a rect, a circle, a polygon, a polyline, a line {
   </div>
 
   <!-- Show Focused Cards Button -->
-  <button id="show-focused-btn" class="nav-btn" style="display:none;" aria-label="Show open cards">Focus</button>
+  <div class="main-header">
+    <button id="browse-cats-btn" class="nav-btn" aria-label="Show categories">Cats</button>
+    <button id="show-focused-btn" class="nav-btn" style="display:none;" aria-label="Show open cards">Focus</button>
+  </div>
 
   <!-- Focused Cards Modal -->
   <div id="focus-modal" aria-modal="true" role="dialog" tabindex="-1">
     <div class="modal-header">
       <button id="close-focused-btn" class="nav-btn" aria-label="Back to all cards">Back</button>
+      <button id="print-btn" class="nav-btn" aria-label="Print open cards">Print</button>
     </div>
     <div class="focused-cards-outer">
       <div class="focused-cards-grid" id="focused-cards-grid">
         <!-- Focused cards rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Sections Modal -->
+  <div id="sections-modal" aria-modal="true" role="dialog" tabindex="-1" style="display:none;">
+    <div class="modal-header">
+      <button id="close-sections-btn" class="nav-btn" aria-label="Close sections menu">Back</button>
+    </div>
+    <div class="sections-list-outer">
+      <div class="sections-list" id="sections-list">
+        <!-- Section links will be injected here -->
       </div>
     </div>
   </div>
@@ -468,6 +89,7 @@ a path, a rect, a circle, a polygon, a polyline, a line {
   sortedCategories.forEach(([catTitle, catSlugs]) => {
     const col = document.createElement("div");
     col.className = "category-col";
+    col.id = "cat-" + encodeURIComponent(catTitle.replace(/\s+/g, '-').toLowerCase());
 
     const titleDiv = document.createElement("div");
     titleDiv.className = "category-title";
@@ -611,7 +233,6 @@ a path, a rect, a circle, a polygon, a polyline, a line {
 
   function cloneCardForModal(card) {
     const modalCard = card.cloneNode(true);
-    modalCard.tabIndex = -1;
 
     const wrapper = modalCard.querySelector('.svg-inline');
     if (wrapper) {
@@ -686,6 +307,86 @@ a path, a rect, a circle, a polygon, a polyline, a line {
       }
     }
   });
+
+  const browseSectionsBtn = document.getElementById('browse-cats-btn');
+  const sectionsModal     = document.getElementById('sections-modal');
+  const closeSectionsBtn  = document.getElementById('close-sections-btn');
+  const sectionsList      = document.getElementById('sections-list');
+
+  function showSectionsModal() {
+    sectionsList.innerHTML = '';
+    sortedCategories.forEach(([catTitle]) => {
+      const sectionId = "cat-" + encodeURIComponent(catTitle.replace(/\s+/g, '-').toLowerCase());
+      const link = document.createElement('a');
+      link.href = "#" + sectionId;
+      link.textContent = decodeHTMLEntities(catTitle);
+      link.className = "section-link";
+      link.onclick = (e) => {
+        e.preventDefault();
+        // Scroll to the section
+        const col = document.getElementById(sectionId);
+        if (col) {
+          col.scrollIntoView({ behavior: "smooth", block: "start" });
+          col.querySelector('.category-title').classList.add('highlighted');
+          setTimeout(() => col.querySelector('.category-title').classList.remove('highlighted'), 1500);
+        }
+        hideSectionsModal();
+      };
+      sectionsList.appendChild(link);
+    });
+    sectionsModal.style.display = 'flex';
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollBarWidth > 0) {
+      document.body.style.paddingRight = scrollBarWidth + "px";
+    }
+    sectionsModal.focus();
+    document.body.style.overflow = "hidden";
+  }
+
+  function hideSectionsModal() {
+    sectionsModal.style.display = 'none';
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  }
+
+  // Button handlers
+  browseSectionsBtn.onclick = showSectionsModal;
+  closeSectionsBtn.onclick  = hideSectionsModal;
+
+  // Escape key closes modal
+  sectionsModal.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") hideSectionsModal();
+  });
+
+  // Accessibility: focus trap (optional, simple)
+  sectionsModal.addEventListener('focusin', (e) => {
+    if (sectionsModal.style.display === "flex") {
+      const focusable = sectionsModal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.target === last && e.relatedTarget === first) {
+        first.focus();
+        e.preventDefault();
+      }
+    }
+  });
+
+  const printBtn = document.getElementById('print-btn');
+
+  printBtn.onclick = () => {
+    // Ensure all SVGs are loaded before printing
+    const pending = Array.from(document.querySelectorAll('.svg-wrap:not(.loaded)'));
+    if (pending.length) {
+      Promise.all(pending.map(w => new Promise(res => {
+        const obs = new MutationObserver(() => {
+          if (w.classList.contains('loaded')) { obs.disconnect(); res(); }
+        });
+        obs.observe(w, { attributes: true });
+      }))).then(() => window.print());
+    } else {
+      window.print();
+    }
+  };
 </script>
 </body>
 </html>

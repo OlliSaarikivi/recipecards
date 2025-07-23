@@ -1,0 +1,502 @@
+:root {
+  --cbw: 5in;
+  --cs: 1.2;
+  --card-expansion: calc(0.2in * var(--cs));
+  --card-width: calc(var(--cbw) * var(--cs));
+  --card-width-expanded: calc(var(--cbw) * var(--cs) + var(--card-expansion));
+  --card-height-collapsed: calc(0.5in * var(--cs));
+  --card-height-collapsed-mobile: 8.5vw;
+  --card-popup-mobile: 1.5vw;
+}
+
+html {
+  scroll-padding-top: 30px;
+}
+
+html, body {
+  color: #122121;
+  background: #f7f6f4;
+  margin: 0;
+  padding: 0;
+  font-family: "Georgia", serif;
+  min-height: 100svh;
+}
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+.categories-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
+}
+.category-col {
+  display: flex;
+  flex-direction: column;
+  width: var(--card-width-expanded);
+  min-width: var(--card-width-expanded);
+  max-width: var(--card-width-expanded);
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+}
+
+.category-title {
+  text-align: center;
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+  font-family: 'Coelacanth', Georgia, serif;
+}
+.card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  align-items: center;
+}
+
+/* --- Card --- */
+.card {
+  background: white;
+  height: auto;
+  border-radius: 0;
+  border: none;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: var(--card-width);
+  min-width: var(--card-width);
+  max-width: var(--card-width);
+  transition:
+    width 0.2s ease,
+    min-width 0.2s ease,
+    max-width 0.2s ease,
+    box-shadow 0.2s ease,
+    height 0.2s ease,
+    min-height 0.2s ease,
+    max-height 0.2s ease,
+    margin 0.2s ease;
+  will-change: width, min-width, max-width, box-shadow, height, min-height, max-height, margin;
+  z-index: 1;
+}
+
+.card.collapsed {
+  height: var(--card-height-collapsed);
+  min-height: var(--card-height-collapsed);
+  max-height: var(--card-height-collapsed);
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  box-shadow:
+    0 -2px 6px -2px rgba(0,0,0,0.1),
+    -2px 0 6px -2px rgba(0,0,0,0.1),
+    2px 0 6px -2px rgba(0,0,0,0.1);
+}
+
+.card.expanded {
+  overflow: visible;
+  min-width: var(--card-width-expanded);
+  max-width: var(--card-width-expanded);
+  margin-top: calc(var(--card-expansion) / -4);
+  margin-left: calc(var(--card-expansion) / -2);
+  margin-right: calc(var(--card-expansion) / -2);
+  margin-bottom: var(--card-expansion);
+  z-index: 2;
+  box-shadow:
+    0 6px 12px -3px rgba(0,0,0,0.1),
+    0 -6px 12px -3px rgba(0,0,0,0.1),
+    -6px 0 12px -3px rgba(0,0,0,0.1),
+    6px 0 12px -3px rgba(0,0,0,0.1);
+}
+
+.card.collapsed:hover {
+  margin-top: calc(var(--card-expansion) / -4);
+  height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+  min-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+  max-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+}
+
+
+.card.collapsed:last-child:hover {
+  margin-bottom: calc(var(--card-expansion) / 4);
+}
+
+.card.collapsed:last-child {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  background: transparent;
+}
+
+.card:focus {
+  outline: none;
+}
+
+.svg-wrap svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 3; /* 5in x 3in for your cards; set to your true SVG ratio */
+  display: block;
+  min-height: var(--card-height-collapsed); /* Fallback for collapsed cards */
+  background-color: white;
+  pointer-events: auto;
+}
+
+.svg-fade {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 1;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.svg-wrap.loaded .svg-fade {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+/* ---------- Modal for Focused Cards ---------- */
+#focus-modal {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(10px) brightness(0.96);
+  -webkit-backdrop-filter: blur(10px) brightness(0.96);
+  animation: fadeIn 0.18s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#sections-modal {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  padding: clamp(6px, calc(-10.6667px + 4.4444vw), 16px);
+  overflow-y: auto;
+  background: rgba(255,255,255,0.44);
+  backdrop-filter: blur(10px) brightness(0.98);
+  -webkit-backdrop-filter: blur(10px) brightness(0.98);
+  animation: fadeIn 0.18s;
+}
+
+#sections-modal .modal-header {
+  position: fixed;
+  display: flex;
+  justify-content: flex-start;
+  background: transparent;
+  pointer-events: none;
+  z-index: 1101;
+}
+
+#sections-modal .nav-btn {
+  position: static;
+  pointer-events: auto;
+  margin: 0;
+}
+
+.sections-list-outer {
+  margin-left: 0;
+  margin-right: auto;
+  padding-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sections-list {
+  background: rgba(255,255,255,0.9);
+  border-radius: 1.5em;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+  padding: 0.8em 0.8em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+.section-link {
+  text-align: center;
+  margin-bottom: 0.1rem;
+  font-size: 1.2rem;
+  font-family: 'Coelacanth', Georgia, serif;
+  display: block;
+  padding: 0.72em 0.9em;
+  border-radius: 1em;
+  text-align: center;
+  color: #511e15;
+  text-decoration: none;
+  transition: background 0.15s, color 0.12s;
+  cursor: pointer;
+}
+.section-link:hover,
+.section-link:focus {
+  background: #f7f6f4;
+  color: #122121;
+}
+
+
+.nav-btn {
+  position: fixed;
+  top: clamp(6.0000px, calc(-10.6667px + 4.4444vw), 16.0000px);
+  left: clamp(6.0000px, calc(-10.6667px + 4.4444vw), 16.0000px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.94);
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.11);
+  padding: 0.78rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  transition: color 0.13s;
+  color: #7a2d1f;
+  font-family: 'Coelacanth', Georgia, serif;
+}
+
+.nav-btn:hover, .nav-btn:focus {
+  color: #053333;
+}
+
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: clamp(6px, calc(-10.6667px + 4.4444vw), 16px);
+  display: flex;
+  justify-content: flex-start;
+  gap: .5rem;
+  background: transparent;
+  pointer-events: none;          /* header itself transparent */
+  z-index: 1101;
+}
+
+.main-header .nav-btn{
+  position: static;              /* no fixed positioning */
+  top: auto; left: auto;         /* clear inherited values */
+  pointer-events: auto;          /* clickable */
+  margin: 0;
+}
+
+#focus-modal .modal-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: clamp(6px, calc(-10.6667px + 4.4444vw), 16px);
+  display: flex;
+  justify-content: flex-start;
+  gap: .5rem;
+  background: transparent;
+  pointer-events: none;          /* header itself transparent */
+  z-index: 1101;
+}
+
+#focus-modal .modal-header .nav-btn{
+  position: static;              /* no fixed positioning */
+  top: auto; left: auto;         /* clear inherited values */
+  pointer-events: auto;          /* clickable */
+  margin: 0;
+}
+
+#focus-modal .focused-cards-outer {
+  height: 100svh;
+  width: 100vw;
+  box-sizing: border-box;
+  padding-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
+  padding-bottom: 3rem;
+  overflow: auto;
+}
+
+#focus-modal .focused-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, var(--card-width-expanded));
+  grid-template-rows: masonry;
+  gap: 0.9rem;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  justify-content: center; /* This is the key! */
+}
+
+
+#focus-modal .focused-cards-grid .card {
+  margin: 0 !important;
+  position: relative;
+  cursor: default;
+}
+
+.remove-btn {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  color: #b7b7b7;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  opacity: 0;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.11);
+  cursor: pointer;
+  transition: color 0.13s, opacity 0.13s;
+  color: #7a2d1f;
+  font-family: 'Coelacanth', Georgia, serif;
+  overflow: visible;
+}
+
+.remove-btn:hover, .remove-btn:focus {
+  color: #053333;
+}
+
+
+.card:hover .remove-btn,
+.card:focus-within .remove-btn,
+.remove-btn:focus {
+  opacity: 1;
+}
+
+.card.highlighted {
+  outline: 0px solid #9B3928;
+  outline-offset: 0px;
+  animation: outline-flash 0.7s;
+  z-index: 10;
+}
+
+@keyframes outline-flash {
+  0%   { outline-width: 0px; outline-offset: 0px; }
+  10%  { outline-width: 3px;  outline-offset: -1px; }
+  80%  { outline-width: 3px;  outline-offset: -1px; }
+  100% { outline-width: 0px;  outline-offset: 0px; }
+}
+
+.category-title.highlighted {
+  animation: color-flash 1.5s;
+}
+
+@keyframes color-flash {
+  0%   { color: inherit; }
+  5%  { color: #9B3928; }
+  90%  { color: #9B3928; }
+  100% { color: inherit; }
+}
+
+a {
+  color: #511e15;
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: #053333;
+}
+
+/* Make link contents follow that color */
+a text, a tspan { fill: currentColor !important; }
+a path, a rect, a circle, a polygon, a polyline, a line {
+  stroke: currentColor !important;
+  fill: currentColor !important; /* in case your text was converted to paths */
+}
+
+@media (max-width: 6.5in) {
+  .category-col {
+    width: 99%;
+    min-width: 0;
+    max-width: 99%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .card.expanded {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .card {
+    width: 96%;
+    min-width: 0;
+    max-width: 96%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .card.collapsed {
+    height: 9vw;
+    min-height: 9vw;
+    max-height: 9vw;
+  }
+
+  .card.collapsed:hover {
+    margin-top: calc(-1.5vw);
+    height: calc(9vw + 1.5vw);
+    min-height: calc(9vw + 1.5vw);
+    max-height: calc(9vw + 1.5vw);
+  }
+
+  .card.collapsed:last-child:hover {
+    margin-bottom: 1.5vw;
+  }
+
+  .card.collapsed:last-child {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .remove-btn {
+    right: 0.25rem;
+  }
+
+  /* --- Focus modal --- */
+  #focus-modal .focused-cards-grid {
+    grid-template-columns: 1fr;
+    width: 99%;
+  }
+}
