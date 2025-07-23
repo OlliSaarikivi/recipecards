@@ -278,7 +278,9 @@ body {
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
-  font-size: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
   color: #b7b7b7;
   line-height: 1;
   cursor: pointer;
@@ -291,7 +293,6 @@ body {
   border: none;
   border-radius: 2rem;
   box-shadow: 0 2px 12px rgba(0,0,0,0.11);
-  padding: 0.58rem 0.9rem;
   cursor: pointer;
   transition: color 0.13s, opacity 0.13s;
   color: #7a2d1f;
@@ -339,7 +340,13 @@ a path, a rect, a circle, a polygon, a polyline, a line {
 }
 
 @media (max-width: 6.5in) {
-  .category-col,
+  .category-col {
+    width: 99%;
+    min-width: 0;
+    max-width: 99%;
+    margin-left: 0;
+    margin-right: 0;
+  }
   .card.expanded {
     width: 100%;
     min-width: 0;
@@ -348,9 +355,9 @@ a path, a rect, a circle, a polygon, a polyline, a line {
     margin-right: 0;
   }
   .card {
-    width: 97%;
+    width: 96%;
     min-width: 0;
-    max-width: 97%;
+    max-width: 96%;
     margin-left: 0;
     margin-right: 0;
   }
@@ -377,11 +384,14 @@ a path, a rect, a circle, a polygon, a polyline, a line {
     max-height: none;
   }
 
- /* --- Focus modal --- */
+  .remove-btn {
+    right: 0.25rem;
+  }
+
+  /* --- Focus modal --- */
   #focus-modal .focused-cards-grid {
     grid-template-columns: 1fr;
-    width: 100%;
-    padding: 0;
+    width: 99%;
   }
 }
   </style>
