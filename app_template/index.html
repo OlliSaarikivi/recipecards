@@ -78,7 +78,7 @@ body {
   gap: 1em;
   width: 100%;
   box-sizing: border-box;
-  margin-top: 4.2rem;
+  margin-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
 }
 .category-col {
   display: flex;
@@ -146,6 +146,7 @@ body {
 }
 
 .card.expanded {
+  overflow: visible;
   min-width: var(--card-width-expanded);
   max-width: var(--card-width-expanded);
   margin-top: calc(var(--card-expansion) / -4);
@@ -245,8 +246,8 @@ body {
 
 .nav-btn {
   position: fixed;
-  top: 1rem;
-  left: 1rem;
+  top: clamp(6.0000px, calc(-10.6667px + 4.4444vw), 16.0000px);
+  left: clamp(6.0000px, calc(-10.6667px + 4.4444vw), 16.0000px);
   z-index: 1100;
   display: flex;
   align-items: center;
@@ -273,8 +274,8 @@ body {
   height: 100svh;
   width: 100vw;
   box-sizing: border-box;
-  padding-top: 4.2rem;
-  padding-bottom: 2rem;
+  padding-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
+  padding-bottom: 3rem;
   overflow: auto;
 }
 
@@ -298,24 +299,38 @@ body {
 
 .remove-btn {
   position: absolute;
-  top: 0.2rem;
-  right: 0.45rem;
-  background: none;
-  border: none;
-  font-size: 1.7rem;
+  top: -0.5rem;
+  right: -0.5rem;
+  font-size: 1rem;
   color: #b7b7b7;
-  padding: 0;
   line-height: 1;
   cursor: pointer;
   z-index: 3;
-  opacity: 0.82;
+  display: flex;
+  opacity: 0;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.11);
+  padding: 0.58rem 0.9rem;
+  cursor: pointer;
   transition: color 0.13s, opacity 0.13s;
+  color: #7a2d1f;
+  font-family: 'Coelacanth', Georgia, serif;
+  overflow: visible;
 }
 
 .remove-btn:hover, .remove-btn:focus {
-  color: #7a2d1f;
+  color: #053333;
+}
+
+
+.card:hover .remove-btn,
+.card:focus-within .remove-btn,
+.remove-btn:focus {
   opacity: 1;
-  outline: none;
 }
 
 .card.highlighted {
@@ -353,12 +368,12 @@ a path, a rect, a circle, a polygon, a polyline, a line {
   </div>
 
   <!-- Show Focused Cards Button -->
-  <button id="show-focused-btn" class="nav-btn" style="display:none;">focus</button>
+  <button id="show-focused-btn" class="nav-btn" style="display:none;" aria-label="Show open cards">focus</button>
 
   <!-- Focused Cards Modal -->
   <div id="focus-modal" aria-modal="true" role="dialog" tabindex="-1">
     <div class="modal-header">
-      <button id="close-focus-modal" class="nav-btn" aria-label="Back to all cards">back</button>
+      <button id="close-focus-modal" class="nav-btn" aria-label="Back to all cards">Back</button>
     </div>
     <div class="focused-cards-outer">
       <div class="focused-cards-grid" id="focused-cards-grid">
