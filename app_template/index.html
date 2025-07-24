@@ -315,7 +315,7 @@
 
   function showSectionsModal() {
     sectionsList.innerHTML = '';
-    sortedCategories.forEach(([catTitle]) => {
+    Object.entries(slugs).forEach(([catTitle]) => {
       const sectionId = "cat-" + encodeURIComponent(catTitle.replace(/\s+/g, '-').toLowerCase());
       const link = document.createElement('a');
       link.href = "#" + sectionId;
