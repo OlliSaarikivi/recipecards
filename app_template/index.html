@@ -118,9 +118,7 @@
       loadAndInsertSVG(`${slug}.svg`, svgWrap, fade, card, slug);
 
       card.onclick = () => {
-        card.classList.toggle("expanded");
-        card.classList.toggle("collapsed");
-        updateShowFocusedBtn();
+        toggleCardExpanded(card);
       };
       card.onkeydown = (e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -191,13 +189,21 @@
     }
   }
 
+  function toggleCardExpanded(card) {
+    // Toggle the state
+    const isExpanding = !card.classList.contains("expanded");
+    card.classList.toggle("expanded", isExpanding);
+    card.classList.toggle("collapsed", !isExpanding);
+
+    // Update the focused cards button
+    updateShowFocusedBtn();
+  }
+
   function onRecipeRefClick(slug) {
     const card = document.querySelector(`.card[data-slug="${slug}"]`);
     if (card) {
       if (!card.classList.contains('expanded')) {
-        card.classList.add('expanded');
-        card.classList.remove('collapsed');
-        updateShowFocusedBtn();
+        toggleCardExpanded(card);
       }
 
       if (focusModal.style.display === "flex") {
@@ -250,9 +256,7 @@
     removeBtn.setAttribute('aria-label', "Remove from focus");
     removeBtn.onmousedown = e => e.stopPropagation();
     removeBtn.onclick = () => {
-      card.classList.remove('expanded');
-      card.classList.add('collapsed');
-      updateShowFocusedBtn();
+      toggleCardExpanded(card);
       modalCard.remove();
       if (getAllExpandedCards().length === 0) {
         hideFocusModal();
