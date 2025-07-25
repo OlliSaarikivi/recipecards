@@ -153,10 +153,6 @@ body {
   background: transparent;
 }
 
-.card:focus {
-  outline: none;
-}
-
 .svg-wrap svg {
   width: 100%;
   height: auto;
@@ -237,6 +233,7 @@ body {
   margin-left: 0;
   margin-right: auto;
   padding-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
+  padding-bottom: 2em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -266,8 +263,7 @@ body {
   transition: background 0.15s, color 0.12s;
   cursor: pointer;
 }
-.section-link:hover,
-.section-link:focus {
+.section-link:hover {
   background: #f7f6f4;
   color: #122121;
 }
@@ -295,7 +291,7 @@ body {
   font-family: 'Coelacanth', Georgia, serif;
 }
 
-.nav-btn:hover, .nav-btn:focus {
+.nav-btn:hover {
   color: #053333;
 }
 
@@ -372,37 +368,27 @@ body {
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   font-size: 1.5rem;
   color: #b7b7b7;
   line-height: 1;
   cursor: pointer;
   z-index: 3;
   display: flex;
-  opacity: 0;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: transparent;
   border: none;
-  border-radius: 2rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.11);
   cursor: pointer;
-  transition: color 0.13s, opacity 0.13s;
+  transition: color 0.13s;
   color: #7a2d1f;
   font-family: 'Coelacanth', Georgia, serif;
   overflow: visible;
 }
 
-.remove-btn:hover, .remove-btn:focus {
+.remove-btn:hover {
   color: #053333;
-}
-
-
-.card:hover .remove-btn,
-.card:focus-within .remove-btn,
-.remove-btn:focus {
-  opacity: 1;
 }
 
 .card.highlighted {
@@ -434,7 +420,7 @@ a {
   color: #511e15;
   text-decoration: none;
 }
-a:hover, a:focus {
+a:hover {
   color: #053333;
 }
 

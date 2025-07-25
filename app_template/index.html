@@ -140,7 +140,6 @@
     fetch(url)
       .then(resp => resp.text())
       .then(svgText => {
-        container.classList.add('loaded');
         container.querySelector('.svg-inline')?.remove();
 
         // Insert SVG as inline HTML
@@ -151,6 +150,10 @@
         wireInlineSVGInteractions(wrapper, cardEl);
 
         container.insertBefore(wrapper, fadeEl);
+
+        requestAnimationFrame(() => {
+          container.classList.add('loaded');
+        });
       });
   }
 
@@ -163,6 +166,7 @@
 
     // Add handler to all SVG links
     wrapper.querySelectorAll('a').forEach(a => {
+      a.tabIndex = -1;
       let href = a.getAttribute('xlink:href') || a.getAttribute('href');
       if (!href) return;
       a.addEventListener('click', e => {
