@@ -126,16 +126,30 @@ body {
     6px 0 12px -3px rgba(0,0,0,0.1);
 }
 
-.card.collapsed:hover {
-  margin-top: calc(var(--card-expansion) / -4);
-  height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
-  min-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
-  max-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+@media (hover: hover) and (pointer: fine) {
+  .card.collapsed:hover {
+    margin-top: calc(var(--card-expansion) / -4);
+    height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+    min-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+    max-height: calc(var(--card-height-collapsed) + (var(--card-expansion) / 4));
+  }
+
+  .card.collapsed:last-child:hover {
+    margin-bottom: calc(var(--card-expansion) / 4);
+  }
 }
 
+@media (max-width: 6.5in) and (hover: hover) and (pointer: fine) {
+  .card.collapsed:hover {
+    margin-top: calc(-1.5vw);
+    height: calc(9vw + 1.5vw);
+    min-height: calc(9vw + 1.5vw);
+    max-height: calc(9vw + 1.5vw);
+  }
 
-.card.collapsed:last-child:hover {
-  margin-bottom: calc(var(--card-expansion) / 4);
+  .card.collapsed:last-child:hover {
+    margin-bottom: 1.5vw;
+  }
 }
 
 .card.collapsed:last-child {
@@ -205,7 +219,7 @@ body {
   inset: 0;
   z-index: 9999;
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
   padding: clamp(6px, calc(-10.6667px + 4.4444vw), 16px);
   overflow-y: auto;
   background: rgba(255,255,255,0.44);
@@ -233,7 +247,7 @@ body {
   margin-left: 0;
   margin-right: auto;
   padding-top: clamp(58.0000px, calc(41.3333px + 4.4444vw), 68.0000px);
-  padding-bottom: 2em;
+  padding-bottom: max(2em, env(safe-area-inset-bottom, 0));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -457,17 +471,6 @@ a path, a rect, a circle, a polygon, a polyline, a line {
     height: 9vw;
     min-height: 9vw;
     max-height: 9vw;
-  }
-
-  .card.collapsed:hover {
-    margin-top: calc(-1.5vw);
-    height: calc(9vw + 1.5vw);
-    min-height: calc(9vw + 1.5vw);
-    max-height: calc(9vw + 1.5vw);
-  }
-
-  .card.collapsed:last-child:hover {
-    margin-bottom: 1.5vw;
   }
 
   .card.collapsed:last-child {
