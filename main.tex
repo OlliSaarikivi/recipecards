@@ -1,4 +1,19 @@
 \documentclass{article}
+
+\iffalse New recipe template
+
+\begin{recipe}{}{\preheat{}\totaltime{}}
+\begin{ingredients}
+\end{ingredients}
+\nextcolumn
+Serves
+\begin{steps}
+    \item
+\end{steps}
+\end{recipe}
+
+\fi
+
 \usepackage[paperheight=3in,paperwidth=5in,margin=0.25in,headsep=0pt,footskip=4pt]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -34,7 +49,7 @@
 \usepackage[absolute]{textpos}
 \textblockorigin{0pt}{\paperheight-0.18in}
 
-\hyphenation{slight-ly car-da-mom crush-ed es-pres-so car-a-mel-ized}
+\hyphenation{slight-ly car-da-mom crush-ed es-pres-so car-a-mel-ized horse-ra-dish}
 
 \makeatletter
 \newcommand*{\shifttext}[2]{%
@@ -378,21 +393,5 @@ This is a collection of recipes that I want to have easily referenceable in my k
 \include{sauces_and_marinades}
 \include{components}
 
-% ============================
-% === New recipe templates ===
-% ============================
-\iffalse
-
-\begin{recipe}{}{\preheat{}\totaltime{}}
-\begin{ingredients}
-\end{ingredients}
-\nextcolumn
-Serves
-\begin{steps}
-    \item
-\end{steps}
-\end{recipe}
-
-\fi
 \end{document}
 \immediate\closeout\slugfile
