@@ -276,8 +276,9 @@ body {
   text-decoration: none;
   transition: background 0.15s, color 0.12s;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.section-link:hover {
+.section-link:is(:hover, :active) {
   background: #f7f6f4;
   color: #122121;
 }
@@ -303,9 +304,10 @@ body {
   transition: color 0.13s;
   color: #7a2d1f;
   font-family: 'Coelacanth', Georgia, serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.nav-btn:hover {
+.nav-btn:is(:hover, :active) {
   color: #053333;
 }
 
@@ -382,8 +384,8 @@ body {
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
-  width: 3rem;
-  height: 3rem;
+  width: 0.5in;
+  height: 0.5in;
   font-size: 1.5rem;
   color: #b7b7b7;
   line-height: 1;
@@ -399,9 +401,10 @@ body {
   color: #7a2d1f;
   font-family: 'Coelacanth', Georgia, serif;
   overflow: visible;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.remove-btn:hover {
+.remove-btn:is(:hover, :active) {
   color: #053333;
 }
 
@@ -433,8 +436,9 @@ body {
 a {
   color: #511e15;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
-a:hover {
+a:is(:hover, :active) {
   color: #053333;
 }
 
@@ -443,6 +447,26 @@ a text, a tspan { fill: currentColor !important; }
 a path, a rect, a circle, a polygon, a polyline, a line {
   stroke: currentColor !important;
   fill: currentColor !important; /* in case your text was converted to paths */
+}
+
+.remove-btn,
+.nav-btn,
+.section-link,
+a {
+  transition: transform 0.08s;
+  outline: none;
+}
+
+.remove-btn:active,
+.nav-btn:active,
+.section-link:active,
+a:active {
+  transform: scale(0.95);
+}
+
+.remove-btn:active {
+  transform: scale(0.9);
+  transform-origin: 50% 20%;
 }
 
 @media (max-width: 6.5in) {
@@ -477,10 +501,6 @@ a path, a rect, a circle, a polygon, a polyline, a line {
     height: auto;
     min-height: 0;
     max-height: none;
-  }
-
-  .remove-btn {
-    right: 0.25rem;
   }
 
   /* --- Focus modal --- */
